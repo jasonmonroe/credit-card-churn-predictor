@@ -1,2 +1,11 @@
 # requirements.txt
 
+scikit-learn
+seaborn
+matplotlib
+numpy
+pandas
+imbalanced-learn
+xgboost
+category_encoders
+threadpoolctl
