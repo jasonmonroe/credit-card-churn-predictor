@@ -763,12 +763,12 @@ plt.show()
 # Validation Data - 15%
 # Testing Data - 15%
 
-'''
+"""
 DATA_TEMP_SPLIT = 0.3
 DATA_TRAINING_SPLIT = 0.7
 DATA_TESTING_SPLIT = 0.15
 DATA_VALIDATION_SPLIT = 0.15
-'''
+"""
 
 # INDEPENDENT VARIABLES
 df_independent = X = df.drop('attrition_flag', axis=1)
@@ -776,7 +776,7 @@ df_independent = X = df.drop('attrition_flag', axis=1)
 # DEPENDENT VARIABLE
 df_dependent = y = df['attrition_flag']
 
-'''
+"""
 df_independent_vars_training_data = None
 df_independent_vars_temp_data = None
 df_dependent_var_training_data = None
@@ -786,7 +786,7 @@ df_independent_vars_validation_data = None
 df_independent_vars_testing_data = None
 df_dependent_var_validation_data = None
 df_dependent_var_testing_data = None
-'''
+"""
 
 x_training_data = None
 y_training_data = None
@@ -996,7 +996,7 @@ def run_model_performance(
     show_classify: bool=False
     ) -> None:
 
-    '''
+    """
     mods: - list of models
 
     data_y: dependent variable
@@ -1005,7 +1005,7 @@ def run_model_performance(
     show_classify: bool - determines which performance function to run
 
     Starts time for benchmarking, displays banner for readability and shows model performance.
-    '''
+    """
     start_time = start_timer()
     show_banner(title, section)
 
@@ -1187,11 +1187,11 @@ def plot_confusion_matrix(model, X, y_true):
     print(f"False Negatives (FN): {FN}")
 
 def pick_top_model(xgb_model_scores: pd.DataFrame, xgb_models: list) -> XGBClassifier :
-    '''
+    """
     xgb_models: pd.DataFrame
 
     Compares the three XGBoost models and returns the best one.
-    '''
+    """
     top_m = None
     top_m_title = ''
     f1_scores = []
@@ -1822,7 +1822,7 @@ xgb_comparison_models.columns = [
 show_banner('XGBoost Performance Comparison')
 xgb_comparison_models
 
-# Final model (highest score)
+# Final model (the highest score)
 # top_model was previously assigned a DataFrame, we need to reassign it to the actual model
 top_model = pick_top_model(xgb_comparison_models, xgb_models)  # Assuming xgb_tuned_oversample is your desired model
 

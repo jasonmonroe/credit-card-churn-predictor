@@ -3,6 +3,7 @@
 import time
 import pandas as pd
 import numpy as np
+import random
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import (
@@ -17,6 +18,12 @@ from src.config import *
 # ==================================
 #  HELPER FUNCTIONS
 # ==================================
+
+# --- Functions --- #
+def get_run_id() -> str:
+    """ Generates a unique ID for the current run. """
+    return 'RUN ID:' + str(random.randint(10000, 99999))
+
 
 def start_timer() -> float:
     """
@@ -40,8 +47,8 @@ def show_timer(start_time_int: float) -> None:
 
 
 def show_banner(title: str, section: str='') -> None:
-    PADDING = 2
-    strlen = len(title) + PADDING
+    padding = 2
+    strlen = len(title) + padding
 
     # Top line
     #print("\n")

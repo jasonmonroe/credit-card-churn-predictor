@@ -1,4 +1,5 @@
 # src/eda.py
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -124,13 +125,13 @@ def run_eda(df: pd.DataFrame):
     stacked_barplot(df, 'contacts_count_12_mon', 'attrition_flag')
 
     # Assume df is your DataFrame with numerical attributes
-    numerical_df = df.select_dtypes(include=['number'])
+    df_numerical = df.select_dtypes(include=['number'])
 
     # Calculate the correlation matrix
-    correlation_matrix = numerical_df.corr()
+    correlation_matrix = df_numerical.corr()
 
     # Display the correlation matrix
     plt.figure(figsize=(12, 8))
-    sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", vmin=-1, vmax=1)
-    plt.title("Correlation Matrix")
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
+    plt.title('Correlation Matrix')
     plt.show()

@@ -38,7 +38,7 @@ MSEC = 1000
 # Controls the maximum number of levels (nodes) allowed in each individual decision
 # tree within the forest.
 NODE_RFC_CNT = 4
-NODE_XGBC_CNT = 3
+NODE_XGBOOST_CNT = 3
 
 # Number of different parameter combinations that will be tried.
 PARAM_DISTR_CNT = 10

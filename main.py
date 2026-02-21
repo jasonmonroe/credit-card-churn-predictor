@@ -1,9 +1,11 @@
 # src/main.py
 
+import gc
 import pandas as pd
 import numpy as np
 from src.config import *
 from src.eda import run_eda
+from src import utils
 from src.modeling import (
     split_data,
     impute_missing_values,
@@ -32,10 +34,11 @@ def main():
     # Create a copy of the data (that will be used later)
     df = data.copy()
 
-    # Remove "N/A" from Education Level, "NaN" from Marital Status and "abc" from Income Category
+    # Remove "N/A" from Education Level, "NaN" from Marital Status and "abc" from the Income Category
     df['education_level'] = df['education_level'].replace('N/A', np.nan)
     df['marital_status'] = df['marital_status'].replace('NaN', np.nan)
     df['income_category'] = df['income_category'].replace('abc', np.nan)
+
 
     # Run EDA
     run_eda(df)
@@ -59,6 +62,7 @@ def main():
         print('Warning! Target training data is empty after dropping NaNs. Imputation cannot be performed.')
     else:
         y_training_data = y_training_data.fillna(y_training_data.mode()[0])  # Impute only if y_train is not empty
+
 
     # Build Model with original data
     models = build_model()
@@ -412,10 +416,23 @@ def main():
     ]
     print(xgb_comparison_models)
 
-    # Final model (highest score)
+    # Final model (the highest score)
     top_model = pick_top_model(xgb_comparison_models, xgb_models)
     model_performance_classification_sklearn(top_model, x_testing_data, y_testing_data)
     plot_confusion_matrix(top_model, x_testing_data, y_testing_data)
 
-if __name__ == "__main__":
+
+# --- Main --- #
+if __name__ == '__main__':
+    main_start_time = utils.start_timer()
+    run_id = utils.get_run_id()
+    print(f'\n#--- {run_id} | START PROGRAM ---#')
+
+    # ----
     main()
+
+    gc.collect()
+
+    utils.show_timer(main_start_time)
+    print(f'\n#--- {run_id} | END PROGRAM ---#')
+

@@ -31,18 +31,18 @@ def split_data(df: pd.DataFrame):
     df_independent = df.drop('attrition_flag', axis=1)
 
     # DEPENDENT VARIABLE
-    df_dependent = df['attrition_flag']
+    df_target = df['attrition_flag']
 
     # --- Split data into 70% training data and 30% temporary data --- #
     x_training_data, x_temp_data, y_training_data, y_temp_data = train_test_split(
         df_independent,
-        df_dependent,
+        df_target,
         test_size=DATA_TEMP_SPLIT,
         random_state=SEED,
-        stratify=df_dependent
+        stratify=df_target
     )
 
-    # --- Then take remaining temporary data 30% and split in half --- #
+    # --- Then take the remaining temporary data 30% and split in half --- #
     x_validation_data, x_testing_data, y_validation_data, y_testing_data = train_test_split(
         x_temp_data,
         y_temp_data,
@@ -107,16 +107,17 @@ def build_model():
         max_depth=NODE_RFC_CNT,
         n_estimators=UNTUNED_ESTIMATOR_CNT,
         min_samples_split=10,
-        min_samples_leaf=5)
+        min_samples_leaf=5,
+        max_features='sqrt')
       )
     )
 
-    # Appendinig extra models to perfect data
+    # Appending extra models to perfect data
     models.append(('AdaBoost', AdaBoostClassifier(random_state=SEED)))
     models.append(('Gradient Boosting', GradientBoostingClassifier(random_state=SEED)))
     models.append(('XGBoost', XGBClassifier(
         n_estimators=UNTUNED_ESTIMATOR_CNT,
-        max_depth=NODE_XGBC_CNT,
+        max_depth=NODE_XGBOOST_CNT,
         learning_rate= UNTUNED_LEARNING_RATE,
         reg_alpha=0.3,
         reg_lambda=0.3)
@@ -124,6 +125,7 @@ def build_model():
     )
 
     return models
+
 
 def show_fit_model_scores(
     mods: list,
@@ -156,7 +158,7 @@ def run_model_performance(
     show_classify: bool=False
     ) -> None:
 
-    '''
+    """
     mods: - list of models
 
     data_y: dependent variable
@@ -164,8 +166,8 @@ def run_model_performance(
     section: str - title of the section
     show_classify: bool - determines which performance function to run
 
-    Starts time for benchmarking, displays banner for readability and shows model performance.
-    '''
+    Starts time for benchmarking, displays a banner for readability, and shows model performance.
+    """
     start_time = start_timer()
     show_banner(title, section)
 
@@ -176,33 +178,36 @@ def run_model_performance(
 
     show_timer(start_time)
 
+
 def oversample_data(x_training_data, y_training_data):
     # Synthetic Minority Over Sampling Technique
     sm = SMOTE(sampling_strategy=1, k_neighbors=5, random_state=SEED)
     x_training_oversample, y_training_oversample = sm.fit_resample(x_training_data, y_training_data)
+
     return x_training_oversample, y_training_oversample
 
+
 def undersample_data(x_training_data, y_training_data):
-    # Random undersampler for under sampling the data
+    # Random under sampler for under sampling the data
     rus = RandomUnderSampler(random_state=SEED, sampling_strategy=1)
     x_training_undersample, y_training_undersample = rus.fit_resample(x_training_data, y_training_data)
+
     return x_training_undersample, y_training_undersample
 
+
 def pick_top_model(xgb_model_scores: pd.DataFrame, xgb_models: list) -> XGBClassifier :
-    '''
+    """
     xgb_models: pd.DataFrame
 
     Compares the three XGBoost models and returns the best one.
-    '''
-    top_m = None
-    top_m_title = ''
+    """
     f1_scores = []
 
     # Get F1 Scores
     for model in xgb_model_scores.columns:
         f1_scores.append(xgb_model_scores[model]['F1'])
 
-    # Get index and variable of top F1 score
+    # Get index and variable of the top F1 score
     top_m_index = f1_scores.index(max(f1_scores))
     top_m_title = xgb_model_scores.columns[top_m_index]
     top_m = xgb_models[top_m_index]
