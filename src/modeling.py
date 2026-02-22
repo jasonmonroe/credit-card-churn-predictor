@@ -26,32 +26,6 @@ from src.utils import (
     plot_confusion_matrix
 )
 
-def split_data(df: pd.DataFrame):
-    # INDEPENDENT VARIABLES
-    df_independent = df.drop('attrition_flag', axis=1)
-
-    # DEPENDENT VARIABLE
-    df_target = df['attrition_flag']
-
-    # --- Split data into 70% training data and 30% temporary data --- #
-    x_training_data, x_temp_data, y_training_data, y_temp_data = train_test_split(
-        df_independent,
-        df_target,
-        test_size=DATA_TEMP_SPLIT,
-        random_state=SEED,
-        stratify=df_target
-    )
-
-    # --- Then take the remaining temporary data 30% and split in half --- #
-    x_validation_data, x_testing_data, y_validation_data, y_testing_data = train_test_split(
-        x_temp_data,
-        y_temp_data,
-        test_size=HALF_SPLIT,
-        random_state=SEED,
-        stratify=y_temp_data
-    )
-
-    return x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data
 
 def impute_missing_values(x_training_data, x_validation_data, x_testing_data):
     impute_columns = ['education_level', 'marital_status', 'income_category']
@@ -154,7 +128,7 @@ def run_model_performance(
     x_data: pd.DataFrame,
     y_data: pd.Series,
     title: str,
-    section: str="",
+    section: str='',
     show_classify: bool=False
     ) -> None:
 

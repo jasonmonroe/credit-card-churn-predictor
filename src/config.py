@@ -3,9 +3,13 @@
 # ==================================
 #  CONSTANTS
 # ==================================
-FILE_NAME = 'sample_data.csv'
-SOURCE_PATH = 'data/'
-CSV_FILE = SOURCE_PATH + FILE_NAME
+SAMPLE_FILE = 'data/sample_data.csv'
+SEEDER_FILE = 'data/seeder_data.csv'
+DATASET_FILE = 'data/dataset.csv'
+
+
+# Customer Churn Rate (16%)
+CUST_CHURN_RATE = 0.16
 
 # Specifies the number of base estimators (individual models) that will be trained
 # and combined to form the final ensemble model.

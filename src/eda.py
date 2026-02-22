@@ -64,15 +64,10 @@ def run_eda(df: pd.DataFrame):
     print(inactive_data)
 
     histogram_boxplot(df, 'months_inactive_12_mon', 'Last 12 months of customer inactivity')
-
     histogram_boxplot(df, 'customer_age', 'Ages of Customers Histogram')
-
     histogram_boxplot(df, 'months_on_book', 'Months on the books Histogram')
-
     histogram_boxplot(df, 'total_relationship_count')
-
     histogram_boxplot(df, 'months_inactive_12_mon', 'Inactive customers of at least 1 year')
-
     histogram_boxplot(df, 'contacts_count_12_mon', 'Customer contacts for the last 12 months')
 
     # Count the number of contacts by highest frequency

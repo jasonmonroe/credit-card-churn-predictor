@@ -3,9 +3,13 @@
 import gc
 import pandas as pd
 import numpy as np
+
 from src.config import *
 from src.eda import run_eda
 from src import utils
+from src import preprocessing
+from src.preprocessing import split_seeder_data
+
 from src.modeling import (
     split_data,
     impute_missing_values,
@@ -27,24 +31,24 @@ from xgboost import XGBClassifier
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import make_scorer, precision_score
 
+
+
+
 def main():
     # Load data
-    data = pd.read_csv(CSV_FILE)
+    #ata = pd.read_csv(CSV_FILE)
 
     # Create a copy of the data (that will be used later)
-    df = data.copy()
-
-    # Remove "N/A" from Education Level, "NaN" from Marital Status and "abc" from the Income Category
-    df['education_level'] = df['education_level'].replace('N/A', np.nan)
-    df['marital_status'] = df['marital_status'].replace('NaN', np.nan)
-    df['income_category'] = df['income_category'].replace('abc', np.nan)
+    #df = data.copy()
+    df = preprocessing.load_data()
+    df = preprocessing.clean_data(df)
 
 
     # Run EDA
     run_eda(df)
 
     # Split Data
-    x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data = split_data(df)
+    x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data = split_seeder_data(df)
 
     # Impute Missing Values
     x_training_data, x_validation_data, x_testing_data = impute_missing_values(x_training_data, x_validation_data, x_testing_data)

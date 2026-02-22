@@ -76,8 +76,8 @@ def histogram_boxplot(data: pd.DataFrame, feature: str, chart_title: str='', fig
 
     data: dataframe
     feature: dataframe column
-    figsize: size of figure (default (12,7))
-    kde: whether to the show density curve (default False)
+    figsize: size of a figure (default (12,7))
+    kde: whether to show density curve (default False)
     bins: number of bins for histogram (default None)
     """
 
@@ -107,7 +107,6 @@ def histogram_boxplot(data: pd.DataFrame, feature: str, chart_title: str='', fig
         #plt.title(chart_title.title() + 'Histogram')
 
     plt.title(chart_title_str + ' Histogram')
-
 
     ax_hist2.axvline(
         data[feature].mean(), color="green", linestyle="--"
@@ -192,18 +191,18 @@ def stacked_barplot(data: pd.DataFrame, predictor: str, target: str):
     print(tab1)
     print('\n')
 
-    tab = pd.crosstab(data[predictor], data[target], normalize="index").sort_values(
+    tab = pd.crosstab(data[predictor], data[target], normalize='index').sort_values(
         by=sorter,
         ascending=False
     )
 
-    tab.plot(kind="bar", stacked=True, figsize=(count + 1, 5))
+    tab.plot(kind='bar', stacked=True, figsize=(count + 1, 5))
     plt.legend(
-        loc="lower left",
+        loc='lower left',
         frameon=False,
     )
 
-    plt.legend(loc="upper left", bbox_to_anchor=(1, 1))
+    plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
     plt.show()
 
 ### Function to plot distributions
@@ -289,7 +288,7 @@ def plot_confusion_matrix(model, X, y_true):
     y_true: True target labels
 
     Returns:
-    Heatmap showing TP, FP, TN, FN.
+    Heatmap showing TP (True Positives), FP (False Positives), TN (True Negatives), FN (False Negatives).
     """
 
     # Predict the target for the given features
@@ -301,7 +300,7 @@ def plot_confusion_matrix(model, X, y_true):
     # Calculate percentages for each cell in the confusion matrix
     cm_percentage = cm / cm.sum() * PERCENTILE
 
-    # Add a label to chart.
+    # Add a label to the chart.
     labels = np.asarray([
         [f"{int(cm[i, j])}\n{cm_percentage[i, j]:.2f}%" for j in range(len(cm))]
         for i in range(len(cm))
@@ -309,17 +308,23 @@ def plot_confusion_matrix(model, X, y_true):
 
     # Display the confusion matrix as a heatmap
     plt.figure(figsize=(6, 4))
-    hm = sns.heatmap(cm, annot=labels, fmt='', cbar=False,
-                xticklabels=model.classes_, yticklabels=model.classes_)
+    hm = sns.heatmap(
+        cm,
+        annot=labels,
+        fmt='',
+        cbar=False,
+        xticklabels=model.classes_,
+        yticklabels=model.classes_
+    )
 
 
     plt.title("Confusion Matrix Heatmap")
     plt.show()
 
     # Extract TP, FP, TN, FN and print them
-    TN, FP, FN, TP = cm.ravel()
+    true_negatives, false_positives, false_negatives, true_positives = cm.ravel()
 
-    print(f"\nTrue Positives (TP): {TP}")
-    print(f"False Positives (FP): {FP}")
-    print(f"True Negatives (TN): {TN}")
-    print(f"False Negatives (FN): {FN}")
+    print(f"\nTrue Positives (TP): {true_positives}")
+    print(f"False Positives (FP): {false_positives}")
+    print(f"True Negatives (TN): {true_negatives}")
+    print(f"False Negatives (FN): {false_negatives}")
