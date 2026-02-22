@@ -20,7 +20,7 @@ from src.modeling import (
     undersample_data,
     pick_top_model,
     model_performance_classification_sklearn,
-    plot_confusion_matrix
+    plot_confusion_matrix, build_models
 )
 from sklearn.ensemble import (
     AdaBoostClassifier,
@@ -69,7 +69,8 @@ def main():
 
 
     # Build Model with original data
-    models = build_model()
+    # models = build_model()
+    models = build_models()
     run_model_performance(models, x_training_data, y_training_data, x_training_data, y_training_data, 'Original Data Model', 'Training Performance')
     run_model_performance(models, x_training_data, y_training_data, x_validation_data, y_validation_data, 'Original Data Model', 'Validation Performance')
     run_model_performance(models, None, None, x_training_data, y_training_data, 'Original Data Model', 'Classification by Model(s)', True)

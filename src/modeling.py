@@ -67,6 +67,8 @@ def encode_data(x_training_data, x_validation_data, x_testing_data, y_training_d
 
     return x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data
 
+
+# defunct
 def build_model():
 
     models = []  # Empty list to store all the models
@@ -99,6 +101,47 @@ def build_model():
     )
 
     return models
+
+
+def build_models():
+    models = [
+        {'Bagging': bagging_model()},
+        {'Random forest': random_forest_model()},
+        {'AdaBoost': ada_boost_model()},
+        {'Gradient Boosting': gradient_boosting_model()},
+        {'XGBoost': xgboost_model()}
+    ]
+
+    return models
+
+def bagging_model():
+    return BaggingClassifier(
+        random_state=SEED,
+        n_estimators=BASE_ESTIMATOR_CNT)
+
+
+def random_forest_model():
+    return RandomForestClassifier(
+        max_depth=NODE_RFC_CNT,
+        n_estimators=UNTUNED_ESTIMATOR_CNT,
+        min_samples_split=10,
+        min_samples_leaf=5,
+        max_features='sqrt')
+
+
+def ada_boost_model():
+    return AdaBoostClassifier(random_state=SEED)
+
+def gradient_boosting_model():
+    return GradientBoostingClassifier(random_state=SEED)
+
+def xgboost_model():
+    return XGBClassifier(
+        n_estimators=UNTUNED_ESTIMATOR_CNT,
+        max_depth=NODE_XGBOOST_CNT,
+        learning_rate= UNTUNED_LEARNING_RATE,
+        reg_alpha=0.3,
+        reg_lambda=0.3)
 
 
 def show_fit_model_scores(
