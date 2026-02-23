@@ -1,5 +1,8 @@
 # src/config.py
 
+import numpy as np
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import AdaBoostClassifier
 # ==================================
 #  CONSTANTS
 # ==================================
@@ -62,30 +65,30 @@ TUNED_LEARNING_RATE = 0.1
 UNTUNED_ESTIMATOR_CNT = 50
 UNTUNED_LEARNING_RATE = 0.05
 
-DECISION_TREE_PARAMS = {
+GB_PARAMS = {
     "init": [
-        "AdaBoostClassifier(random_state=SEED)",
-        "DecisionTreeClassifier(random_state=SEED)"
+        AdaBoostClassifier(random_state=SEED),
+        DecisionTreeClassifier(random_state=SEED)
         ],
-    "n_estimators": "np.arange(50, 110, 25)",
-    "learning_rate": "[0.01, 0.1, 0.05]",
-    "subsample": "[0.7, 0.9]",
-    "max_features": "[0.5, 0.7, 1]",
+    "n_estimators": np.arange(50, 110, 25),
+    "learning_rate": [0.01, 0.1, 0.05],
+    "subsample": [0.7, 0.9],
+    "max_features": [0.5, 0.7, 1],
 }
 
 ADA_BOOST_PARAMS = {
-    "n_estimators": "np.arange(50, 110, 25)",
-    "learning_rate": "[0.01, 0.1, 0.05]",
+    "n_estimators": np.arange(50, 110, 25),
+    "learning_rate": [0.01, 0.1, 0.05],
     "estimator": [
-        "DecisionTreeClassifier(max_depth=2, random_state=SEED)",
-        "DecisionTreeClassifier(max_depth=3, random_state=SEED)",
+        DecisionTreeClassifier(max_depth=2, random_state=SEED),
+        DecisionTreeClassifier(max_depth=3, random_state=SEED),
     ],
 }
 
 XGB_BOOST_PARAMS = {
-    'n_estimators':"np.arange(50, 110, 25)",
-    'scale_pos_weight':'[1, 2, 5]',
-    'learning_rate':'[0.01, 0.1, 0.05]',
-    'gamma':'[1, 3]',
-    'subsample':'[0.7, 0.9]'
+    'n_estimators': np.arange(50, 110, 25),
+    'scale_pos_weight': [1, 2, 5],
+    'learning_rate': [0.01, 0.1, 0.05],
+    'gamma': [1, 3, 5],
+    'subsample': [0.7, 0.9]
 }

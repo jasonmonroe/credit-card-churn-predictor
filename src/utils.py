@@ -2,7 +2,6 @@
 
 import time
 import pandas as pd
-import numpy as np
 import random
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -22,7 +21,7 @@ from src.config import *
 # --- Functions --- #
 def get_run_id() -> str:
     """ Generates a unique ID for the current run. """
-    return 'RUN ID:' + str(random.randint(10000, 99999))
+    return 'RUN ID: ' + str(random.randint(10000, 99999))
 
 
 def start_timer() -> float:
@@ -34,7 +33,7 @@ def start_timer() -> float:
 
 def get_time(start_time_float: float) -> str:
     diff = abs(time.time() - start_time_float)
-    hours, remainder = divmod(diff, SECS_IN_MIN*SECS_IN_MIN)
+    _, remainder = divmod(diff, SECS_IN_MIN*SECS_IN_MIN)
     minutes, seconds = divmod(remainder, SECS_IN_MIN)
     fractional_seconds = seconds - int(seconds)
 
@@ -46,28 +45,22 @@ def show_timer(start_time_int: float) -> None:
     print(f"Run Time: {get_time(start_time_int)}")
 
 
-def show_banner(title: str, section: str='') -> None:
+def show_banner(title: str, section: str = '') -> None:
+    """Prints a stylized banner for console readability."""
     padding = 2
     strlen = len(title) + padding
+    line = '+-' + '-' * strlen + '-+'
 
-    # Top line
     print('')
-    print('+', end='+')
-    print('-' * strlen)
-    print('+', end='')
+    print(line)
+    print('|  ' + title.upper() + '  |')
+    print(line)
 
-    # Show title
-    print(' ' + title)
-
-    print('+', end='+')
-    print('-' * strlen)
-    print('')
-    #print('# ', end='')
-
-    # Show section
     if section:
-        print(' ' + section)
-        print("\n")
+        print('| ' + section)
+
+    print('')
+
 
 # function to plot a boxplot and a histogram along the same scale.
 def histogram_boxplot(data: pd.DataFrame, feature: str, chart_title: str='', figsize:tuple=(12, 7), kde:bool=False, bins=None):
@@ -77,7 +70,7 @@ def histogram_boxplot(data: pd.DataFrame, feature: str, chart_title: str='', fig
     data: dataframe
     feature: dataframe column
     figsize: size of a figure (default (12,7))
-    kde: whether to show density curve (default False)
+    kde: whether to show a density curve (default False)
     bins: number of bins for histogram (default None)
     """
 
@@ -104,7 +97,6 @@ def histogram_boxplot(data: pd.DataFrame, feature: str, chart_title: str='', fig
 
     if chart_title:
         chart_title_str = chart_title.title().replace('_', ' ')
-        #plt.title(chart_title.title() + 'Histogram')
 
     plt.title(chart_title_str + ' Histogram')
 

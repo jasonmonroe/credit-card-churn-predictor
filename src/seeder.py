@@ -2,7 +2,6 @@
 
 import numpy as np
 import pandas as pd
-import random
 
 from src.config import *
 
@@ -46,7 +45,7 @@ def run():
     seeder_data = []
 
     # Pick how many rows of data that will be created (200 to 10,000 rows).
-    num_rows = random.randint(200, 10000)
+    num_rows = rng.integers(200, 10000)
 
     for _ in range(num_rows):
         # 1. Determine Attrition (~16% Churn)
@@ -54,16 +53,21 @@ def run():
         attrition_flag = 'Attrited Customer' if is_churn else 'Existing Customer'
 
         # 2. Apply Behavioral Correlation
-        if is_churn:
-            rel_count = rng.integers(1, 4)      # Lower relationships
-            inactive_12 = rng.integers(3, 7)    # Higher inactivity
-            trans_ct = rng.integers(10, 50)     # Lower transaction count
-            contacts_12 = rng.integers(3, 7)    # Higher bank contacts
+        # Introduce noise: 5% chance to decouple behavior from attrition status (simulating outliers)
+        simulate_churn_behavior = is_churn
+        if rng.random() < 0.05:
+            simulate_churn_behavior = not simulate_churn_behavior
+
+        if simulate_churn_behavior:
+            rel_count = rng.integers(1, 6)      # Lower relationships (widened for overlap)
+            inactive_12 = rng.integers(2, 7)    # Higher inactivity (widened for overlap)
+            trans_ct = rng.integers(10, 85)     # Lower transaction count (widened for overlap)
+            contacts_12 = rng.integers(2, 7)    # Higher bank contacts (widened for overlap)
         else:
-            rel_count = rng.integers(3, 7)      # Higher relationships
-            inactive_12 = rng.integers(0, 4)    # Lower inactivity
-            trans_ct = rng.integers(40, 140)    # Higher transaction count
-            contacts_12 = rng.integers(0, 4)    # Lower bank contacts
+            rel_count = rng.integers(2, 7)      # Higher relationships
+            inactive_12 = rng.integers(0, 5)    # Lower inactivity
+            trans_ct = rng.integers(30, 140)    # Higher transaction count
+            contacts_12 = rng.integers(0, 5)    # Lower bank contacts
 
         # 3. Generate Numerical values
         client_num = rng.integers(700000000, 899999999)
@@ -89,9 +93,9 @@ def run():
         ct_chng = round(rng.uniform(0.0, 3.7), 3)
 
         seeder_data.append([
-            client_num, attrition_flag, age, random.choice(['M', 'F']),
-            dependents, random.choice(edu_levels), random.choice(maritals),
-            random.choice(incomes), random.choice(cards), months_on_book,
+            client_num, attrition_flag, age, rng.choice(['M', 'F']),
+            dependents, rng.choice(edu_levels), rng.choice(maritals),
+            rng.choice(incomes), rng.choice(cards), months_on_book,
             rel_count, inactive_12, contacts_12, limit, revolving_bal,
             open_to_buy, amt_chng, trans_amt, trans_ct, ct_chng, utilization
         ])

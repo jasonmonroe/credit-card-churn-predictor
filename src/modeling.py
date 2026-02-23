@@ -25,41 +25,6 @@ from src.utils import (
 )
 
 
-# defunct
-def __build_model():
-
-    models = []  # Empty list to store all the models
-
-    # Appending models into the list
-    models.append(('Bagging', BaggingClassifier(
-        random_state=SEED,
-        n_estimators=BASE_ESTIMATOR_CNT)
-      )
-    )
-    models.append(('Random forest', RandomForestClassifier(
-        max_depth=NODE_RFC_CNT,
-        n_estimators=UNTUNED_ESTIMATOR_CNT,
-        min_samples_split=10,
-        min_samples_leaf=5,
-        max_features='sqrt')
-      )
-    )
-
-    # Appending extra models to perfect data
-    models.append(('AdaBoost', AdaBoostClassifier(random_state=SEED)))
-    models.append(('Gradient Boosting', GradientBoostingClassifier(random_state=SEED)))
-    models.append(('XGBoost', XGBClassifier(
-        n_estimators=UNTUNED_ESTIMATOR_CNT,
-        max_depth=NODE_XGBOOST_CNT,
-        learning_rate= UNTUNED_LEARNING_RATE,
-        reg_alpha=0.3,
-        reg_lambda=0.3)
-      )
-    )
-
-    return models
-
-
 def build_models():
     models = [
         ('Bagging', bagging_model()),
@@ -190,30 +155,3 @@ def pick_top_model(xgb_model_scores: pd.DataFrame, xgb_models: list) -> XGBClass
     print(xgb_model_scores[top_m_title]) # Fixed line: Use top_m_title (string) instead of top_m_index (integer)
 
     return top_m
-
-
-def run_model():
-    """
-    Run original, oversampled, undersampled model(s)
-    :return:
-    """
-    pass
-
-
-def tune_model():
-    """
-    Tune original, oversampled, undersampled model(s)
-
-    init, scorer, params, randomized search, fit
-
-    init, randomized search, fit
-    :return:
-    """
-    pass
-
-def run_orig_model():
-    pass
-
-
-def run_oversampled_model():
-    pass

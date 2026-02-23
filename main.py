@@ -32,6 +32,8 @@ from xgboost import XGBClassifier
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import make_scorer, precision_score
 
+from src.utils import show_banner
+
 
 def get_df(seed_data=False):
 
@@ -50,6 +52,35 @@ def run_eda_pipeline(seed_data=False):
     run_eda(df)
 
     print('EDA complete.')
+
+
+def tune_and_evaluate(estimator, params, x_train, y_train, x_val, y_val, scorer):
+    """
+    Helper function to perform RandomizedSearchCV, fit the best model, and calculate scores.
+    """
+    randomized_cv = RandomizedSearchCV(
+        estimator=estimator,
+        param_distributions=params,
+        n_iter=PARAM_DISTR_CNT,
+        n_jobs=MAX_PROC_THREADS,
+        scoring=scorer,
+        cv=CV_FOLDS,
+        random_state=SEED
+    )
+    randomized_cv.fit(x_train, y_train)
+    print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
+
+    # Re-instantiate or use best_estimator_ directly. 
+    # Using best_estimator_ is safer as it contains the fitted model with best params.
+    best_model = randomized_cv.best_estimator_
+    
+    # If you specifically wanted to re-fit on x_train (though best_estimator_ is already refit on the passed x_train)
+    # best_model.fit(x_train, y_train) 
+
+    train_scores = model_performance_classification_sklearn(best_model, x_train, y_train)
+    val_scores = model_performance_classification_sklearn(best_model, x_val, y_val)
+
+    return best_model, train_scores, val_scores
 
 
 def main(seed_data=False):
@@ -98,318 +129,78 @@ def main(seed_data=False):
     run_model_performance(undersample_models, x_training_undersample, y_training_undersample, x_validation_data, y_validation_data, 'Undersampled Data Models', 'Validation Performance')
     run_model_performance(undersample_models, None, None, x_training_undersample, y_training_undersample, 'Undersampled Data Models', 'Classification by Model(s)', True)
 
-    # Hyperparameter Tuning
-    # Gradient Boosting
-    gbc = GradientBoostingClassifier(random_state=SEED)
-    scorer = make_scorer(precision_score)
+    # --- Hyperparameter Tuning ---
+    scorer = make_scorer(precision_score, zero_division=0)
 
-    # Evaluate params for RandomizedSearchCV
-    decision_tree_params = {
-        "init": [
-            AdaBoostClassifier(random_state=SEED),
-            DecisionTreeClassifier(random_state=SEED)
-        ],
-        "n_estimators": np.arange(50, 110, 25),
-        "learning_rate": [0.01, 0.1, 0.05],
-        "subsample": [0.7, 0.9],
-        "max_features": [0.5, 0.7, 1],
+    # Define the datasets to iterate over
+    datasets = {
+        'Original': (x_training_data, y_training_data),
+        'Oversampled': (x_training_oversample, y_training_oversample),
+        'Undersampled': (x_training_undersample, y_training_undersample)
     }
 
-    randomized_cv = RandomizedSearchCV(
-        estimator=gbc,
-        param_distributions=decision_tree_params,
-        n_iter=PARAM_DISTR_CNT,
-        n_jobs=MAX_PROC_THREADS,
-        scoring=scorer,
-        cv=CV_FOLDS,
-        random_state=SEED
-    )
-    randomized_cv.fit(x_training_data, y_training_data)
-    print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
+    # Define models and their configs
+    # Format: (Name, Estimator, Params)
+    models_config = [
+        ('Gradient Boosting', GradientBoostingClassifier(random_state=SEED), GB_PARAMS),
+        ('AdaBoost', AdaBoostClassifier(random_state=SEED), ADA_BOOST_PARAMS),
+        ('XGBoost', XGBClassifier(random_state=SEED), XGB_BOOST_PARAMS)
+    ]
 
-    gbc_tuned = GradientBoostingClassifier(
-        random_state=SEED,
-        n_estimators=TUNED_ESTIMATOR_CNT,
-        learning_rate=TUNED_LEARNING_RATE,
-        subsample=SUB_SAMPLE_SIZE,
-        max_features=FEATURES_SPLIT_PCT
-    )
-    gbc_tuned.fit(x_training_data, y_training_data)
-    gbc_tuned_scores = model_performance_classification_sklearn(gbc_tuned, x_training_data, y_training_data)
-    gbc_tuned_validation_scores = model_performance_classification_sklearn(gbc_tuned, x_validation_data, y_validation_data)
+    # Storage for results
+    training_results_list = []
+    validation_results_list = []
+    column_names = []
+    
+    # Specific storage for XGBoost comparison later
+    xgb_models_storage = {} 
 
-    # Gradient Boosting Oversampled
-    gbc_oversample = GradientBoostingClassifier(random_state=SEED)
-    randomized_cv = RandomizedSearchCV(
-        estimator=gbc_oversample,
-        param_distributions=decision_tree_params,
-        n_iter=PARAM_DISTR_CNT,
-        n_jobs=MAX_PROC_THREADS,
-        scoring=scorer,
-        cv=CV_FOLDS,
-        random_state=SEED
-    )
-    randomized_cv.fit(x_training_oversample, y_training_oversample)
-    print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
+    for model_name, estimator, params in models_config:
+        for data_name, (x_train, y_train) in datasets.items():
+            full_name = f"{model_name} {data_name}"
+            show_banner(f"Tuning {full_name}")
 
-    gbc_tuned_oversample = GradientBoostingClassifier(
-        random_state=SEED,
-        n_estimators=TUNED_ESTIMATOR_CNT,
-        learning_rate=TUNED_LEARNING_RATE,
-        subsample=SUB_SAMPLE_SIZE,
-        max_features=FEATURES_SPLIT_PCT
-    )
-    gbc_tuned_oversample.fit(x_training_oversample, y_training_oversample)
-    gbc_tuned_oversample_scores = model_performance_classification_sklearn(gbc_tuned_oversample, x_training_oversample, y_training_oversample)
-    gbc_tuned_oversample_validation_scores = model_performance_classification_sklearn(gbc_tuned_oversample, x_validation_data, y_validation_data)
+            best_model, train_score, val_score = tune_and_evaluate(
+                estimator, params, x_train, y_train, x_validation_data, y_validation_data, scorer
+            )
 
-    # Gradient Boosting Undersampled
-    gbc_undersample = GradientBoostingClassifier(random_state=SEED)
-    randomized_cv = RandomizedSearchCV(
-        estimator=gbc_undersample,
-        param_distributions=decision_tree_params,
-        n_iter=PARAM_DISTR_CNT,
-        n_jobs=MAX_PROC_THREADS,
-        scoring=scorer,
-        cv=CV_FOLDS,
-        random_state=SEED
-    )
-    randomized_cv.fit(x_training_undersample, y_training_undersample)
-    print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
+            # Store scores for the big comparison table
+            training_results_list.append(train_score.T)
+            validation_results_list.append(val_score.T)
+            column_names.append(full_name)
 
-    gbc_tuned_undersample = GradientBoostingClassifier(
-        random_state=SEED,
-        n_estimators=TUNED_ESTIMATOR_CNT,
-        learning_rate=TUNED_LEARNING_RATE,
-        subsample=SUB_SAMPLE_SIZE,
-        max_features=FEATURES_SPLIT_PCT
-    )
-    gbc_tuned_undersample.fit(x_training_undersample, y_training_undersample)
-    gbc_tuned_undersample_scores = model_performance_classification_sklearn(gbc_tuned_undersample, x_training_undersample, y_training_undersample)
-    gbc_tuned_undersample_validation_scores = model_performance_classification_sklearn(gbc_tuned_undersample, x_validation_data, y_validation_data)
-
-    # AdaBoost Original
-    ada = AdaBoostClassifier(random_state=SEED)
-
-    ada_boost_params = {
-        "n_estimators": np.arange(50, 110, 25),
-        "learning_rate": [0.01, 0.1, 0.05],
-        "estimator": [
-            DecisionTreeClassifier(max_depth=2, random_state=SEED),
-            DecisionTreeClassifier(max_depth=3, random_state=SEED),
-        ],
-    }
-
-    randomized_cv = RandomizedSearchCV(
-        estimator=ada,
-        param_distributions=ada_boost_params,
-        n_iter=PARAM_DISTR_CNT,
-        n_jobs=MAX_PROC_THREADS,
-        scoring=scorer,
-        cv=CV_FOLDS,
-        random_state=SEED
-    )
-    randomized_cv.fit(x_training_data, y_training_data)
-    print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
-
-    ada_tuned = AdaBoostClassifier(
-        random_state=SEED,
-        n_estimators=TUNED_ESTIMATOR_CNT,
-        learning_rate=TUNED_LEARNING_RATE,
-        estimator=DecisionTreeClassifier(max_depth=2, random_state=SEED),
-    )
-    ada_tuned.fit(x_training_data, y_training_data)
-    ada_tuned_scores = model_performance_classification_sklearn(ada_tuned, x_training_data, y_training_data)
-    ada_tuned_validation_scores = model_performance_classification_sklearn(ada_tuned, x_validation_data, y_validation_data)
-
-    # AdaBoost Oversampled
-    ada_oversample = AdaBoostClassifier(random_state=SEED)
-    randomized_cv = RandomizedSearchCV(
-        estimator=ada_oversample,
-        param_distributions=ada_boost_params,
-        n_iter=PARAM_DISTR_CNT,
-        n_jobs=MAX_PROC_THREADS,
-        scoring=scorer,
-        cv=CV_FOLDS,
-        random_state=SEED
-    )
-    randomized_cv.fit(x_training_oversample, y_training_oversample)
-    print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
-
-
-    ada_tuned_oversample = AdaBoostClassifier(
-        random_state=SEED,
-        n_estimators=TUNED_ESTIMATOR_CNT,
-        learning_rate=TUNED_LEARNING_RATE,
-        estimator=DecisionTreeClassifier(max_depth=2, random_state=SEED),
-    )
-    ada_tuned_oversample.fit(x_training_oversample, y_training_oversample)
-    ada_tuned_oversample_scores = model_performance_classification_sklearn(ada_tuned_oversample, x_training_oversample, y_training_oversample)
-    ada_tuned_oversample_validation_scores = model_performance_classification_sklearn(ada_tuned_oversample, x_validation_data, y_validation_data)
-
-    # AdaBoost Undersampled
-    ada_undersample = AdaBoostClassifier(random_state=SEED)
-    randomized_cv = RandomizedSearchCV(
-        estimator=ada_undersample,
-        param_distributions=ada_boost_params,
-        n_iter=PARAM_DISTR_CNT,
-        n_jobs=MAX_PROC_THREADS,
-        scoring=scorer,
-        cv=CV_FOLDS,
-        random_state=SEED
-    )
-    randomized_cv.fit(x_training_undersample, y_training_undersample)
-    print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
-
-    ada_tuned_undersample = AdaBoostClassifier(
-        random_state=SEED,
-        n_estimators=TUNED_ESTIMATOR_CNT,
-        learning_rate=TUNED_LEARNING_RATE,
-        estimator=DecisionTreeClassifier(max_depth=2, random_state=SEED),
-    )
-    ada_tuned_undersample.fit(x_training_undersample, y_training_undersample)
-    ada_tuned_undersample_scores = model_performance_classification_sklearn(ada_tuned_undersample, x_training_undersample, y_training_undersample)
-    ada_tuned_undersample_validation_scores = model_performance_classification_sklearn(ada_tuned_undersample, x_validation_data, y_validation_data)
-
-    # XGBoost Original
-    xgb = XGBClassifier(random_state=SEED)
-
-    xgb_boost_params = {
-        'n_estimators':np.arange(50, 110, 25),
-        'scale_pos_weight':[1, 2, 5],
-        'learning_rate':[0.01, 0.1, 0.05],
-        'gamma':[1, 3],
-        'subsample':[0.7, 0.9]
-    }
-
-    randomized_cv = RandomizedSearchCV(
-        estimator=xgb,
-        param_distributions=xgb_boost_params,
-        n_iter=PARAM_DISTR_CNT,
-        n_jobs=MAX_PROC_THREADS,
-        scoring=scorer,
-        cv=CV_FOLDS,
-        random_state=SEED
-    )
-    randomized_cv.fit(x_training_data, y_training_data)
-    print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
-
-    xgb_tuned = XGBClassifier(
-        random_state=SEED,
-        n_estimators=UNTUNED_ESTIMATOR_CNT,
-        learning_rate=TUNED_LEARNING_RATE,
-        subsample=SUB_SAMPLE_SIZE,
-        gamma=MIN_TREE_SPLIT
-    )
-    xgb_tuned.fit(x_training_data, y_training_data)
-    xgb_tuned_scores = model_performance_classification_sklearn(xgb_tuned, x_training_data, y_training_data)
-    xgb_tuned_validation_scores = model_performance_classification_sklearn(xgb_tuned, x_validation_data, y_validation_data)
-
-    # XGBoost Oversampled
-    xgb_oversample = XGBClassifier(random_state=SEED)
-    randomized_cv = RandomizedSearchCV(
-        estimator=xgb_oversample,
-        param_distributions=xgb_boost_params,
-        n_iter=PARAM_DISTR_CNT,
-        n_jobs=MAX_PROC_THREADS,
-        scoring=scorer,
-        cv=CV_FOLDS,
-        random_state=SEED
-    )
-    randomized_cv.fit(x_training_oversample, y_training_oversample)
-    print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
-
-    xgb_tuned_oversample = XGBClassifier(
-        random_state=SEED,
-        n_estimators=UNTUNED_ESTIMATOR_CNT,
-        learning_rate=TUNED_LEARNING_RATE,
-        subsample=SUB_SAMPLE_SIZE,
-        gamma=MIN_TREE_SPLIT
-    )
-    xgb_tuned_oversample.fit(x_training_oversample, y_training_oversample)
-    xgb_tuned_oversample_scores = model_performance_classification_sklearn(xgb_tuned_oversample, x_training_oversample, y_training_oversample)
-    xgb_tuned_oversample_validation_scores = model_performance_classification_sklearn(xgb_tuned_oversample, x_validation_data, y_validation_data)
-
-    # XGBoost Undersampled
-    xgb_undersample = XGBClassifier(random_state=SEED)
-    randomized_cv = RandomizedSearchCV(
-        estimator=xgb_undersample,
-        param_distributions=xgb_boost_params,
-        n_iter=PARAM_DISTR_CNT,
-        n_jobs=MAX_PROC_THREADS,
-        scoring=scorer,
-        cv=CV_FOLDS,
-        random_state=SEED
-    )
-    randomized_cv.fit(x_training_undersample, y_training_undersample)
-    print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
-
-    xgb_tuned_undersample = XGBClassifier(
-        random_state=SEED,
-        n_estimators=UNTUNED_ESTIMATOR_CNT,
-        learning_rate=TUNED_LEARNING_RATE,
-        subsample=SUB_SAMPLE_SIZE,
-        gamma=MIN_TREE_SPLIT
-    )
-    xgb_tuned_undersample.fit(x_training_undersample, y_training_undersample)
-    xgb_tuned_undersample_scores = model_performance_classification_sklearn(xgb_tuned_undersample, x_training_undersample, y_training_undersample)
-    xgb_tuned_undersample_validation_scores = model_performance_classification_sklearn(xgb_tuned_undersample, x_validation_data, y_validation_data)
+            # Store XGBoost models specifically for the final step
+            if model_name == 'XGBoost':
+                xgb_models_storage[data_name] = best_model
 
     # --- Comparison of Models --- #
 
     # Training Comparison
-    training_models = pd.concat([
-        gbc_tuned_scores.T,
-        gbc_tuned_oversample_scores.T,
-        gbc_tuned_undersample_scores.T,
-        ada_tuned_scores.T,
-        ada_tuned_oversample_scores.T,
-        ada_tuned_undersample_scores.T,
-        xgb_tuned_scores.T,
-        xgb_tuned_oversample_scores.T,
-        xgb_tuned_undersample_scores.T,
-    ], axis=1)
-
-    training_models.columns = [
-        'Gradient Boosting Original',
-        'Gradient Boosting Oversampled',
-        'Gradient Boosting Undersampled',
-        'AdaBoost Original',
-        'AdaBoost Oversampled',
-        'AdaBoost Undersampled',
-        'XGBoost Original',
-        'XGBoost Oversampled',
-        'XGBoost Undersampled'
-    ]
+    training_models = pd.concat(training_results_list, axis=1)
+    training_models.columns = column_names
+    # Rename columns to match original output format if strictly necessary, 
+    # but the generated names "Gradient Boosting Original", etc. are already correct.
+    
+    # Adjust column names to match the specific "Value" suffix used in original code for validation
+    val_cols = [f"{name} Value" for name in column_names]
+    
+    print("\n--- Training Comparison ---")
     print(training_models)
 
     # Validation Comparison
-    validation_models = pd.concat([
-        gbc_tuned_validation_scores.T,
-        gbc_tuned_oversample_validation_scores.T,
-        gbc_tuned_undersample_validation_scores.T,
-        ada_tuned_validation_scores.T,
-        ada_tuned_oversample_validation_scores.T,
-        ada_tuned_undersample_validation_scores.T,
-        xgb_tuned_validation_scores.T,
-        xgb_tuned_oversample_validation_scores.T,
-        xgb_tuned_undersample_validation_scores.T,
-    ], axis=1)
-
-    validation_models.columns = [
-        'Gradient Boosting Original Value',
-        'Gradient Boosting Oversampled Value',
-        'Gradient Boosting Undersampled Value',
-        'AdaBoost Original Value',
-        'AdaBoost Oversampled Value',
-        'AdaBoost Undersampled Value',
-        'XGBoost Original Value',
-        'XGBoost Oversampled Value',
-        'XGBoost Undersampled Value'
-    ]
+    validation_models = pd.concat(validation_results_list, axis=1)
+    validation_models.columns = val_cols
+    
+    print("\n--- Validation Comparison ---")
     print(validation_models)
 
-    # Test Final Performance
+    # Test Final Performance (XGBoost specific)
+    # Retrieve the specific models we stored
+    xgb_tuned_undersample = xgb_models_storage['Undersampled']
+    xgb_tuned_oversample = xgb_models_storage['Oversampled']
+    # Assuming "Original" is the "Tuned" one in the final comparison context
+    xgb_tuned = xgb_models_storage['Original'] 
+
     xgb_undersample_scores_model = model_performance_classification_sklearn(xgb_tuned_undersample, x_testing_data, y_testing_data)
     xgb_oversample_scores_model = model_performance_classification_sklearn(xgb_tuned_oversample, x_testing_data, y_testing_data)
     xgb_tuned_scores_model = model_performance_classification_sklearn(xgb_tuned, x_testing_data, y_testing_data)
@@ -435,6 +226,7 @@ def main(seed_data=False):
     print(xgb_comparison_models)
 
     # Final model (the highest score)
+    show_banner('Final Model w/ Plot Confusion Matrix')
     top_model = pick_top_model(xgb_comparison_models, xgb_models)
     model_performance_classification_sklearn(top_model, x_testing_data, y_testing_data)
     plot_confusion_matrix(top_model, x_testing_data, y_testing_data)    
@@ -444,7 +236,7 @@ def main(seed_data=False):
 if __name__ == '__main__':
     main_start_time = utils.start_timer()
     run_id = utils.get_run_id()
-    print(f'\n#--- {run_id} | START PROGRAM ---#')
+    print(f'\n# --- {run_id} | START PROGRAM --- #')
 
     # --- Check arguments ---
     parser = argparse.ArgumentParser(description='Credit Card Churn Predictor')
