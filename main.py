@@ -1,5 +1,5 @@
 # src/main.py
-
+import argparse
 import gc
 import pandas as pd
 import numpy as np
@@ -8,19 +8,20 @@ from src.config import *
 from src.eda import run_eda
 from src import utils
 from src import preprocessing
-from src.preprocessing import split_seeder_data
+from src.preprocessing import (
+    split_seeder_data,
+    impute_missing_values,
+    encode_data
+)
 
 from src.modeling import (
-    split_data,
-    impute_missing_values,
-    encode_data,
-    build_model,
     run_model_performance,
     oversample_data,
     undersample_data,
     pick_top_model,
     model_performance_classification_sklearn,
-    plot_confusion_matrix, build_models
+    plot_confusion_matrix,
+    build_models
 )
 from sklearn.ensemble import (
     AdaBoostClassifier,
@@ -32,20 +33,28 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import make_scorer, precision_score
 
 
-
-
-def main():
-    # Load data
-    #ata = pd.read_csv(CSV_FILE)
+def get_df(seed_data=False):
 
     # Create a copy of the data (that will be used later)
     #df = data.copy()
-    df = preprocessing.load_data()
+    df = preprocessing.load_data(seed_data)
     df = preprocessing.clean_data(df)
+    
+    return df
 
+def run_eda_pipeline(seed_data=False):
+    
+    df = get_df(seed_data)
 
     # Run EDA
     run_eda(df)
+
+    print('EDA complete.')
+
+
+def main(seed_data=False):
+    # Load and clean data
+    df = get_df(seed_data)
 
     # Split Data
     x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data = split_seeder_data(df)
@@ -70,21 +79,21 @@ def main():
 
     # Build Model with original data
     # models = build_model()
-    models = build_models()
-    run_model_performance(models, x_training_data, y_training_data, x_training_data, y_training_data, 'Original Data Model', 'Training Performance')
-    run_model_performance(models, x_training_data, y_training_data, x_validation_data, y_validation_data, 'Original Data Model', 'Validation Performance')
-    run_model_performance(models, None, None, x_training_data, y_training_data, 'Original Data Model', 'Classification by Model(s)', True)
+    orig_models = build_models()
+    run_model_performance(orig_models, x_training_data, y_training_data, x_training_data, y_training_data, 'Original Data Model', 'Training Performance')
+    run_model_performance(orig_models, x_training_data, y_training_data, x_validation_data, y_validation_data, 'Original Data Model', 'Validation Performance')
+    run_model_performance(orig_models, None, None, x_training_data, y_training_data, 'Original Data Model', 'Classification by Model(s)', True)
 
     # Oversampled Data
     x_training_oversample, y_training_oversample = oversample_data(x_training_data, y_training_data)
-    oversample_models = build_model()
+    oversample_models = build_models()
     run_model_performance(oversample_models, x_training_oversample, y_training_oversample, x_training_oversample, y_training_oversample, 'Oversampled Data Models', 'Training Performance')
     run_model_performance(oversample_models, x_training_oversample, y_training_oversample, x_validation_data, y_validation_data, 'Oversampled Data Models', 'Validation Performance')
     run_model_performance(oversample_models, None, None, x_training_oversample, y_training_oversample, 'Oversampled Data Models', 'Classification by Model(s)', True)
 
     # Undersampled Data
     x_training_undersample, y_training_undersample = undersample_data(x_training_data, y_training_data)
-    undersample_models = build_model()
+    undersample_models = build_models()
     run_model_performance(undersample_models, x_training_undersample, y_training_undersample, x_training_undersample, y_training_undersample, 'Undersampled Data Models', 'Training Performance')
     run_model_performance(undersample_models, x_training_undersample, y_training_undersample, x_validation_data, y_validation_data, 'Undersampled Data Models', 'Validation Performance')
     run_model_performance(undersample_models, None, None, x_training_undersample, y_training_undersample, 'Undersampled Data Models', 'Classification by Model(s)', True)
@@ -93,7 +102,7 @@ def main():
     # Gradient Boosting
     gbc = GradientBoostingClassifier(random_state=SEED)
     scorer = make_scorer(precision_score)
-    
+
     # Evaluate params for RandomizedSearchCV
     decision_tree_params = {
         "init": [
@@ -175,11 +184,13 @@ def main():
         subsample=SUB_SAMPLE_SIZE,
         max_features=FEATURES_SPLIT_PCT
     )
-    gbc_tuned_undersample.fit(x_training_data, y_training_data)
-    gbc_tuned_undersample_scores = model_performance_classification_sklearn(gbc_tuned_undersample, x_training_data, y_training_data)
+    gbc_tuned_undersample.fit(x_training_undersample, y_training_undersample)
+    gbc_tuned_undersample_scores = model_performance_classification_sklearn(gbc_tuned_undersample, x_training_undersample, y_training_undersample)
     gbc_tuned_undersample_validation_scores = model_performance_classification_sklearn(gbc_tuned_undersample, x_validation_data, y_validation_data)
 
     # AdaBoost Original
+    ada = AdaBoostClassifier(random_state=SEED)
+
     ada_boost_params = {
         "n_estimators": np.arange(50, 110, 25),
         "learning_rate": [0.01, 0.1, 0.05],
@@ -188,7 +199,7 @@ def main():
             DecisionTreeClassifier(max_depth=3, random_state=SEED),
         ],
     }
-    ada = AdaBoostClassifier(random_state=SEED)
+
     randomized_cv = RandomizedSearchCV(
         estimator=ada,
         param_distributions=ada_boost_params,
@@ -225,6 +236,7 @@ def main():
     randomized_cv.fit(x_training_oversample, y_training_oversample)
     print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
 
+
     ada_tuned_oversample = AdaBoostClassifier(
         random_state=SEED,
         n_estimators=TUNED_ESTIMATOR_CNT,
@@ -260,6 +272,8 @@ def main():
     ada_tuned_undersample_validation_scores = model_performance_classification_sklearn(ada_tuned_undersample, x_validation_data, y_validation_data)
 
     # XGBoost Original
+    xgb = XGBClassifier(random_state=SEED)
+
     xgb_boost_params = {
         'n_estimators':np.arange(50, 110, 25),
         'scale_pos_weight':[1, 2, 5],
@@ -267,7 +281,7 @@ def main():
         'gamma':[1, 3],
         'subsample':[0.7, 0.9]
     }
-    xgb = XGBClassifier(random_state=SEED)
+
     randomized_cv = RandomizedSearchCV(
         estimator=xgb,
         param_distributions=xgb_boost_params,
@@ -285,7 +299,6 @@ def main():
         n_estimators=UNTUNED_ESTIMATOR_CNT,
         learning_rate=TUNED_LEARNING_RATE,
         subsample=SUB_SAMPLE_SIZE,
-        max_features=FEATURES_SPLIT_PCT,
         gamma=MIN_TREE_SPLIT
     )
     xgb_tuned.fit(x_training_data, y_training_data)
@@ -311,7 +324,6 @@ def main():
         n_estimators=UNTUNED_ESTIMATOR_CNT,
         learning_rate=TUNED_LEARNING_RATE,
         subsample=SUB_SAMPLE_SIZE,
-        max_features=FEATURES_SPLIT_PCT,
         gamma=MIN_TREE_SPLIT
     )
     xgb_tuned_oversample.fit(x_training_oversample, y_training_oversample)
@@ -337,12 +349,13 @@ def main():
         n_estimators=UNTUNED_ESTIMATOR_CNT,
         learning_rate=TUNED_LEARNING_RATE,
         subsample=SUB_SAMPLE_SIZE,
-        max_features=FEATURES_SPLIT_PCT,
         gamma=MIN_TREE_SPLIT
     )
     xgb_tuned_undersample.fit(x_training_undersample, y_training_undersample)
     xgb_tuned_undersample_scores = model_performance_classification_sklearn(xgb_tuned_undersample, x_training_undersample, y_training_undersample)
     xgb_tuned_undersample_validation_scores = model_performance_classification_sklearn(xgb_tuned_undersample, x_validation_data, y_validation_data)
+
+    # --- Comparison of Models --- #
 
     # Training Comparison
     training_models = pd.concat([
@@ -396,7 +409,7 @@ def main():
     ]
     print(validation_models)
 
-    # Test set final performance
+    # Test Final Performance
     xgb_undersample_scores_model = model_performance_classification_sklearn(xgb_tuned_undersample, x_testing_data, y_testing_data)
     xgb_oversample_scores_model = model_performance_classification_sklearn(xgb_tuned_oversample, x_testing_data, y_testing_data)
     xgb_tuned_scores_model = model_performance_classification_sklearn(xgb_tuned, x_testing_data, y_testing_data)
@@ -424,7 +437,7 @@ def main():
     # Final model (the highest score)
     top_model = pick_top_model(xgb_comparison_models, xgb_models)
     model_performance_classification_sklearn(top_model, x_testing_data, y_testing_data)
-    plot_confusion_matrix(top_model, x_testing_data, y_testing_data)
+    plot_confusion_matrix(top_model, x_testing_data, y_testing_data)    
 
 
 # --- Main --- #
@@ -433,11 +446,30 @@ if __name__ == '__main__':
     run_id = utils.get_run_id()
     print(f'\n#--- {run_id} | START PROGRAM ---#')
 
-    # ----
-    main()
+    # --- Check arguments ---
+    parser = argparse.ArgumentParser(description='Credit Card Churn Predictor')
+    parser.add_argument(
+        '--mode',
+        type=str,
+        default='train',
+        choices=['train', 'eda'],
+        help='Execution mode: train (default) or eda'
+    )
+    parser.add_argument(
+        '--seed',
+        action='store_true',
+        help='Generate seed data and merge with sample data'
+    )
+
+    args = parser.parse_args()
+
+    if args.mode == 'eda':
+        run_eda_pipeline(args.seed)
+    else:
+        main(args.seed)
 
     gc.collect()
 
+    print('\n')
     utils.show_timer(main_start_time)
     print(f'\n#--- {run_id} | END PROGRAM ---#')
-

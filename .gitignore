@@ -3,3 +3,6 @@
 .idea
 
 venv
+
+data/dataset.csv
+data/seeder_data.csv

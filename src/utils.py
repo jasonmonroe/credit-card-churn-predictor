@@ -51,16 +51,16 @@ def show_banner(title: str, section: str='') -> None:
     strlen = len(title) + padding
 
     # Top line
-    #print("\n")
-    print('# ', end='')
-    print('=' * strlen)
-    print('#', end='')
+    print('')
+    print('+', end='+')
+    print('-' * strlen)
+    print('+', end='')
 
     # Show title
-    print('  ' + title)
+    print(' ' + title)
 
-    print('# ', end='')
-    print('=' * strlen)
+    print('+', end='+')
+    print('-' * strlen)
     print('')
     #print('# ', end='')
 
