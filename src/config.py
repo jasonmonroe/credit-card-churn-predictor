@@ -48,7 +48,7 @@ NODE_RFC_CNT = 4
 NODE_XGBOOST_CNT = 3
 
 # Number of different parameter combinations that will be tried.
-PARAM_DISTR_CNT = 10
+PARAM_DISTR_CNT = 50
 PERCENTILE = 100
 SECS_IN_MIN = 60
 SEED = 42
