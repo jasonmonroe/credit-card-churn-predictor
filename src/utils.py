@@ -23,13 +23,11 @@ def get_run_id() -> str:
     """ Generates a unique ID for the current run. """
     return 'RUN ID: ' + str(random.randint(10000, 99999))
 
-
 def start_timer() -> float:
     """
     Start a timer
     """
     return time.time()
-
 
 def get_time(start_time_float: float) -> str:
     diff = abs(time.time() - start_time_float)
@@ -40,10 +38,8 @@ def get_time(start_time_float: float) -> str:
     ms = fractional_seconds * MSEC
     return f"{int(minutes)}m {int(seconds)}s {int(ms)}ms"
 
-
 def show_timer(start_time_int: float) -> None:
     print(f"Run Time: {get_time(start_time_int)}")
-
 
 def show_banner(title: str, section: str = '') -> None:
     """Prints a stylized banner for console readability."""
@@ -60,7 +56,6 @@ def show_banner(title: str, section: str = '') -> None:
         print('| ' + section)
 
     print('')
-
 
 # function to plot a boxplot and a histogram along the same scale.
 def histogram_boxplot(data: pd.DataFrame, feature: str, chart_title: str='', figsize:tuple=(12, 7), kde:bool=False, bins=None):
@@ -197,7 +192,7 @@ def stacked_barplot(data: pd.DataFrame, predictor: str, target: str):
     plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
     plt.show()
 
-### Function to plot distributions
+# Function to plot distributions
 def distribution_plot_wrt_target(data, predictor, target):
 
     fig, axs = plt.subplots(2, 2, figsize=(12, 10))

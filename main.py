@@ -31,6 +31,7 @@ from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import make_scorer, precision_score
+from sklearn.model_selection import ParameterGrid
 
 from src.utils import show_banner
 
@@ -58,10 +59,14 @@ def tune_and_evaluate(estimator, params, x_train, y_train, x_val, y_val, scorer)
     """
     Helper function to perform RandomizedSearchCV, fit the best model, and calculate scores.
     """
+    # Calculate total parameter space size
+    total_params = len(ParameterGrid(params))
+    n_iter = min(PARAM_DISTR_CNT, total_params)
+
     randomized_cv = RandomizedSearchCV(
         estimator=estimator,
         param_distributions=params,
-        n_iter=PARAM_DISTR_CNT,
+        n_iter=n_iter,
         n_jobs=MAX_PROC_THREADS,
         scoring=scorer,
         cv=CV_FOLDS,

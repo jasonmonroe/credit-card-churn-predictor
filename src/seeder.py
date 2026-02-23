@@ -101,7 +101,7 @@ def run():
         ])
 
     # Create DataFrame
-    output_file = 'data/seeder_data.csv'
+    output_file = SEEDER_FILE
 
     df = pd.DataFrame(seeder_data, columns=csv_header_cols)
     df.to_csv(output_file, index=False)
