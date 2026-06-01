@@ -115,7 +115,7 @@ import pandas as pd
 import numpy as np
 import category_encoders as ce
 
-# Libaries to help with data visualization
+# Libraries to help with data visualization
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -290,7 +290,6 @@ carry a balance of at least $1,000 that's rolling over.
 9. The most transactions by a customer is significant higher than the bottom 75% which indicates there are a few high rollers that frequent this establishment.
 
 **Sanity Checks**
-
 
 1.   For the most part the data looks evenly distrubited.
 2.   There are at least 10,000 rows of data to perfect the UI storage?

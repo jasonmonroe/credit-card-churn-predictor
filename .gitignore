@@ -1,8 +1,17 @@
 # .gitignore
 
+.DS_Store
 .idea
-
+.iml
 venv
 
 data/dataset.csv
 data/seeder_data.csv
+
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints

@@ -30,6 +30,28 @@ def merge_seeder_data(df_sample: pd.DataFrame) -> pd.DataFrame:
 
     return df_combined
 
+def process_data(df: pd.DataFrame):
+    # Split Data
+    x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data = split_seeder_data(df)
+
+    # Impute Missing Values
+    x_training_data, x_validation_data, x_testing_data = impute_missing_values(x_training_data, x_validation_data, x_testing_data)
+
+    # Encode Data
+    x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data = encode_data(
+        x_training_data, x_validation_data, x_testing_data, y_training_data, y_validation_data, y_testing_data
+    )
+
+    return x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data
+
+def get_df(seed_data=False):
+
+    # Create a copy of the data (that will be used later)
+    #df = data.copy()
+    df = load_data(seed_data)
+    df = clean_data(df)
+
+    return df
 
 def split_seeder_data(df: pd.DataFrame):
     # INDEPENDENT VARIABLES
@@ -58,7 +80,6 @@ def split_seeder_data(df: pd.DataFrame):
 
     return x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data
 
-
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
 
     # Remove "N/A" from Education Level, "NaN" from Marital Status and "abc" from the Income Category
@@ -67,7 +88,6 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     df['income_category'] = df['income_category'].replace('abc', np.nan)
 
     return df
-
 
 def impute_missing_values(x_training_data, x_validation_data, x_testing_data):
     impute_columns = ['education_level', 'marital_status', 'income_category']
@@ -83,7 +103,6 @@ def impute_missing_values(x_training_data, x_validation_data, x_testing_data):
     x_testing_data[impute_columns] = imputer.transform(x_testing_data[impute_columns])
 
     return x_training_data, x_validation_data, x_testing_data
-
 
 def encode_data(x_training_data, x_validation_data, x_testing_data, y_training_data, y_validation_data, y_testing_data):
     # Find categorical features

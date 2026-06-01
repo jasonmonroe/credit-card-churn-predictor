@@ -126,7 +126,8 @@ def run_eda(df: pd.DataFrame):
     correlation_matrix = df_numerical.corr()
 
     # Display the correlation matrix
-    plt.figure(figsize=(12, 8))
+    title = 'Correlation Matrix'
+    plt.figure(num=f'{title}', figsize=(12, 8))
     sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
-    plt.title('Correlation Matrix')
+    plt.title(title)
     plt.show()

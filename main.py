@@ -2,18 +2,18 @@
 import argparse
 import gc
 import pandas as pd
-import numpy as np
 
-from src.config import *
+from src.config import (
+    ADA_BOOST_PARAMS,
+    GB_PARAMS,
+    SEED,
+    XGB_BOOST_PARAMS
+)
 from src.eda import run_eda
 from src import utils
-from src import preprocessing
 from src.preprocessing import (
-    split_seeder_data,
-    impute_missing_values,
-    encode_data
+    get_df, process_data
 )
-
 from src.modeling import (
     run_model_performance,
     oversample_data,
@@ -21,29 +21,15 @@ from src.modeling import (
     pick_top_model,
     model_performance_classification_sklearn,
     plot_confusion_matrix,
-    build_models
+    build_models, tune_and_evaluate
 )
 from sklearn.ensemble import (
     AdaBoostClassifier,
     GradientBoostingClassifier
 )
-from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
-from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import make_scorer, precision_score
-from sklearn.model_selection import ParameterGrid
-
 from src.utils import show_banner
-
-
-def get_df(seed_data=False):
-
-    # Create a copy of the data (that will be used later)
-    #df = data.copy()
-    df = preprocessing.load_data(seed_data)
-    df = preprocessing.clean_data(df)
-    
-    return df
 
 def run_eda_pipeline(seed_data=False):
     
@@ -54,44 +40,18 @@ def run_eda_pipeline(seed_data=False):
 
     print('EDA complete.')
 
+def run_main_pipeline(seed_data=False):
 
-def tune_and_evaluate(estimator, params, x_train, y_train, x_val, y_val, scorer):
-    """
-    Helper function to perform RandomizedSearchCV, fit the best model, and calculate scores.
-    """
-    # Calculate total parameter space size
-    total_params = len(ParameterGrid(params))
-    n_iter = min(PARAM_DISTR_CNT, total_params)
+    print('+-----------------------------+')
+    print('+ CREDIT CARD CHURN PREDICTOR +')
+    print('+-----------------------------+')
 
-    randomized_cv = RandomizedSearchCV(
-        estimator=estimator,
-        param_distributions=params,
-        n_iter=n_iter,
-        n_jobs=MAX_PROC_THREADS,
-        scoring=scorer,
-        cv=CV_FOLDS,
-        random_state=SEED
-    )
-    randomized_cv.fit(x_train, y_train)
-    print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
-
-    # Re-instantiate or use best_estimator_ directly. 
-    # Using best_estimator_ is safer as it contains the fitted model with best params.
-    best_model = randomized_cv.best_estimator_
-    
-    # If you specifically wanted to re-fit on x_train (though best_estimator_ is already refit on the passed x_train)
-    # best_model.fit(x_train, y_train) 
-
-    train_scores = model_performance_classification_sklearn(best_model, x_train, y_train)
-    val_scores = model_performance_classification_sklearn(best_model, x_val, y_val)
-
-    return best_model, train_scores, val_scores
-
-
-def main(seed_data=False):
     # Load and clean data
     df = get_df(seed_data)
 
+    x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data = process_data(df)
+
+    """
     # Split Data
     x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data = split_seeder_data(df)
 
@@ -102,6 +62,7 @@ def main(seed_data=False):
     x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data = encode_data(
         x_training_data, x_validation_data, x_testing_data, y_training_data, y_validation_data, y_testing_data
     )
+    """
 
     # Drop rows in X_train and y_train where y_train has NaN values
     y_training_data = y_training_data.dropna()
@@ -158,8 +119,7 @@ def main(seed_data=False):
     column_names = []
     
     # Specific storage for XGBoost comparison later
-    xgb_models_storage = {} 
-
+    xgb_models_storage = {}
     for model_name, estimator, params in models_config:
         for data_name, (x_train, y_train) in datasets.items():
             full_name = f"{model_name} {data_name}"
@@ -203,6 +163,7 @@ def main(seed_data=False):
     # Retrieve the specific models we stored
     xgb_tuned_undersample = xgb_models_storage['Undersampled']
     xgb_tuned_oversample = xgb_models_storage['Oversampled']
+
     # Assuming "Original" is the "Tuned" one in the final comparison context
     xgb_tuned = xgb_models_storage['Original'] 
 
@@ -263,7 +224,7 @@ if __name__ == '__main__':
     if args.mode == 'eda':
         run_eda_pipeline(args.seed)
     else:
-        main(args.seed)
+        run_main_pipeline(args.seed)
 
     gc.collect()
 

@@ -1,29 +1,38 @@
 # src/modeling.py
 
 import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
-from sklearn.metrics import recall_score, make_scorer, precision_score
+
+import matplotlib.pyplot as plt
+from sklearn.model_selection import RandomizedSearchCV, ParameterGrid
+from sklearn.metrics import recall_score, confusion_matrix
 from sklearn.ensemble import (
     BaggingClassifier,
     RandomForestClassifier,
     AdaBoostClassifier,
     GradientBoostingClassifier
 )
-from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
 from imblearn.over_sampling import SMOTE
 from imblearn.under_sampling import RandomUnderSampler
 
-from src.config import *
+from src.config import (
+    SEED,
+    BASE_ESTIMATOR_CNT,
+    NODE_RFC_CNT,
+    UNTUNED_ESTIMATOR_CNT,
+    NODE_XGBOOST_CNT,
+    UNTUNED_LEARNING_RATE,
+    PARAM_DISTR_CNT,
+    MAX_PROC_THREADS,
+    CV_FOLDS,
+    PERCENTILE
+)
 from src.utils import (
     start_timer,
     show_banner,
     show_timer,
-    model_performance_classification_sklearn,
-    plot_confusion_matrix
+    model_performance_classification_sklearn
 )
-
 
 def build_models():
     models = [
@@ -41,7 +50,6 @@ def bagging_model():
         random_state=SEED,
         n_estimators=BASE_ESTIMATOR_CNT)
 
-
 def random_forest_model():
     return RandomForestClassifier(
         max_depth=NODE_RFC_CNT,
@@ -49,7 +57,6 @@ def random_forest_model():
         min_samples_split=10,
         min_samples_leaf=5,
         max_features='sqrt')
-
 
 def ada_boost_model():
     return AdaBoostClassifier(random_state=SEED)
@@ -79,12 +86,10 @@ def show_fit_model_scores(
         scores_val = recall_score(y_data, model.predict(x_data))
         print("{}: {}".format(name, scores_val))
 
-
 def show_classification_model_perf(mods, x_data: pd.DataFrame, y_data: pd.Series):
     for name, model in mods:
         df_perf = model_performance_classification_sklearn(model, x_data, y_data)
         print(df_perf)
-
 
 def run_model_performance(
     mods: list,
@@ -117,7 +122,6 @@ def run_model_performance(
 
     show_timer(start_time)
 
-
 def oversample_data(x_training_data, y_training_data):
     # Synthetic Minority Over Sampling Technique
     sm = SMOTE(sampling_strategy=1, k_neighbors=5, random_state=SEED)
@@ -125,14 +129,12 @@ def oversample_data(x_training_data, y_training_data):
 
     return x_training_oversample, y_training_oversample
 
-
 def undersample_data(x_training_data, y_training_data):
     # Random under sampler for under sampling the data
     rus = RandomUnderSampler(sampling_strategy=1, random_state=SEED)
     x_training_undersample, y_training_undersample = rus.fit_resample(x_training_data, y_training_data)
 
     return x_training_undersample, y_training_undersample
-
 
 def pick_top_model(xgb_model_scores: pd.DataFrame, xgb_models: list) -> XGBClassifier :
     """
@@ -155,3 +157,78 @@ def pick_top_model(xgb_model_scores: pd.DataFrame, xgb_models: list) -> XGBClass
     print(xgb_model_scores[top_m_title]) # Fixed line: Use top_m_title (string) instead of top_m_index (integer)
 
     return top_m
+
+def tune_and_evaluate(estimator, params, x_train, y_train, x_val, y_val, scorer):
+    """
+    Helper function to perform RandomizedSearchCV, fit the best model, and calculate scores.
+    """
+    # Calculate total parameter space size
+    total_params = len(ParameterGrid(params))
+    n_iter = min(PARAM_DISTR_CNT, total_params)
+
+    randomized_cv = RandomizedSearchCV(
+        estimator=estimator,
+        param_distributions=params,
+        n_iter=n_iter,
+        n_jobs=MAX_PROC_THREADS,
+        scoring=scorer,
+        cv=CV_FOLDS,
+        random_state=SEED
+    )
+    randomized_cv.fit(x_train, y_train)
+    print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
+
+    # Re-instantiate or use best_estimator_ directly. 
+    # Using best_estimator_ is safer as it contains the fitted model with best params.
+    best_model = randomized_cv.best_estimator_
+
+    # If you specifically wanted to re-fit on x_train (though best_estimator_ is already refit on the passed x_train)
+    train_scores = model_performance_classification_sklearn(best_model, x_train, y_train)
+    val_scores = model_performance_classification_sklearn(best_model, x_val, y_val)
+
+    return best_model, train_scores, val_scores
+
+def plot_confusion_matrix(model, X, y_true):
+    """
+    Generates a heatmap for the confusion matrix of a given model and dataset.
+
+    Parameters:
+    model: Trained model
+    X: Feature data to make predictions
+    y_true: True target labels
+
+    Returns:
+    Heatmap showing TP, FP, TN, FN.
+    """
+
+    # Predict the target for the given features
+    y_pred = model.predict(X)
+
+    # Compute confusion matrix
+    cm = confusion_matrix(y_true, y_pred)
+
+    # Calculate percentages for each cell in the confusion matrix
+    cm_percentage = cm / cm.sum() * PERCENTILE
+
+    # Add a label to chart.
+    labels = np.asarray([
+        [f"{int(cm[i, j])}\n{cm_percentage[i, j]:.2f}%" for j in range(len(cm))]
+        for i in range(len(cm))
+    ])
+
+    # Display the confusion matrix as a heatmap
+    plt.figure(figsize=(6, 4))
+    hm = sns.heatmap(cm, annot=labels, fmt='', cbar=False,
+                     xticklabels=model.classes_, yticklabels=model.classes_)
+
+
+    plt.title("Confusion Matrix Heatmap")
+    plt.show()
+
+    # Extract TP, FP, TN, FN and print them
+    TN, FP, FN, TP = cm.ravel()
+
+    print(f"\nTrue Positives (TP): {TP}")
+    print(f"False Positives (FP): {FP}")
+    print(f"True Negatives (TN): {TN}")
+    print(f"False Negatives (FN): {FN}")
