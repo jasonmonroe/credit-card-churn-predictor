@@ -1185,7 +1185,7 @@ def plot_confusion_matrix(model, X, y_true):
     print(f"True Negatives (TN): {TN}")
     print(f"False Negatives (FN): {FN}")
 
-def pick_top_model(xgb_model_scores: pd.DataFrame, xgb_models: list) -> XGBClassifier :
+def pick_best_model(xgb_model_scores: pd.DataFrame, xgb_models: list) -> XGBClassifier :
     """
     xgb_models: pd.DataFrame
 
@@ -1823,7 +1823,7 @@ xgb_comparison_models
 
 # Final model (the highest score)
 # top_model was previously assigned a DataFrame, we need to reassign it to the actual model
-top_model = pick_top_model(xgb_comparison_models, xgb_models)  # Assuming xgb_tuned_oversample is your desired model
+top_model = pick_best_model(xgb_comparison_models, xgb_models)  # Assuming xgb_tuned_oversample is your desired model
 
 # Now we can call model_performance_classification_sklearn
 model_performance_classification_sklearn(top_model, x_testing_data, y_testing_data)

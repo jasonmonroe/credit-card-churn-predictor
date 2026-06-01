@@ -1,10 +1,8 @@
 # src/modeling.py
 
 import pandas as pd
-
-import matplotlib.pyplot as plt
 from sklearn.model_selection import RandomizedSearchCV, ParameterGrid
-from sklearn.metrics import recall_score, confusion_matrix
+from sklearn.metrics import recall_score
 from sklearn.ensemble import (
     BaggingClassifier,
     RandomForestClassifier,
@@ -24,8 +22,7 @@ from src.config import (
     UNTUNED_LEARNING_RATE,
     PARAM_DISTR_CNT,
     MAX_PROC_THREADS,
-    CV_FOLDS,
-    PERCENTILE
+    CV_FOLDS
 )
 from src.utils import (
     start_timer,
@@ -56,13 +53,15 @@ def random_forest_model():
         n_estimators=UNTUNED_ESTIMATOR_CNT,
         min_samples_split=10,
         min_samples_leaf=5,
-        max_features='sqrt')
+        max_features='sqrt',
+        random_state=SEED
+    )
 
 def ada_boost_model():
-    return AdaBoostClassifier(random_state=SEED)
+    return AdaBoostClassifier(random_state=SEED, learning_rate=UNTUNED_LEARNING_RATE)
 
 def gradient_boosting_model():
-    return GradientBoostingClassifier(random_state=SEED)
+    return GradientBoostingClassifier(random_state=SEED, learning_rate=UNTUNED_LEARNING_RATE)
 
 def xgboost_model():
     return XGBClassifier(
@@ -70,8 +69,9 @@ def xgboost_model():
         max_depth=NODE_XGBOOST_CNT,
         learning_rate= UNTUNED_LEARNING_RATE,
         reg_alpha=0.3,
-        reg_lambda=0.3)
-
+        reg_lambda=0.3,
+        random_state=SEED
+    )
 
 def show_fit_model_scores(
     mods: list,
@@ -136,7 +136,7 @@ def undersample_data(x_training_data, y_training_data):
 
     return x_training_undersample, y_training_undersample
 
-def pick_top_model(xgb_model_scores: pd.DataFrame, xgb_models: list) -> XGBClassifier :
+def pick_best_model(xgb_model_scores: pd.DataFrame, xgb_models: list) -> XGBClassifier :
     """
     xgb_models: pd.DataFrame
 
@@ -148,15 +148,15 @@ def pick_top_model(xgb_model_scores: pd.DataFrame, xgb_models: list) -> XGBClass
     for model in xgb_model_scores.columns:
         f1_scores.append(xgb_model_scores[model]['F1'])
 
-    # Get index and variable of the top F1 score
-    top_m_index = f1_scores.index(max(f1_scores))
-    top_m_title = xgb_model_scores.columns[top_m_index]
-    top_m = xgb_models[top_m_index]
+    # Get index and variable of the best F1 score
+    best_m_index = f1_scores.index(max(f1_scores))
+    best_m_title = xgb_model_scores.columns[best_m_index]
+    best_m = xgb_models[best_m_index]
 
-    show_banner('TOP MODEL', top_m_title)
-    print(xgb_model_scores[top_m_title]) # Fixed line: Use top_m_title (string) instead of top_m_index (integer)
+    show_banner('BEST MODEL', best_m_title)
+    print(xgb_model_scores[best_m_title]) # Fixed line: Use best_m_title (string) instead of best_m_index (integer)
 
-    return top_m
+    return best_m
 
 def tune_and_evaluate(estimator, params, x_train, y_train, x_val, y_val, scorer):
     """
@@ -187,48 +187,3 @@ def tune_and_evaluate(estimator, params, x_train, y_train, x_val, y_val, scorer)
     val_scores = model_performance_classification_sklearn(best_model, x_val, y_val)
 
     return best_model, train_scores, val_scores
-
-def plot_confusion_matrix(model, X, y_true):
-    """
-    Generates a heatmap for the confusion matrix of a given model and dataset.
-
-    Parameters:
-    model: Trained model
-    X: Feature data to make predictions
-    y_true: True target labels
-
-    Returns:
-    Heatmap showing TP, FP, TN, FN.
-    """
-
-    # Predict the target for the given features
-    y_pred = model.predict(X)
-
-    # Compute confusion matrix
-    cm = confusion_matrix(y_true, y_pred)
-
-    # Calculate percentages for each cell in the confusion matrix
-    cm_percentage = cm / cm.sum() * PERCENTILE
-
-    # Add a label to chart.
-    labels = np.asarray([
-        [f"{int(cm[i, j])}\n{cm_percentage[i, j]:.2f}%" for j in range(len(cm))]
-        for i in range(len(cm))
-    ])
-
-    # Display the confusion matrix as a heatmap
-    plt.figure(figsize=(6, 4))
-    hm = sns.heatmap(cm, annot=labels, fmt='', cbar=False,
-                     xticklabels=model.classes_, yticklabels=model.classes_)
-
-
-    plt.title("Confusion Matrix Heatmap")
-    plt.show()
-
-    # Extract TP, FP, TN, FN and print them
-    TN, FP, FN, TP = cm.ravel()
-
-    print(f"\nTrue Positives (TP): {TP}")
-    print(f"False Positives (FP): {FP}")
-    print(f"True Negatives (TN): {TN}")
-    print(f"False Negatives (FN): {FN}")

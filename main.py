@@ -7,27 +7,28 @@ from src.config import (
     ADA_BOOST_PARAMS,
     GB_PARAMS,
     SEED,
-    XGB_BOOST_PARAMS
+    XGB_BOOST_PARAMS,
+    UNTUNED_LEARNING_RATE
 )
-from src.eda import run_eda
+from src.eda import run_eda, plot_confusion_matrix
 from src import utils
 from src.preprocessing import (
-    get_df, process_data
+    get_df,
+    process_data
 )
 from src.modeling import (
     run_model_performance,
     oversample_data,
     undersample_data,
-    pick_top_model,
+    pick_best_model,
     model_performance_classification_sklearn,
-    plot_confusion_matrix,
-    build_models, tune_and_evaluate
+    build_models,
+    tune_and_evaluate,
+    gradient_boosting_model,
+    xgboost_model,
+    ada_boost_model
 )
-from sklearn.ensemble import (
-    AdaBoostClassifier,
-    GradientBoostingClassifier
-)
-from xgboost import XGBClassifier
+
 from sklearn.metrics import make_scorer, precision_score
 from src.utils import show_banner
 
@@ -38,7 +39,7 @@ def run_eda_pipeline(seed_data=False):
     # Run EDA
     run_eda(df)
 
-    print('EDA complete.')
+    print('--- EDA complete ---')
 
 def run_main_pipeline(seed_data=False):
 
@@ -50,29 +51,6 @@ def run_main_pipeline(seed_data=False):
     df = get_df(seed_data)
 
     x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data = process_data(df)
-
-    """
-    # Split Data
-    x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data = split_seeder_data(df)
-
-    # Impute Missing Values
-    x_training_data, x_validation_data, x_testing_data = impute_missing_values(x_training_data, x_validation_data, x_testing_data)
-
-    # Encode Data
-    x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data = encode_data(
-        x_training_data, x_validation_data, x_testing_data, y_training_data, y_validation_data, y_testing_data
-    )
-    """
-
-    # Drop rows in X_train and y_train where y_train has NaN values
-    y_training_data = y_training_data.dropna()
-    x_training_data = x_training_data.loc[y_training_data.index]  # Keep only rows in X_train that match y_train's index
-
-    if y_training_data.empty:
-        print('Warning! Target training data is empty after dropping NaNs. Imputation cannot be performed.')
-    else:
-        y_training_data = y_training_data.fillna(y_training_data.mode()[0])  # Impute only if y_train is not empty
-
 
     # Build Model with original data
     # models = build_model()
@@ -108,9 +86,9 @@ def run_main_pipeline(seed_data=False):
     # Define models and their configs
     # Format: (Name, Estimator, Params)
     models_config = [
-        ('Gradient Boosting', GradientBoostingClassifier(random_state=SEED), GB_PARAMS),
-        ('AdaBoost', AdaBoostClassifier(random_state=SEED), ADA_BOOST_PARAMS),
-        ('XGBoost', XGBClassifier(random_state=SEED), XGB_BOOST_PARAMS)
+        ('Gradient Boosting', gradient_boosting_model(), GB_PARAMS),
+        ('AdaBoost', ada_boost_model(), ADA_BOOST_PARAMS),
+        ('XGBoost', xgboost_model(), XGB_BOOST_PARAMS)
     ]
 
     # Storage for results
@@ -193,7 +171,7 @@ def run_main_pipeline(seed_data=False):
 
     # Final model (the highest score)
     show_banner('Final Model w/ Plot Confusion Matrix')
-    top_model = pick_top_model(xgb_comparison_models, xgb_models)
+    top_model = pick_best_model(xgb_comparison_models, xgb_models)
     model_performance_classification_sklearn(top_model, x_testing_data, y_testing_data)
     plot_confusion_matrix(top_model, x_testing_data, y_testing_data)    
 
@@ -202,7 +180,7 @@ def run_main_pipeline(seed_data=False):
 if __name__ == '__main__':
     main_start_time = utils.start_timer()
     run_id = utils.get_run_id()
-    print(f'\n# --- {run_id} | START PROGRAM --- #')
+    print(f'\n{run_id} | START PROGRAM')
 
     # --- Check arguments ---
     parser = argparse.ArgumentParser(description='Credit Card Churn Predictor')
@@ -230,4 +208,4 @@ if __name__ == '__main__':
 
     print('\n')
     utils.show_timer(main_start_time)
-    print(f'\n#--- {run_id} | END PROGRAM ---#')
+    print(f'\n{run_id} | END PROGRAM')

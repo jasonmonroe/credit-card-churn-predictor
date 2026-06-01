@@ -14157,7 +14157,7 @@ Run Time: 0m 0s 298ms
 <div class="jp-InputPrompt jp-InputArea-prompt">In [219]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">pick_top_model</span><span class="p">(</span><span class="n">xgb_model_scores</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">xgb_models</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">XGBClassifier</span> <span class="p">:</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">pick_best_model</span><span class="p">(</span><span class="n">xgb_model_scores</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">xgb_models</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">XGBClassifier</span> <span class="p">:</span>
 <span class="w">    </span><span class="sd">'''</span>
 <span class="sd">    xgb_models: pd.DataFrame</span>
 
@@ -21171,7 +21171,7 @@ False Negatives (FN): 17
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Final model (highest score)</span>
 <span class="c1"># top_model was previously assigned a DataFrame, we need to reassign it to the actual model</span>
-<span class="n">top_model</span> <span class="o">=</span> <span class="n">pick_top_model</span><span class="p">(</span><span class="n">xgb_comparison_models</span><span class="p">,</span> <span class="n">xgb_models</span><span class="p">)</span>  <span class="c1"># Assuming xgb_tuned_oversample is your desired model</span>
+<span class="n">top_model</span> <span class="o">=</span> <span class="n">pick_best_model</span><span class="p">(</span><span class="n">xgb_comparison_models</span><span class="p">,</span> <span class="n">xgb_models</span><span class="p">)</span>  <span class="c1"># Assuming xgb_tuned_oversample is your desired model</span>
 </pre></div>
 </div>
 </div>

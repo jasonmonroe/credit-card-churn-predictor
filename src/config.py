@@ -10,7 +10,6 @@ SAMPLE_FILE = 'data/sample_data.csv'
 SEEDER_FILE = 'data/seeder_data.csv'
 DATASET_FILE = 'data/dataset.csv'
 
-
 # Customer Churn Rate (16%)
 CUST_CHURN_RATE = 0.16
 
@@ -80,8 +79,10 @@ ADA_BOOST_PARAMS = {
     "n_estimators": np.arange(50, 110, 25),
     "learning_rate": [0.01, 0.1, 0.05],
     "estimator": [
-        DecisionTreeClassifier(max_depth=2, random_state=SEED),
-        DecisionTreeClassifier(max_depth=3, random_state=SEED),
+        DecisionTreeClassifier(max_depth=2, ccp_alpha=0.0, random_state=SEED),
+        DecisionTreeClassifier(max_depth=2, ccp_alpha=0.01, random_state=SEED),
+        DecisionTreeClassifier(max_depth=3, ccp_alpha=0.0, random_state=SEED),
+        DecisionTreeClassifier(max_depth=3, ccp_alpha=0.01, random_state=SEED),
     ],
 }
 

@@ -42,6 +42,9 @@ def process_data(df: pd.DataFrame):
         x_training_data, x_validation_data, x_testing_data, y_training_data, y_validation_data, y_testing_data
     )
 
+    # Clean training data
+    x_training_data, y_training_data = clean_training_data(x_training_data, y_training_data)
+
     return x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data
 
 def get_df(seed_data=False):
@@ -128,3 +131,15 @@ def encode_data(x_training_data, x_validation_data, x_testing_data, y_training_d
     y_testing_data = y_testing_data.map(numerical_labels)
 
     return x_training_data, y_training_data, x_validation_data, y_validation_data, x_testing_data, y_testing_data
+
+def clean_training_data(x_training_data: pd.Series, y_training_data: pd.Series):
+    # Drop rows in X_train and y_train where y_train has NaN values
+    y_training_data = y_training_data.dropna()
+    x_training_data = x_training_data.loc[y_training_data.index]  # Keep only rows in X_train that match y_train's index
+
+    if y_training_data.empty:
+        print('Warning! Target training data is empty after dropping NaNs. Imputation cannot be performed.')
+    else:
+        y_training_data = y_training_data.fillna(y_training_data.mode()[0])  # Impute only if y_train is not empty
+
+    return x_training_data, y_training_data

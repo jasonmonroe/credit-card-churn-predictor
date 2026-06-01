@@ -1,0 +1,227 @@
+
+# ---  --- RUN ID: 10246--- | START PROGRAM --- #
++-----------------------------+
++ CREDIT CARD CHURN PREDICTOR +
++-----------------------------+
+
++-------------------------+
+|  ORIGINAL DATA MODEL  |
++-------------------------+
+| Training Performance
+
+Bagging: 1.0
+Random forest: 0.5276558384547849
+AdaBoost: 0.3090430201931519
+Gradient Boosting: 0.8156277436347673
+XGBoost: 0.7190517998244074
+Run Time: 0m 4s 988ms
+
++-------------------------+
+|  ORIGINAL DATA MODEL  |
++-------------------------+
+| Validation Performance
+
+Bagging: 0.8360655737704918
+Random forest: 0.45081967213114754
+AdaBoost: 0.20491803278688525
+Gradient Boosting: 0.7172131147540983
+XGBoost: 0.6557377049180327
+Run Time: 0m 4s 879ms
+
++-------------------------+
+|  ORIGINAL DATA MODEL  |
++-------------------------+
+| Classification by Model(s)
+
+   Accuracy  Recall  Precision   F1
+0       1.0     1.0        1.0  1.0
+   Accuracy    Recall  Precision        F1
+0  0.913516  0.527656   0.889053  0.662259
+   Accuracy    Recall  Precision        F1
+0   0.88149  0.309043   0.869136  0.455959
+   Accuracy    Recall  Precision        F1
+0  0.962613  0.815628   0.944106  0.875177
+   Accuracy    Recall  Precision        F1
+0  0.946529  0.719052   0.932802  0.812097
+Run Time: 0m 0s 97ms
+
++-----------------------------+
+|  OVERSAMPLED DATA MODELS  |
++-----------------------------+
+| Training Performance
+
+Bagging: 1.0
+Random forest: 0.9314170448814927
+AdaBoost: 0.9092284417549168
+Gradient Boosting: 0.9636913767019667
+XGBoost: 0.957135653050933
+Run Time: 0m 9s 484ms
+
++-----------------------------+
+|  OVERSAMPLED DATA MODELS  |
++-----------------------------+
+| Validation Performance
+
+Bagging: 0.8688524590163934
+Random forest: 0.8278688524590164
+AdaBoost: 0.8360655737704918
+Gradient Boosting: 0.8647540983606558
+XGBoost: 0.8647540983606558
+Run Time: 0m 9s 377ms
+
++-----------------------------+
+|  OVERSAMPLED DATA MODELS  |
++-----------------------------+
+| Classification by Model(s)
+
+   Accuracy  Recall  Precision   F1
+0       1.0     1.0        1.0  1.0
+   Accuracy    Recall  Precision        F1
+0  0.909817  0.931417   0.892846  0.911724
+   Accuracy    Recall  Precision        F1
+0  0.808959  0.909228   0.757351  0.826369
+   Accuracy    Recall  Precision        F1
+0  0.949655  0.963691   0.937377  0.950352
+   Accuracy    Recall  Precision        F1
+0  0.932342  0.957136   0.911915  0.933979
+Run Time: 0m 0s 148ms
+
++------------------------------+
+|  UNDERSAMPLED DATA MODELS  |
++------------------------------+
+| Training Performance
+
+Bagging: 1.0
+Random forest: 0.9192273924495171
+AdaBoost: 0.8805970149253731
+Gradient Boosting: 0.971027216856892
+XGBoost: 0.9482001755926251
+Run Time: 0m 1s 493ms
+
++------------------------------+
+|  UNDERSAMPLED DATA MODELS  |
++------------------------------+
+| Validation Performance
+
+Bagging: 0.9221311475409836
+Random forest: 0.8729508196721312
+AdaBoost: 0.819672131147541
+Gradient Boosting: 0.9139344262295082
+XGBoost: 0.8975409836065574
+Run Time: 0m 1s 484ms
+
++------------------------------+
+|  UNDERSAMPLED DATA MODELS  |
++------------------------------+
+| Classification by Model(s)
+
+   Accuracy  Recall  Precision   F1
+0       1.0     1.0        1.0  1.0
+   Accuracy    Recall  Precision        F1
+0   0.90518  0.919227   0.894108  0.906494
+   Accuracy    Recall  Precision        F1
+0  0.802458  0.880597   0.761579  0.816775
+   Accuracy    Recall  Precision        F1
+0  0.962248  0.971027   0.954271  0.962576
+   Accuracy  Recall  Precision        F1
+0  0.932836  0.9482   0.919932  0.933852
+Run Time: 0m 0s 51ms
+
++---------------------------------------+
+|  TUNING GRADIENT BOOSTING ORIGINAL  |
++---------------------------------------+
+
+Best parameters are {'subsample': 0.9, 'n_estimators': np.int64(75), 'max_features': 1, 'learning_rate': 0.01, 'init': AdaBoostClassifier(random_state=42)} with CV score=0.9756848486742496:
+
++------------------------------------------+
+|  TUNING GRADIENT BOOSTING OVERSAMPLED  |
++------------------------------------------+
+
+Best parameters are {'subsample': 0.7, 'n_estimators': np.int64(100), 'max_features': 0.7, 'learning_rate': 0.1, 'init': AdaBoostClassifier(random_state=42)} with CV score=0.9516644420797151:
+
++-------------------------------------------+
+|  TUNING GRADIENT BOOSTING UNDERSAMPLED  |
++-------------------------------------------+
+
+Best parameters are {'subsample': 0.7, 'n_estimators': np.int64(100), 'max_features': 0.5, 'learning_rate': 0.1, 'init': AdaBoostClassifier(random_state=42)} with CV score=0.9456456786612298:
+
++------------------------------+
+|  TUNING ADABOOST ORIGINAL  |
++------------------------------+
+
+Best parameters are {'n_estimators': np.int64(100), 'learning_rate': 0.1, 'estimator': DecisionTreeClassifier(max_depth=3, random_state=42)} with CV score=0.9319263502454991:
+
++---------------------------------+
+|  TUNING ADABOOST OVERSAMPLED  |
++---------------------------------+
+
+Best parameters are {'n_estimators': np.int64(100), 'learning_rate': 0.1, 'estimator': DecisionTreeClassifier(max_depth=3, random_state=42)} with CV score=0.9364265655049712:
+
++----------------------------------+
+|  TUNING ADABOOST UNDERSAMPLED  |
++----------------------------------+
+
+Best parameters are {'n_estimators': np.int64(100), 'learning_rate': 0.1, 'estimator': DecisionTreeClassifier(max_depth=3, random_state=42)} with CV score=0.93438909445183:
+
++-----------------------------+
+|  TUNING XGBOOST ORIGINAL  |
++-----------------------------+
+
+Best parameters are {'subsample': 0.7, 'scale_pos_weight': 1, 'n_estimators': np.int64(75), 'learning_rate': 0.01, 'gamma': 3} with CV score=0.967724434255057:
+
++--------------------------------+
+|  TUNING XGBOOST OVERSAMPLED  |
++--------------------------------+
+
+Best parameters are {'subsample': 0.7, 'scale_pos_weight': 1, 'n_estimators': np.int64(100), 'learning_rate': 0.1, 'gamma': 5} with CV score=0.9509439704217808:
+
++---------------------------------+
+|  TUNING XGBOOST UNDERSAMPLED  |
++---------------------------------+
+
+Best parameters are {'subsample': 0.9, 'scale_pos_weight': 1, 'n_estimators': np.int64(100), 'learning_rate': 0.1, 'gamma': 1} with CV score=0.9463719777470686:
+
+--- Training Comparison ---
+           Gradient Boosting Original  Gradient Boosting Oversampled  Gradient Boosting Undersampled  AdaBoost Original  AdaBoost Oversampled  AdaBoost Undersampled  XGBoost Original  XGBoost Oversampled  XGBoost Undersampled
+Accuracy                     0.889532                       0.965288                        0.981124           0.967410              0.950244               0.965759          0.881631             0.962935              0.980246
+Recall                       0.319579                       0.972432                        0.987709           0.843723              0.960666               0.971027          0.271291             0.969575              0.983319
+Precision                    0.978495                       0.958734                        0.974870           0.947732              0.941051               0.960904          0.971698             0.956868              0.977312
+F1                           0.481800                       0.965535                        0.981247           0.892708              0.950757               0.965939          0.424159             0.963179              0.980306
+
+--- Validation Comparison ---
+           Gradient Boosting Original Value  Gradient Boosting Oversampled Value  Gradient Boosting Undersampled Value  AdaBoost Original Value  AdaBoost Oversampled Value  AdaBoost Undersampled Value  XGBoost Original Value  XGBoost Oversampled Value  XGBoost Undersampled Value
+Accuracy                           0.884134                             0.936801                              0.939434                 0.949967                    0.924951                     0.931534                0.875576                   0.930876                    0.942067
+Recall                             0.290984                             0.881148                              0.922131                 0.758197                    0.881148                     0.926230                0.241803                   0.872951                    0.938525
+Precision                          0.959459                             0.762411                              0.755034                 0.915842                    0.716667                     0.724359                0.936508                   0.742160                    0.758278
+F1                                 0.446541                             0.817490                              0.830258                 0.829596                    0.790441                     0.812950                0.384365                   0.802260                    0.838828
+           XGBoost Undersampled  XGBoost Oversampled  XGBoost Tuned
+Accuracy               0.946053             0.940789       0.870395
+Recall                 0.954918             0.905738       0.213115
+Precision              0.766447             0.767361       0.912281
+F1                     0.850365             0.830827       0.345515
+
++------------------------------------------+
+|  FINAL MODEL W/ PLOT CONFUSION MATRIX  |
++------------------------------------------+
+
+
++----------------+
+|  BEST MODEL  |
++----------------+
+| XGBoost Undersampled
+
+Accuracy     0.946053
+Recall       0.954918
+Precision    0.766447
+F1           0.850365
+Name: XGBoost Undersampled, dtype: float64
+
+True Positives (TP): 233
+False Positives (FP): 71
+True Negatives (TN): 1205
+False Negatives (FN): 11
+
+
+Run Time: 3m 0s 76ms
+
+#---  --- RUN ID: 10246--- | END PROGRAM ---#
