@@ -1,11 +1,13 @@
 # models/model_evaluator.py
+
 import pandas as pd
 from imblearn.over_sampling import SMOTE
 from imblearn.under_sampling import RandomUnderSampler
-from models.xg_boost import XGBoostModel
+from notebooks.credit_card_churn_predictor_notebook import show_timer
 from sklearn.metrics import recall_score, accuracy_score, precision_score, f1_score
 from sklearn.model_selection import ParameterGrid, RandomizedSearchCV
 from src.config import SEED, PARAM_DISTR_CNT, MAX_PROC_THREADS, CV_FOLDS, DF_TYPES
+from src.utils import start_timer
 from xgboost import XGBClassifier
 
 
@@ -37,16 +39,7 @@ class ModelEvaluator():
         self.x_under = []
         self.y_under = []
 
-        #self.best_estimator = None
-
-        #self.oversamples = {}
-        #self.undersamples = {}
         self._set_attrs(dataset)
-
-        #self.x_os, self.y_os = self._get_oversampled()
-        #self.x_us, self.y_us = self._get_undersampled()
-
-        # Get oversampled and undersampled data
 
     def _set_attrs(self, dataset):
         for key, value in dataset.items():
@@ -79,78 +72,41 @@ class ModelEvaluator():
         rus = RandomUnderSampler(sampling_strategy=1, random_state=SEED)
         return rus.fit_resample(self.x_train, self.y_train)
 
-
-    def run(self, data_title = ''):
+    def run(self):
 
         # Get original, oversamples and undersampled datasets
-        print(f'--- Running {self.title} Model Performances ---')
+        print(f'\n--- Running {self.title} Model Performances ---')
 
         self.run_orig()
         self.run_oversampled()
         self.run_undersampled()
 
-
-        # Original
-
-        # Oversampled
-
-        #
-
-        # Training
-        #print('--- Training Performance ---')
-
-        # Get Model Scores
-
-
-
-        #training = self._training()
-
-
-
-        # Validation
-        #print('--- Validation Performance ---')
-
-        #for d_type in ['Original', 'Oversampled', 'Undersampled']:
-
-
-            #pass
-
-        # show classification model performance or show fit model scores
-        #pass
-
-
     def run_orig(self):
-        print(f'-- {self.title} Original Data --')
+        print(f'\n-- {self.title} Original Data --')
         self.orig['train'] = self._fit_model(self.x_train, self.y_train, self.x_train, self.y_train)
         self.orig['val'] = self._fit_model(self.x_train, self.y_train, self.x_val, self.y_val)
 
         self.show_classification_model_perf(self.x_train, self.y_train)
 
     def run_oversampled(self):
-        print(f'-- {self.title} Oversampled Data --')
-        #self.x_os, self.y_os = self._get_oversampled()
+        print(f'\n-- {self.title} Oversampled Data --')
 
         self.oversample['train'] = self._fit_model(self.x_over, self.y_over, self.x_over, self.y_over)
         self.oversample['val'] = self._fit_model(self.x_over, self.y_over, self.x_val, self.y_val)
         self.show_classification_model_perf(self.x_over, self.y_over)
 
     def run_undersampled(self):
-        print(f'-- {self.title} Undersampled Data --')
+        print(f'\n-- {self.title} Undersampled Data --')
         #x_us, y_us = self._get_undersampled()
 
         self.undersample['train'] = self._fit_model(self.x_under, self.y_under, self.x_under, self.y_under)
         self.undersample['val'] = self._fit_model(self.x_under, self.y_under, self.x_val, self.y_val)
         self.show_classification_model_perf(self.x_under, self.y_under)
 
-
     def show_classification_model_perf(self, x, y):
         print('- Model Classification -')
         self.perf = self._get_model_perf(self.model, x, y)
         print(self.perf)
-
-    def show_fit_model_scores(self):
-        pass
-
 
     def _fit_model(self, x_fit, y_fit, x, y) -> float:
         self.model.fit(x_fit, y_fit)
@@ -158,7 +114,6 @@ class ModelEvaluator():
         print(f'{self.title}: {score}')
 
         return score
-
 
     def _tune(self, scorer):
         """
@@ -184,27 +139,26 @@ class ModelEvaluator():
         #print(f'Best parameters are {randomized_cv.best_params_} with CV score={randomized_cv.best_score_}:')
         print(f'CV Score: {randomized_cv.best_score_}')
         print('Best parameter are: ')
-        for key, value in randomized_cv.best_params_:
-            print(f'{key}: {value}')
+        for key, value in randomized_cv.best_params_.items():
+            print(f"\t{key}: {value}")
 
         # Re-instantiate or use best_estimator_ directly.
         # Using best_estimator_ is safer as it contains the fitted model with best params.
         return randomized_cv.best_estimator_
-
-
-
 
     def get_results(self, scorer) -> dict:
         model_titles = []
         train_results = []
         val_results = []
 
-        xgb = []
+        xgb = {}
         for df_type in DF_TYPES:
             title = f'{self.title } {df_type.title()}'
-            print(f'--- Tuning {title} Data ---')
+            print(f'\n--- Tuning {title} Data ---')
 
+            start_time = start_timer()
             tuned_model = self._tune(scorer)
+            show_timer(start_time)
             train_perf = self._get_train_perf(tuned_model)
             val_perf = self._get_val_perf(tuned_model)
 
@@ -223,6 +177,7 @@ class ModelEvaluator():
 
         # If we're utilizing the XGBClassifier Model then return that as well
         if isinstance(self.model, XGBClassifier):
+            print('DEBUG: storing xgb in results as best_estimator!')
             results['best_estimator'] = xgb
 
         return results
@@ -232,7 +187,6 @@ class ModelEvaluator():
 
     def _get_val_perf(self, model):
         return self._get_model_perf(model, self.x_val, self.y_val)
-
 
     # Defining a function to compute different metrics to check performance of a classification model built using sklearn
     def _get_model_perf(self, model, predictors, target) -> pd.DataFrame:
@@ -264,4 +218,3 @@ class ModelEvaluator():
         )
 
         return df_perf
-

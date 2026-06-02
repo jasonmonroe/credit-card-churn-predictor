@@ -85,9 +85,10 @@ class XGBoostModel(ModelEvaluator):
         show_banner('--- 🏆 BEST XG BOOST MODEL 🏆--- ', best_model_title)
         print(comp_models[best_model_title])
         print(f'best_model type: {type(best_model)}')
+
         return best_model
 
-    def show_best(self, comp_models: pd.DataFrame):
+    def show_best(self, comp_models: pd.DataFrame) -> None:
         best_model = self.get_best(comp_models)
         best_perf = self._get_model_perf(best_model, self.x_test, self.y_test)
 

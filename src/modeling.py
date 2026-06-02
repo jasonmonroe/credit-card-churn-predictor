@@ -28,7 +28,7 @@ from src.utils import (
     start_timer,
     show_banner,
     show_timer,
-    model_performance_classification_sklearn
+    #model_performance_classification_sklearn
 )
 
 """"

@@ -1,27 +1,17 @@
 # src/utils.py
 
 import time
-import pandas as pd
 import random
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.metrics import (
-    accuracy_score,
-    recall_score,
-    precision_score,
-    f1_score,
-    confusion_matrix
-)
-from src.config import *
+
+from src.config import MSEC, SECS_IN_MIN
 
 # ==================================
 #  HELPER FUNCTIONS
 # ==================================
 
-# --- Functions --- #
 def get_run_id() -> str:
     """ Generates a unique ID for the current run. """
-    return ' --- RUN ID: ' + str(random.randint(10000, 99999)) + '---'
+    return str(random.randint(10000, 99999))
 
 def start_timer() -> float:
     """
@@ -56,5 +46,3 @@ def show_banner(title: str, section: str = '') -> None:
         print('| ' + section)
 
     print('')
-
-

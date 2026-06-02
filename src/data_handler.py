@@ -1,5 +1,6 @@
 # src/data_handler.py
-from typing import Optional
+
+from pathlib import Path
 import sys
 import numpy as np
 import pandas as pd
@@ -48,7 +49,7 @@ def _merge(df: pd.DataFrame) -> pd.DataFrame:
     Internal helper. Changed from __merge to _merge for better
     idiomatic consistency and ease of testing.
     """
-    df_seeder = pd.read_csv(SEEDER_FILE)
+    df_seeder = pd.read_csv(Path(SEEDER_FILE))
     df_combined = pd.concat([df, df_seeder]).drop_duplicates().reset_index(drop=True)
     df_combined.to_csv(DATASET_FILE, index=False)
 
@@ -90,7 +91,7 @@ def _split_data(df: pd.DataFrame) -> dict:
     print(f'Shape of Y testing: {y_test.shape}')
 
     print('\n--- (Split) Data Types ---')
-    print(f'Data type of X training: {x_train.dtype}')
+    print(f'Data types of X training:\n{x_train.dtypes}')
     print(f'Data type of Y training: {y_train.dtype}')
 
     return {
