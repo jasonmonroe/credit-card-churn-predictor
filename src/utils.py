@@ -3,7 +3,8 @@
 import time
 import random
 
-from src.config import MSEC, SECS_IN_MIN
+from src.config import MSEC, SECS_IN_MIN, BANK_NAME, PROJ_NAME
+
 
 # ==================================
 #  HELPER FUNCTIONS
@@ -46,3 +47,10 @@ def show_banner(title: str, section: str = '') -> None:
         print('| ' + section)
 
     print('')
+
+def show_title_banner() -> str:
+    return f"""
+        +-------------------------------------+
+        |{BANK_NAME:^35}|
+        |{PROJ_NAME:^35}|
+        +-------------------------------------+"""

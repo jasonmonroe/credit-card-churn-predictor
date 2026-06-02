@@ -11,8 +11,9 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 from sklearn.model_selection import ParameterGrid, RandomizedSearchCV
 from xgboost import XGBClassifier
 
-from src.config import CV_FOLDS, DATASET_TYPES, MAX_PROC_THREADS, OUTPUT_FILE, PARAM_DIST_CNT, SEED, BANK_NAME
-from src.utils import show_timer, start_timer
+from src.config import (
+    CV_FOLDS, DATASET_TYPES, MAX_PROC_THREADS, OUTPUT_FILE, PARAM_DIST_CNT, SEED)
+from src.utils import show_timer, start_timer, show_title_banner
 
 
 class ModelEvaluator:
@@ -331,15 +332,9 @@ class ModelEvaluator:
         df_val_long = val_models.T
         print(df_val_long.to_string())
 
-        proj_title_str = ''
-        proj_title_str += '\t\t\t\t\t\t+-----------------------------------+\n\t\t\t\t\t\t|'
-        proj_title_str += f'\n|\t\t\t\t\t\t{BANK_NAME}\t\t\t\t\t\t|'
-        proj_title_str += ' 💳️ CREDIT CARD CHURN PREDICTOR 💳️ '
-        proj_title_str += '|\n\t\t\t\t\t\t+-----------------------------------+'
-
         # Print Results to file
         with open(OUTPUT_FILE, 'w') as f:
-            f.write(proj_title_str)
+            f.write(show_title_banner())
             f.write("\n\n")
             f.write('----------------------- 🤝🏾️Model Training Comparisons 🤝🏾------------------------\n')
             f.write(df_train_long.to_string())

@@ -3,7 +3,8 @@
 # ==================================
 #  CONSTANTS
 # ==================================
-BANK_NAME = 'TERA BANK'
+BANK_NAME = '🏦 TERA BANK 🏦'
+PROJ_NAME = '💳 CREDIT CARD CHURN PREDICTOR 💳'
 DATASET_TYPES = ['original', 'oversampled', 'undersampled']
 
 SAMPLE_FILE = 'data/sample_data.csv'
@@ -53,10 +54,9 @@ PERCENTILE = 100
 SECS_IN_MIN = 60
 SEED = 42
 
-# Hyperparameter that controls the fraction of the training samples used to train
-# each individual tree.
-# Sample size of training data for Stochastic Gradient Boosting (SGB).
-# Increased robustness, lower variance, generally better generalization.
+# Hyperparameter that controls the fraction of the training samples used to train each individual tree.
+# Sample size of training data for Stochastic Gradient Boosting (SGB). Increased robustness, lower variance, generally
+# better generalization.
 SUB_SAMPLE_SIZE = 0.7
 
 # Tuning parameters

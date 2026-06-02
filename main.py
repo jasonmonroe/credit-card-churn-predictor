@@ -13,11 +13,10 @@ from models.model_evaluator import ModelEvaluator
 from models.random_forest import RandomForestModel
 from models.xg_boost import XGBoostModel
 
-from src.config import DATASET_TYPES, OUTPUT_FILE, BANK_NAME
+from src.config import DATASET_TYPES, OUTPUT_FILE
 from src.data_handler import DataHandler
 from src.eda import run_eda
-from src.utils import get_run_id, start_timer, show_timer
-from src.utils import get_time, show_banner
+from src.utils import get_run_id, start_timer, show_timer, show_title_banner, get_time, show_banner
 
 
 def run_eda_pipeline(seed_data=False):
@@ -32,10 +31,11 @@ def run_eda_pipeline(seed_data=False):
 
 def run_main_pipeline(seed_data=False):
 
-    print('+-----------------------------------+')
-    print(f'|           {BANK_NAME}              |')
-    print('| 💳 CREDIT CARD CHURN PREDICTOR 💳 |')
-    print('+-----------------------------------+')
+    #print('+-----------------------------------+')
+    #print(f'|           {BANK_NAME}              |')
+    #print(f'|           {PROJ_NAME}             |')
+    #print('+-----------------------------------+')
+    print(show_title_banner())
 
     data_handler = DataHandler(seed_data)
     df = data_handler.data
