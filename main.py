@@ -138,11 +138,11 @@ def run_main_pipeline(seed_data=False):
     #print(f'val_models={val_models}')
 
     # Final Test Performance (XGB Boost Specific)
-    # This logic matches your main2.py logic but utilizes the new XGBoostModel class state
     xg_boost_perfs = xg_boost_model.get_perf()
     
     # Create the comparison dataframe horizontally to match previous tables
-    xg_boost_comps = pd.concat([xg_boost_perfs[xgb_type] for xgb_type in DF_TYPES], axis=1)
+    # Transpose (.T) each set so metrics become rows and sampling types become single columns
+    xg_boost_comps = pd.concat([xg_boost_perfs[xgb_type].T for xgb_type in DF_TYPES], axis=1)
     xg_boost_comps.columns = [name.capitalize() for name in DF_TYPES]
     print('* xg_boost_comps *')
     print(xg_boost_comps)
