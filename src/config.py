@@ -3,6 +3,9 @@
 # ==================================
 #  CONSTANTS
 # ==================================
+BANK_NAME = 'TERA BANK'
+DATASET_TYPES = ['original', 'oversampled', 'undersampled']
+
 SAMPLE_FILE = 'data/sample_data.csv'
 SEEDER_FILE = 'data/seeder_data.csv'
 DATASET_FILE = 'data/dataset.csv'
@@ -11,8 +14,8 @@ OUTPUT_FILE = 'outputs/model_comparison_report.txt'
 # Customer Churn Rate (16%)
 CUST_CHURN_RATE = 0.16
 
-# Specifies the number of base estimators (individual models) that will be trained
-# and combined to form the final ensemble model.
+# Specifies the number of base estimators (individual models) that will be trained and combined to form the final
+# ensemble model.
 BASE_ESTIMATOR_CNT = 100
 
 # Number of folds to use in K-Fold Cross-Validation.
@@ -45,7 +48,7 @@ NODE_RFC_CNT = 4
 NODE_XGBOOST_CNT = 3
 
 # Number of different parameter combinations that will be tried.
-PARAM_DISTR_CNT = 50
+PARAM_DIST_CNT = 50
 PERCENTILE = 100
 SECS_IN_MIN = 60
 SEED = 42
@@ -61,5 +64,3 @@ TUNED_ESTIMATOR_CNT = 20
 TUNED_LEARNING_RATE = 0.1
 UNTUNED_ESTIMATOR_CNT = 50
 UNTUNED_LEARNING_RATE = 0.05
-
-DF_TYPES = ['original', 'oversampled', 'undersampled']

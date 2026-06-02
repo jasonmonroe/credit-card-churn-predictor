@@ -30,7 +30,7 @@ Original file is located at
 
 ### ⚙️ Project Overview
 
-As a **machine learning engineer** working with thera bank, this project aims to address a critical business problem: the recent **steep decline in credit card user retention**. credit cards are a vital revenue stream for the bank through various fees (annual, balance\_transfer, late\_payment, etc.). customer attrition in this segment directly impacts the bank's profitability.
+As a **machine learning engineer** working with Thera Bank, this project aims to address a critical business problem: the recent **steep decline in credit card user retention**. credit cards are a vital revenue stream for the bank through various fees (annual, balance\_transfer, late\_payment, etc.). customer attrition in this segment directly impacts the bank's profitability.
 
 the core objective is to develop a robust **classification model** that can **identify customers highly likely to renounce their credit card services (attrite)** and, crucially, help infer the **key reasons** driving this attrition. the insights gained will directly inform the bank's strategy to improve services and retention.
 
@@ -212,7 +212,7 @@ NODE_RFC_CNT = 4
 NODE_XGBC_CNT = 3
 
 # Number of different parameter combinations that will be tried.
-PARAM_DISTR_CNT = 10
+PARAM_DIST_CNT = 10
 PERCENTILE = 100
 SECS_IN_MIN = 60
 SEED = 42
@@ -1312,7 +1312,7 @@ scorer = make_scorer(precision_score)
 randomized_cv = RandomizedSearchCV(
     estimator=gbc,
     param_distributions=DECISION_TREE_PARAMS,
-    n_iter=PARAM_DISTR_CNT,
+    n_iter=PARAM_DIST_CNT,
     n_jobs=MAX_PROC_THREADS,
     scoring=scorer,
     cv=CV_FOLDS,
@@ -1356,7 +1356,7 @@ scorer = make_scorer(precision_score)
 randomized_cv = RandomizedSearchCV(
     estimator=gbc_oversample,
     param_distributions=DECISION_TREE_PARAMS, #param_grid,
-    n_iter=PARAM_DISTR_CNT,
+    n_iter=PARAM_DIST_CNT,
     n_jobs=MAX_PROC_THREADS,
     scoring=scorer,
     cv=CV_FOLDS,
@@ -1400,7 +1400,7 @@ scorer = make_scorer(precision_score)
 randomized_cv = RandomizedSearchCV(
     estimator=gbc_undersample,
     param_distributions=DECISION_TREE_PARAMS, #param_grid,
-    n_iter=PARAM_DISTR_CNT,
+    n_iter=PARAM_DIST_CNT,
     n_jobs=MAX_PROC_THREADS,
     scoring=scorer,
     cv=CV_FOLDS,
@@ -1456,7 +1456,7 @@ scorer = make_scorer(precision_score)
 randomized_cv = RandomizedSearchCV(
     estimator=ada,
     param_distributions=ADA_BOOST_PARAMS, #param_grid,
-    n_iter=PARAM_DISTR_CNT,
+    n_iter=PARAM_DIST_CNT,
     n_jobs=MAX_PROC_THREADS,
     scoring=scorer,
     cv=CV_FOLDS,
@@ -1499,7 +1499,7 @@ scorer = make_scorer(precision_score)
 randomized_cv = RandomizedSearchCV(
     estimator=ada_oversample,
     param_distributions=ADA_BOOST_PARAMS, #param_grid,
-    n_iter=PARAM_DISTR_CNT,
+    n_iter=PARAM_DIST_CNT,
     n_jobs=MAX_PROC_THREADS,
     scoring=scorer,
     cv=CV_FOLDS,
@@ -1542,7 +1542,7 @@ scorer = make_scorer(precision_score)
 randomized_cv = RandomizedSearchCV(
     estimator=ada_undersample,
     param_distributions=ADA_BOOST_PARAMS, #param_grid,
-    n_iter=PARAM_DISTR_CNT,
+    n_iter=PARAM_DIST_CNT,
     n_jobs=MAX_PROC_THREADS,
     scoring=scorer,
     cv=CV_FOLDS,
@@ -1594,7 +1594,7 @@ scorer = make_scorer(precision_score)
 randomized_cv = RandomizedSearchCV(
     estimator=xgb,
     param_distributions=XGB_BOOST_PARAMS, #param_grid,
-    n_iter=PARAM_DISTR_CNT,
+    n_iter=PARAM_DIST_CNT,
     n_jobs=MAX_PROC_THREADS,
     scoring=scorer,
     cv=CV_FOLDS,
@@ -1638,7 +1638,7 @@ scorer = make_scorer(precision_score)
 randomized_cv = RandomizedSearchCV(
     estimator=xgb_oversample,
     param_distributions=XGB_BOOST_PARAMS, #param_grid,
-    n_iter=PARAM_DISTR_CNT,
+    n_iter=PARAM_DIST_CNT,
     n_jobs=MAX_PROC_THREADS,
     scoring=scorer,
     cv=CV_FOLDS,
@@ -1683,7 +1683,7 @@ scorer = make_scorer(precision_score)
 randomized_cv = RandomizedSearchCV(
     estimator=xgb_undersample,
     param_distributions=XGB_BOOST_PARAMS, #param_grid,
-    n_iter=PARAM_DISTR_CNT,
+    n_iter=PARAM_DIST_CNT,
     n_jobs=MAX_PROC_THREADS,
     scoring=scorer,
     cv=CV_FOLDS,

@@ -13,7 +13,7 @@ from models.model_evaluator import ModelEvaluator
 from models.random_forest import RandomForestModel
 from models.xg_boost import XGBoostModel
 
-from src.config import DF_TYPES, OUTPUT_FILE
+from src.config import DATASET_TYPES, OUTPUT_FILE, BANK_NAME
 from src.data_handler import DataHandler
 from src.eda import run_eda
 from src.utils import get_run_id, start_timer, show_timer
@@ -33,6 +33,7 @@ def run_eda_pipeline(seed_data=False):
 def run_main_pipeline(seed_data=False):
 
     print('+-----------------------------------+')
+    print(f'|           {BANK_NAME}              |')
     print('| 💳 CREDIT CARD CHURN PREDICTOR 💳 |')
     print('+-----------------------------------+')
 
@@ -110,10 +111,10 @@ def run_main_pipeline(seed_data=False):
     
     # Create the comparison dataframe horizontally to match previous tables
     # Transpose (.T) each set so metrics become rows and sampling types become single columns
-    xg_boost_comps = pd.concat([xg_boost_perfs[xgb_type].T for xgb_type in DF_TYPES], axis=1)
-    xg_boost_comps.columns = [name.capitalize() for name in DF_TYPES]
+    xg_boost_comps = pd.concat([xg_boost_perfs[xgb_type].T for xgb_type in DATASET_TYPES], axis=1)
+    xg_boost_comps.columns = [name.capitalize() for name in DATASET_TYPES]
 
-    print('*** XGB Boost Comparisons ***')
+    print('\n*** XGB Boost Comparisons ***')
     print(xg_boost_comps)
     
     # ⚠ Pick the best model performance
@@ -436,6 +437,6 @@ if __name__ == '__main__':
 
     # Write the run time at the end of file
     with open(OUTPUT_FILE, 'a') as f:
-        f.write(f'\n\n----- ⏱️ Run ID: {run_id} | Total Execution Time: {get_time(main_start_time)} ⏱️ -----')
+        f.write(f'\n\n--------------- ⏱️ Run ID: {run_id} | Total Execution Time: {get_time(main_start_time)} ⏱️ ----------------')
 
     print(f'\n----- ⏱️ END RUN ID: {run_id} ⏱️ -----')

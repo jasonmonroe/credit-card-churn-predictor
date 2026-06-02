@@ -10,7 +10,7 @@ from models.model_evaluator import ModelEvaluator
 from src.config import (
     UNTUNED_ESTIMATOR_CNT,
     NODE_XGBOOST_CNT,
-    DF_TYPES,
+    DATASET_TYPES,
     UNTUNED_LEARNING_RATE,
     SEED
 )
@@ -54,7 +54,7 @@ class XGBoostModel(ModelEvaluator):
         # Need to store tuned_models here since the object is XGBClassifier.
 
         self.best_estimator = results['best_estimator']
-        print(f'DEBUG: setting self.best_estimator = {self.best_estimator}')
+        #print(f'DEBUG: setting self.best_estimator = {self.best_estimator}')
         #self.best_estimator = best_estimator
 
         return results
@@ -68,7 +68,7 @@ class XGBoostModel(ModelEvaluator):
         perf = {}
         if self.best_estimator is not None:
             # Only iterate over valid sampling types to avoid metadata like 'title'
-            for xgb_type in DF_TYPES:
+            for xgb_type in DATASET_TYPES:
                 model = self.best_estimator.get(xgb_type)
                 if model is not None and not isinstance(model, dict):
                     perf[xgb_type] = self._get_model_perf(model, self.x_test, self.y_test)
@@ -82,7 +82,6 @@ class XGBoostModel(ModelEvaluator):
         Compares the three XGBoost models and returns the best one.
         """
         f1_scores = []
-        print('get_best()\n')
 
         # Get F1 Scores
         for model in comp_models.columns:
@@ -91,24 +90,16 @@ class XGBoostModel(ModelEvaluator):
         # Get index and variable of the best F1 score
         best_model_index = f1_scores.index(max(f1_scores))
         best_model_title = comp_models.columns[best_model_index]
-        #print(f'DEBUG: self.best_estimator={self.best_estimator}')
-        print(f'DEBUG: best_model_index={best_model_index}')
-        print(f'DEBUG: best_model_title={best_model_title}')
-        # Error right here!
-        #best_model = self.best_estimator[best_model_index]
 
-
-        # Extract the variant keyword (e.g., "Original", "Oversampled", "Undersampled")
-        # and match your lowercase dictionary keys
+        # Extract the variant keyword (e.g., "Original", "Oversampled", "Undersampled") and match your lowercase
+        # dictionary keys
         col_header = best_model_title.split()[-1].lower()
-        print(f'strategy_key = {col_header}')
 
         # Look up using 'original', 'oversampled', or 'undersampled' instead of a numeric 0
         best_model = self.best_estimator[col_header]
 
-        show_banner('--- 🏆 BEST XG BOOST MODEL 🏆---', best_model_title)
+        show_banner('🏆 --- BEST XG BOOST MODEL --- 🏆', best_model_title)
         print(comp_models[best_model_title])
-        #print(f'best_model type: {type(best_model)}')
 
         return best_model
 
@@ -116,7 +107,8 @@ class XGBoostModel(ModelEvaluator):
         best_model = self.get_best(comp_models)
         best_perf = self._get_model_perf(best_model, self.x_test, self.y_test)
 
-        print('# --- Best Model Performance --- #')
+        print('\n# --- Best Model Performance --- #')
         print(best_perf)
 
-        plot_confusion_matrix(best_model, self.x_test, self.y_test)
+        print('\nShowing Plot Confusion Matrix of Best Model...')
+        #plot_confusion_matrix(best_model, self.x_test, self.y_test)

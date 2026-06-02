@@ -7565,7 +7565,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="%E2%9A%99%EF%B8%8F-Project-Overview">⚙️ Project Overview<a class="anchor-link" href="#%E2%9A%99%EF%B8%8F-Project-Overview">¶</a></h3><p>As a <strong>machine learning engineer</strong> working with thera bank, this project aims to address a critical business problem: the recent <strong>steep decline in credit card user retention</strong>. credit cards are a vital revenue stream for the bank through various fees (annual, balance_transfer, late_payment, etc.). customer attrition in this segment directly impacts the bank's profitability.</p>
+<h3 id="%E2%9A%99%EF%B8%8F-Project-Overview">⚙️ Project Overview<a class="anchor-link" href="#%E2%9A%99%EF%B8%8F-Project-Overview">¶</a></h3><p>As a <strong>machine learning engineer</strong> working with Thera Bank, this project aims to address a critical business problem: the recent <strong>steep decline in credit card user retention</strong>. credit cards are a vital revenue stream for the bank through various fees (annual, balance_transfer, late_payment, etc.). customer attrition in this segment directly impacts the bank's profitability.</p>
 <p>the core objective is to develop a robust <strong>classification model</strong> that can <strong>identify customers highly likely to renounce their credit card services (attrite)</strong> and, crucially, help infer the <strong>key reasons</strong> driving this attrition. the insights gained will directly inform the bank's strategy to improve services and retention.</p>
 <hr/>
 <h3 id="%F0%9F%93%8A-Data-Description">📊 Data Description<a class="anchor-link" href="#%F0%9F%93%8A-Data-Description">¶</a></h3><p>the dataset provides a comprehensive snapshot of customer demographics, account characteristics, and usage behavior. the target variable is <code>attrition_flag</code>.</p>
@@ -7927,7 +7927,7 @@ needs to be filled with an appropriate code to get the correct result. With ever
 <span class="n">NODE_XGBC_CNT</span> <span class="o">=</span> <span class="mi">3</span>
 
 <span class="c1"># Number of different parameter combinations that will be tried.</span>
-<span class="n">PARAM_DISTR_CNT</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">PARAM_DIST_CNT</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">PERCENTILE</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">SECS_IN_MIN</span> <span class="o">=</span> <span class="mi">60</span>
 <span class="n">SEED</span> <span class="o">=</span> <span class="mi">42</span>
@@ -14349,7 +14349,7 @@ Run Time: 0m 0s 298ms
 <span class="n">randomized_cv</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">gbc</span><span class="p">,</span>
     <span class="n">param_distributions</span><span class="o">=</span><span class="n">DECISION_TREE_PARAMS</span><span class="p">,</span>
-    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DISTR_CNT</span><span class="p">,</span>
+    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DIST_CNT</span><span class="p">,</span>
     <span class="n">n_jobs</span><span class="o">=</span><span class="n">MAX_PROC_THREADS</span><span class="p">,</span>
     <span class="n">scoring</span><span class="o">=</span><span class="n">scorer</span><span class="p">,</span>
     <span class="n">cv</span><span class="o">=</span><span class="n">CV_FOLDS</span><span class="p">,</span>
@@ -14964,7 +14964,7 @@ False Negatives (FN): 128
 <span class="n">randomized_cv</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">gbc_oversample</span><span class="p">,</span>
     <span class="n">param_distributions</span><span class="o">=</span><span class="n">DECISION_TREE_PARAMS</span><span class="p">,</span> <span class="c1">#param_grid,</span>
-    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DISTR_CNT</span><span class="p">,</span>
+    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DIST_CNT</span><span class="p">,</span>
     <span class="n">n_jobs</span><span class="o">=</span><span class="n">MAX_PROC_THREADS</span><span class="p">,</span>
     <span class="n">scoring</span><span class="o">=</span><span class="n">scorer</span><span class="p">,</span>
     <span class="n">cv</span><span class="o">=</span><span class="n">CV_FOLDS</span><span class="p">,</span>
@@ -15579,7 +15579,7 @@ False Negatives (FN): 34
 <span class="n">randomized_cv</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">gbc_undersample</span><span class="p">,</span>
     <span class="n">param_distributions</span><span class="o">=</span><span class="n">DECISION_TREE_PARAMS</span><span class="p">,</span> <span class="c1">#param_grid,</span>
-    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DISTR_CNT</span><span class="p">,</span>
+    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DIST_CNT</span><span class="p">,</span>
     <span class="n">n_jobs</span><span class="o">=</span><span class="n">MAX_PROC_THREADS</span><span class="p">,</span>
     <span class="n">scoring</span><span class="o">=</span><span class="n">scorer</span><span class="p">,</span>
     <span class="n">cv</span><span class="o">=</span><span class="n">CV_FOLDS</span><span class="p">,</span>
@@ -16219,7 +16219,7 @@ False Negatives (FN): 128
 <span class="n">randomized_cv</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">ada</span><span class="p">,</span>
     <span class="n">param_distributions</span><span class="o">=</span><span class="n">ADA_BOOST_PARAMS</span><span class="p">,</span> <span class="c1">#param_grid,</span>
-    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DISTR_CNT</span><span class="p">,</span>
+    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DIST_CNT</span><span class="p">,</span>
     <span class="n">n_jobs</span><span class="o">=</span><span class="n">MAX_PROC_THREADS</span><span class="p">,</span>
     <span class="n">scoring</span><span class="o">=</span><span class="n">scorer</span><span class="p">,</span>
     <span class="n">cv</span><span class="o">=</span><span class="n">CV_FOLDS</span><span class="p">,</span>
@@ -16836,7 +16836,7 @@ False Negatives (FN): 127
 <span class="n">randomized_cv</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">ada_oversample</span><span class="p">,</span>
     <span class="n">param_distributions</span><span class="o">=</span><span class="n">ADA_BOOST_PARAMS</span><span class="p">,</span> <span class="c1">#param_grid,</span>
-    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DISTR_CNT</span><span class="p">,</span>
+    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DIST_CNT</span><span class="p">,</span>
     <span class="n">n_jobs</span><span class="o">=</span><span class="n">MAX_PROC_THREADS</span><span class="p">,</span>
     <span class="n">scoring</span><span class="o">=</span><span class="n">scorer</span><span class="p">,</span>
     <span class="n">cv</span><span class="o">=</span><span class="n">CV_FOLDS</span><span class="p">,</span>
@@ -17453,7 +17453,7 @@ False Negatives (FN): 46
 <span class="n">randomized_cv</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">ada_undersample</span><span class="p">,</span>
     <span class="n">param_distributions</span><span class="o">=</span><span class="n">ADA_BOOST_PARAMS</span><span class="p">,</span> <span class="c1">#param_grid,</span>
-    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DISTR_CNT</span><span class="p">,</span>
+    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DIST_CNT</span><span class="p">,</span>
     <span class="n">n_jobs</span><span class="o">=</span><span class="n">MAX_PROC_THREADS</span><span class="p">,</span>
     <span class="n">scoring</span><span class="o">=</span><span class="n">scorer</span><span class="p">,</span>
     <span class="n">cv</span><span class="o">=</span><span class="n">CV_FOLDS</span><span class="p">,</span>
@@ -18091,7 +18091,7 @@ False Negatives (FN): 38
 <span class="n">randomized_cv</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">xgb</span><span class="p">,</span>
     <span class="n">param_distributions</span><span class="o">=</span><span class="n">XGB_BOOST_PARAMS</span><span class="p">,</span> <span class="c1">#param_grid,</span>
-    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DISTR_CNT</span><span class="p">,</span>
+    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DIST_CNT</span><span class="p">,</span>
     <span class="n">n_jobs</span><span class="o">=</span><span class="n">MAX_PROC_THREADS</span><span class="p">,</span>
     <span class="n">scoring</span><span class="o">=</span><span class="n">scorer</span><span class="p">,</span>
     <span class="n">cv</span><span class="o">=</span><span class="n">CV_FOLDS</span><span class="p">,</span>
@@ -18725,7 +18725,7 @@ False Negatives (FN): 39
 <span class="n">randomized_cv</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">xgb_oversample</span><span class="p">,</span>
     <span class="n">param_distributions</span><span class="o">=</span><span class="n">XGB_BOOST_PARAMS</span><span class="p">,</span> <span class="c1">#param_grid,</span>
-    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DISTR_CNT</span><span class="p">,</span>
+    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DIST_CNT</span><span class="p">,</span>
     <span class="n">n_jobs</span><span class="o">=</span><span class="n">MAX_PROC_THREADS</span><span class="p">,</span>
     <span class="n">scoring</span><span class="o">=</span><span class="n">scorer</span><span class="p">,</span>
     <span class="n">cv</span><span class="o">=</span><span class="n">CV_FOLDS</span><span class="p">,</span>
@@ -19360,7 +19360,7 @@ False Negatives (FN): 26
 <span class="n">randomized_cv</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">xgb_undersample</span><span class="p">,</span>
     <span class="n">param_distributions</span><span class="o">=</span><span class="n">XGB_BOOST_PARAMS</span><span class="p">,</span> <span class="c1">#param_grid,</span>
-    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DISTR_CNT</span><span class="p">,</span>
+    <span class="n">n_iter</span><span class="o">=</span><span class="n">PARAM_DIST_CNT</span><span class="p">,</span>
     <span class="n">n_jobs</span><span class="o">=</span><span class="n">MAX_PROC_THREADS</span><span class="p">,</span>
     <span class="n">scoring</span><span class="o">=</span><span class="n">scorer</span><span class="p">,</span>
     <span class="n">cv</span><span class="o">=</span><span class="n">CV_FOLDS</span><span class="p">,</span>

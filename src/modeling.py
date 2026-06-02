@@ -1,5 +1,5 @@
 # src/modeling.py
-# @todo - delete!
+# @todo - DEFUNCT
 import pandas as pd
 from sklearn.model_selection import RandomizedSearchCV, ParameterGrid
 from sklearn.metrics import recall_score
@@ -20,7 +20,7 @@ from src.config import (
     UNTUNED_ESTIMATOR_CNT,
     NODE_XGBOOST_CNT,
     UNTUNED_LEARNING_RATE,
-    PARAM_DISTR_CNT,
+    PARAM_DIST_CNT,
     MAX_PROC_THREADS,
     CV_FOLDS
 )
@@ -177,7 +177,7 @@ def tune_and_evaluate(estimator, params, x_train, y_train, x_val, y_val, scorer)
      
     # Calculate total parameter space size
     total_params = len(ParameterGrid(params))
-    n_iter = min(PARAM_DISTR_CNT, total_params)
+    n_iter = min(PARAM_DIST_CNT, total_params)
 
     randomized_cv = RandomizedSearchCV(
         estimator=estimator,

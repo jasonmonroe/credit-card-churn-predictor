@@ -9,10 +9,9 @@ import pandas as pd
 from sklearn.base import BaseEstimator
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from sklearn.model_selection import ParameterGrid, RandomizedSearchCV
-from src.eda import plot_confusion_matrix
 from xgboost import XGBClassifier
 
-from src.config import CV_FOLDS, DF_TYPES, MAX_PROC_THREADS, OUTPUT_FILE, PARAM_DISTR_CNT, SEED
+from src.config import CV_FOLDS, DATASET_TYPES, MAX_PROC_THREADS, OUTPUT_FILE, PARAM_DIST_CNT, SEED, BANK_NAME
 from src.utils import show_timer, start_timer
 
 
@@ -78,46 +77,68 @@ class ModelEvaluator:
     def run(self):
 
         # Get original, oversampled and undersampled datasets
-        print(f'\n--- Running {self.title} Model Performances ---')
+        print(f'\n🏃🏾--- Running {self.title} Model Performances --- 🏃🏾')
 
         self.run_orig()
         self.run_oversampled()
         self.run_undersampled()
 
-    def run_orig(self):
+    def run_orig(self) -> None:
+        """
+        This is your raw, untouched dataset exactly as it was collected. It reflects the true distribution of the real world.
+        :return:
+        """
         print(f'\n* {self.title} Original Data *')
+        
         self.orig['train'] = self._fit_model(self.x_train, self.y_train, self.x_train, self.y_train)
         self.orig['val'] = self._fit_model(self.x_train, self.y_train, self.x_val, self.y_val)
 
-        print(f'Training: {self.orig["train"]}, Validation: {self.orig["val"]}')
+        print(f'🤝🏾 Training Recall: {self.orig["train"]:.4f}')
+        print(f'☑️ Validation Recall: {self.orig["val"]:.4f}')
+
         # @todo - Is this a duplicate call since I'm calling it again in get_results()?
         #plot_confusion_matrix(self.model, self.x_train, self.y_train)
         self.show_classification_model_perf(self.x_train, self.y_train)
 
-    def run_oversampled(self):
+    def run_oversampled(self) -> None:
+        """
+        Oversampling artificially inflates the size of your minority class (the churners) until it matches the size of
+        your majority class.
+        :return:
+        """
         print(f'\n* {self.title} Oversampled Data *')
 
         self.oversampled['train'] = self._fit_model(self.x_over, self.y_over, self.x_over, self.y_over)
         self.oversampled['val'] = self._fit_model(self.x_over, self.y_over, self.x_val, self.y_val)
 
-        print(f'Training: {self.oversampled["train"]}, Validation: {self.oversampled["val"]}')
+        print(f'🤝🏾 Training Recall: {self.oversampled["train"]:.4f}')
+        print(f'☑️ Validation Recall: {self.oversampled["val"]:.4f}')
+
+        # Display Plot Confusion Matrix for Oversampled Data
         #plot_confusion_matrix(self.model, self.x_over, self.y_over)
         # @todo - Is this a duplicate call since I'm calling it again in get_results()?
         self.show_classification_model_perf(self.x_over, self.y_over)
 
-    def run_undersampled(self):
+    def run_undersampled(self) -> None:
+        """
+        Undersampling balances the dataset by doing the exact opposite: it aggressively shrinks the majority class (the
+        loyal customers) down to match the size of your minority class.
+        :return:
+        """
         print(f'\n* {self.title} Undersampled Data *')
 
         self.undersampled['train'] = self._fit_model(self.x_under, self.y_under, self.x_under, self.y_under)
         self.undersampled['val'] = self._fit_model(self.x_under, self.y_under, self.x_val, self.y_val)
-        print(f'Training: {self.undersampled["train"]}')
-        print(f'Validation: {self.undersampled["val"]}')
+
+        print(f'⭐ Training Recall: {self.undersampled["train"]:.4f}')
+        print(f'☑️ Validation Recall: {self.undersampled["val"]:.4f}')
+
         # @todo - Is this a duplicate call since I'm calling it again in get_results()?
         #plot_confusion_matrix(self.model, self.x_under, self.y_under)
         self.show_classification_model_perf(self.x_under, self.y_under)
 
     def show_classification_model_perf(self, x, y):
-        print('\n** 🖥️ Model Classification 🖥️ **')
+        print('\n-- 🖥️ Model Classification 🖥️ --')
         self.perf = self._get_model_perf(self.model, x, y)
         print(self.perf)
 
@@ -137,12 +158,13 @@ class ModelEvaluator:
             BaseEstimator: The best fitted model found during search.
         """
         total_params = len(ParameterGrid(self.params))
-        n_iter = min(PARAM_DISTR_CNT, total_params)
+        n_iter = min(PARAM_DIST_CNT, total_params)
 
         """
         Instead of building one model, this sets up an automated experimental trial. It treats your original 
         XGBClassifier merely as an initial estimator template, and then uses the param_distributions dictionary as a 
         map of configurations to test.
+        
         @link https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html
         """
         randomized_cv = RandomizedSearchCV(
@@ -168,10 +190,10 @@ class ModelEvaluator:
     def get_results(self, scorer) -> dict[str, Any]:
         model_titles, train_results, val_results = [], [], []
 
-        xgb = {'title': ''}
-        for df_type in DF_TYPES:
+        xgb = {}
+        for df_type in DATASET_TYPES:
             title = f'{self.title} {df_type.title()}'
-            print(f'\n🔧 --- Tuning {title} Data ---')
+            print(f'\n🔧 --- Tuning {title} Data --- 🔧')
 
             # Determine data types to get the x & y values.
             # Note: Every model shares the same x/y_over and x/y_under data due the data being called once, merged into
@@ -210,11 +232,13 @@ class ModelEvaluator:
             model_titles.append(f'{title}')
 
             if isinstance(self.model, XGBClassifier):
-                print('💡 DEBUG: instance is XGBClassifier')
-                xgb['title'] += title + ' '
+                #print('💡 DEBUG: instance is XGBClassifier')
+
                 xgb[df_type] = tuned_model
-            else:
-                print(f'❌ DEBUG: {type(self.model).__name__} is not XGBClassifier')
+                #xgb[df_type] = {'title': title.strip(), 'model': tuned_model}
+
+            #else:
+            #    print(f'❌ DEBUG: {type(self.model).__name__} is not XGBClassifier')
 
         """
         # --- debug ---
@@ -299,7 +323,7 @@ class ModelEvaluator:
         training_models, val_models = self._format_results(results)
 
         # Show Training and Validation Comparison for each model
-        print('\n--- ⚙️ Model Training Comparisons ⚙️ ---')
+        print('\n--- 🤝🏾️ Model Training Comparisons 🤝🏾️ ---')
         df_train_long = training_models.T
         print(df_train_long.to_string())
 
@@ -309,6 +333,7 @@ class ModelEvaluator:
 
         proj_title_str = ''
         proj_title_str += '\t\t\t\t\t\t+-----------------------------------+\n\t\t\t\t\t\t|'
+        proj_title_str += f'\n|\t\t\t\t\t\t{BANK_NAME}\t\t\t\t\t\t|'
         proj_title_str += ' 💳️ CREDIT CARD CHURN PREDICTOR 💳️ '
         proj_title_str += '|\n\t\t\t\t\t\t+-----------------------------------+'
 
@@ -316,11 +341,11 @@ class ModelEvaluator:
         with open(OUTPUT_FILE, 'w') as f:
             f.write(proj_title_str)
             f.write("\n\n")
-            f.write('----------------------- ⚙️ Model Training Comparisons ⚙️ ------------------------\n')
+            f.write('----------------------- 🤝🏾️Model Training Comparisons 🤝🏾------------------------\n')
             f.write(df_train_long.to_string())
             f.write('\n----------------------------------------------------------------------------------')
             f.write("\n\n")
-            f.write('------------------------- ⚙️ Model Validation Comparisons ⚙️ --------------------------\n')
+            f.write('------------------------- 🤝🏾️ Model Validation Comparisons 🤝🏾️ --------------------------\n')
             f.write(df_val_long.to_string())
             f.write('\n----------------------------------------------------------------------------------------')
 
