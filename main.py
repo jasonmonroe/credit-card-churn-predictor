@@ -60,37 +60,22 @@ def run_main_pipeline(seed_data=False):
     # Bagging Model
     bagging_model = BaggingModel(df)
     bagging_model.run()
-    #bagging_model.run_orig()
-    #bagging_model.run_oversampled()
-    #bagging_model.run_undersampled()
 
     # Random Forest Classifier
     rf_model = RandomForestModel(df)
     rf_model.run()
-    #rf_model.run_orig()
-    #rf_model.run_oversampled(x_os, y_os)
-    #rf_model.run_undersampled(x_us, y_us)
 
     # ADA Boost Classifier
     ada_boost_model = AdaBoostModel(df)
     ada_boost_model.run()
-    #ada_boost_model.run_orig()
-    #ada_boost_model.run_oversampled(x_os, y_os)
-    #ada_boost_model.run_undersampled(x_us, y_us)
 
     # Gradient Boosting Classifier
     gradient_boosting_model = GradientBoostingModel(df)
     gradient_boosting_model.run()
-    #gradient_boost_model.run_orig()
-    #gradient_boost_model.run_oversampled(x_os, y_os)
-    #gradient_boost_model.run_undersampled(x_us, y_us)
 
     # XG Boost Classifier
     xg_boost_model = XGBoostModel(df)
     xg_boost_model.run()
-    #xg_boost_model.run_orig()
-    #xg_boost_model.run_oversampled(x_os, y_os)
-    #xg_boost_model.run_undersampled(x_us, y_us)
 
     # --- Hyperparameter Tuning ---
     scorer = make_scorer(precision_score, zero_division=0)
@@ -106,7 +91,6 @@ def run_main_pipeline(seed_data=False):
     # This list allows us to iterate once and handle all comparison tables
     orig_model_results = [gradient_boosting_results, ada_boost_results, xg_boost_results]
     model_results = [bagging_results, random_forest_results, ada_boost_results, gradient_boosting_results, ada_boost_results, xg_boost_results]
-
 
     
     print('DEBUG: --- model_results ----\n')
@@ -139,7 +123,7 @@ def run_main_pipeline(seed_data=False):
     # --- End of Program --- #
 
 
-# --- DEBUG --- #
+"""
 def run_debug(seed_data=False):
     import pandas as pd
     import numpy as np
@@ -413,7 +397,7 @@ def run_debug(seed_data=False):
     show_banner('📊 Final Model w/ Plot Confusion Matrix 📊')
 
     xg_boost_model.show_best(xg_boost_comps)
-
+"""
 
 # --- DEBUG --- #
 
@@ -442,8 +426,8 @@ if __name__ == '__main__':
     if args.mode == 'eda':
         run_eda_pipeline(args.seed)
     else:
-       # run_main_pipeline(args.seed)
-        run_debug(args.seed)
+        run_main_pipeline(args.seed)
+        #run_debug(args.seed)
 
     gc.collect()
 

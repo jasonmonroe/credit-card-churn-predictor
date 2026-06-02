@@ -13,7 +13,7 @@ class GradientBoostingModel(ModelEvaluator):
         super().__init__(dataset)
         self.title = 'Gradient Boosting Classifier'
         self.model = self._create()
-        self.params = self.get_params()
+        self.params = self._get_search_cv_params()
         self.perf = []
 
     def _create(self) -> GradientBoostingClassifier:
@@ -22,7 +22,7 @@ class GradientBoostingModel(ModelEvaluator):
             learning_rate=UNTUNED_LEARNING_RATE
         )
 
-    def get_params(self) -> dict:
+    def _get_search_cv_params(self) -> dict:
         return {
             "init": [
                 AdaBoostClassifier(learning_rate=UNTUNED_LEARNING_RATE, random_state=SEED),

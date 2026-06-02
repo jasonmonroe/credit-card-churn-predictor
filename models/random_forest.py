@@ -1,13 +1,11 @@
 # models/random_forest.py
 
 import numpy as np
-
-from models.model_evaluator import ModelEvaluator
+import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
+from models.model_evaluator import ModelEvaluator
 from src.config import (
-    NODE_RFC_CNT,
-    UNTUNED_ESTIMATOR_CNT,
-    SEED
+    NODE_RFC_CNT, SEED, UNTUNED_ESTIMATOR_CNT
 )
 
 
@@ -16,9 +14,9 @@ class RandomForestModel(ModelEvaluator):
         super().__init__(dataset)
 
         self.title = 'Random Forest Classifier'
-        self.params = self._params()
+        self.params = self._get_search_cv_params()
         self.model = self._create()
-        self.perf = []
+        self.perf = pd.DataFrame()
 
     def _create(self) -> RandomForestClassifier:
         return RandomForestClassifier(
@@ -30,10 +28,12 @@ class RandomForestModel(ModelEvaluator):
             random_state=SEED
         )
 
-    def _params(self) -> dict:
+    def _get_search_cv_params(self) -> dict:
         return {
-            "n_estimators": [50,110,25],
-            "min_samples_leaf": np.arange(1, 4),
-            "max_features": [np.arange(0.3, 0.6, 0.1),'sqrt'],
+            # Using np.arange creates a list of candidates to sample from
+            "n_estimators": np.arange(50, 125, 25),
+            "min_samples_leaf": np.arange(1, 5),
+            # To mix floats and strings, convert the array to a list and extend it
+            "max_features": np.arange(0.3, 0.6, 0.1).tolist() + ['sqrt'],
             "max_samples": np.arange(0.4, 0.7, 0.1)
         }

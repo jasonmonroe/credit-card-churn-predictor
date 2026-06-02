@@ -10,6 +10,7 @@ from models.model_evaluator import ModelEvaluator
 from src.config import (
     UNTUNED_ESTIMATOR_CNT,
     NODE_XGBOOST_CNT,
+    DF_TYPES,
     UNTUNED_LEARNING_RATE,
     SEED
 )
@@ -21,11 +22,12 @@ class XGBoostModel(ModelEvaluator):
 
         self.title = 'XG Boost Classifier'
         self.model = self._create()
-        self.params = self.get_params()
-        self.perf = []
+        self.params = self._get_search_cv_params()
+        self.perf = pd.DataFrame()
         self.best_estimator = None
 
     def _create(self) -> XGBClassifier:
+        # Used as a baseline
         return XGBClassifier(
             n_estimators=UNTUNED_ESTIMATOR_CNT,
             max_depth=NODE_XGBOOST_CNT,
@@ -35,7 +37,8 @@ class XGBoostModel(ModelEvaluator):
             random_state=SEED
         )
 
-    def get_params(self) -> dict:
+    # Params for Randomized Search CV
+    def _get_search_cv_params(self) -> dict:
         return {
             'n_estimators': np.arange(50, 110, 25),
             'scale_pos_weight': [1, 2, 5],
@@ -64,8 +67,11 @@ class XGBoostModel(ModelEvaluator):
 
         perf = {}
         if self.best_estimator is not None:
-            for xgb_type in self.best_estimator:
-                perf[xgb_type] = self._get_model_perf(self.best_estimator[xgb_type], self.x_test, self.y_test)
+            # Only iterate over valid sampling types to avoid metadata like 'title'
+            for xgb_type in DF_TYPES:
+                model = self.best_estimator.get(xgb_type)
+                if model is not None and not isinstance(model, dict):
+                    perf[xgb_type] = self._get_model_perf(model, self.x_test, self.y_test)
 
         return perf
 

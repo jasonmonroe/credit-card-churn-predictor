@@ -101,7 +101,7 @@ class ModelEvaluator:
         self.oversampled['val'] = self._fit_model(self.x_over, self.y_over, self.x_val, self.y_val)
 
         print(f'Training: {self.oversampled["train"]}, Validation: {self.oversampled["val"]}')
-        plot_confusion_matrix(self.model, self.x_over, self.y_over)
+        #plot_confusion_matrix(self.model, self.x_over, self.y_over)
         # @todo - Is this a duplicate call since I'm calling it again in get_results()?
         self.show_classification_model_perf(self.x_over, self.y_over)
 
@@ -130,6 +130,8 @@ class ModelEvaluator:
     def _tune(self, scorer, x, y) -> Any:
         """
         Helper function to perform RandomizedSearchCV, fit the best model, and calculate scores.
+        Wraps that model inside an optimization engine designed to test, score, and select the absolute best variation
+        of that model out of dozens of possibilities.
         
         Returns:
             BaseEstimator: The best fitted model found during search.
@@ -137,6 +139,12 @@ class ModelEvaluator:
         total_params = len(ParameterGrid(self.params))
         n_iter = min(PARAM_DISTR_CNT, total_params)
 
+        """
+        Instead of building one model, this sets up an automated experimental trial. It treats your original 
+        XGBClassifier merely as an initial estimator template, and then uses the param_distributions dictionary as a 
+        map of configurations to test.
+        @link https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html
+        """
         randomized_cv = RandomizedSearchCV(
             estimator=self.model,
             param_distributions=self.params,
@@ -153,7 +161,7 @@ class ModelEvaluator:
         print(f'💡 CV Score: {randomized_cv.best_score_}')
         print('✅ Best parameters are: ')
         for key, value in randomized_cv.best_params_.items():
-            print(f"\t{key}: {value}")
+            print(f"\t⭐ {key}: {value}")
 
         return randomized_cv.best_estimator_
 
@@ -208,6 +216,7 @@ class ModelEvaluator:
             else:
                 print(f'❌ DEBUG: {type(self.model).__name__} is not XGBClassifier')
 
+        """
         # --- debug ---
         import pprint
 
@@ -215,24 +224,27 @@ class ModelEvaluator:
 
         for strategy, model_obj in xgb.items():
             # 1. Pull the raw parameter dictionary out of the estimator object
-            params = model_obj.get_params()
+            params = []
+            if hasattr(model_obj, '_get_search_cv_params'):
+                params = model_obj._get_search_cv_params()
 
-            # 2. Fix the non-serializable objects (like NumPy types or float('nan'))
-            for key, val in list(params.items()):
-                # Convert np.int64 or np.float64 to native Python int/float
-                if hasattr(val, 'item'):
-                    params[key] = val.item()
-                # Convert true float NaN to a safe string or None for easy testing
-                elif isinstance(val, float) and str(val) == 'nan':
-                    params[key] = None
+                # 2. Fix the non-serializable objects (like NumPy types or float('nan'))
+                for key, val in list(params.items()):
+                    # Convert np.int64 or np.float64 to native Python int/float
+                    if hasattr(val, 'item'):
+                        params[key] = val.item()
+                    # Convert true float NaN to a safe string or None for easy testing
+                    elif isinstance(val, float) and str(val) == 'nan':
+                        params[key] = None
 
             clean_mock_dump[strategy] = params
 
         # Print the sanitized dictionary layout
         print("CLEAN_HARDCODED_ESTIMATORS = ")
         pprint.pprint(clean_mock_dump, indent=4, width=120)
-
+        """
         # --- debug ---
+
         # Concatenate the list of DataFrames into a single DataFrame for each set
         # We use axis=0 to stack 'Original', 'Oversampled', and 'Undersampled' vertically
         df_train = pd.concat(train_results, axis=0) if train_results else pd.DataFrame()
@@ -313,7 +325,7 @@ class ModelEvaluator:
             f.write('\n----------------------------------------------------------------------------------------')
 
     @staticmethod
-    def _get_model_perf(model, predictors, target) -> pd.DataFrame:
+    def _get_model_perf(model: Any, predictors, target) -> pd.DataFrame:
         """
         Function to compute different metrics to check classification model performance
 

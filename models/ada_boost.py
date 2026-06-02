@@ -12,7 +12,7 @@ class AdaBoostModel(ModelEvaluator):
         super().__init__(dataset)
         self.title = 'ADA Boost Classifier'
         self.model = self._create()
-        self.params = self.get_params()
+        self.params = self._get_search_cv_params()
         self.perf = []
 
     def _create(self) -> AdaBoostClassifier:
@@ -21,7 +21,7 @@ class AdaBoostModel(ModelEvaluator):
             learning_rate=UNTUNED_LEARNING_RATE
         )
 
-    def get_params(self) -> dict:
+    def _get_search_cv_params(self) -> dict:
         return {
             "n_estimators": np.arange(50, 110, 25),
             "learning_rate": [0.01, 0.1, 0.05],

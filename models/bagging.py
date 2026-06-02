@@ -9,7 +9,7 @@ class BaggingModel(ModelEvaluator):
         super().__init__(dataset)
 
         self.title = 'Bagging'
-        self.params = self._params()
+        self.params = self._get_search_cv_params()
         self.model = self._create()
 
     def _create(self) -> BaggingClassifier:
@@ -18,7 +18,7 @@ class BaggingModel(ModelEvaluator):
             n_estimators=BASE_ESTIMATOR_CNT
         )
 
-    def _params(self) -> dict:
+    def _get_search_cv_params(self) -> dict:
         return {
             'max_samples': [0.8,0.9,1],
             'max_features': [0.7,0.8,0.9],
