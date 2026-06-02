@@ -32,9 +32,9 @@ def run_eda_pipeline(seed_data=False):
 
 def run_main_pipeline(seed_data=False):
 
-    print('+-----------------------------+')
-    print('| CREDIT CARD CHURN PREDICTOR |')
-    print('+-----------------------------+')
+    print('+-----------------------------------+')
+    print('| 💳 CREDIT CARD CHURN PREDICTOR 💳 |')
+    print('+-----------------------------------+')
 
     data_handler = DataHandler(seed_data)
     df = data_handler.data
@@ -108,7 +108,7 @@ def run_main_pipeline(seed_data=False):
 
 
     
-    print('DEBUG: --- model_results ----')
+    print('DEBUG: --- model_results ----\n')
     print(model_results)
     print('DEBUG: --- model_results ----\n')
 
@@ -119,24 +119,7 @@ def run_main_pipeline(seed_data=False):
     """
     model_eval.print_comparisons(model_results)
 
-
-    # 1. Generate flat list of titles (e.g., ['GB Original', 'GB Oversampled' ...])
-    # We filter out 'best_estimator' from the column headers to match our sampled types
-    #flat_titles = [title for res in model_results for title in res['titles'] ] # if not res['best_estimator']
-
-    #print('\n--- ⚙️ Model Training Comparisons ⚙️ ---')
-    # Using .loc[res['titles']] ensures we only pull the 3 specific rows (Original, Over, Under)
-    # and excludes the 'best_estimator' row that was causing the 12 vs 9 length mismatch.
-    #training_models = pd.concat([res['train'].loc[res['titles']].T for res in model_results], axis=1)
-    #training_models.columns = flat_titles
-    #print(training_models)
-
-    #print('\n--- Model ☑️️ Validation Comparisons ☑️️ ---')
-    # We add " Value" to the validation columns to maintain your original output style
-    #val_models = pd.concat([res['val'].loc[res['titles']].T for res in model_results], axis=1)
-    #val_models.columns = [f"{t} Value" for t in flat_titles]
-    #print(f'val_models={val_models}')
-
+    # --- Pick the best XGBoost Model --- #
     # Final Test Performance (XGB Boost Specific)
     xg_boost_perfs = xg_boost_model.get_perf()
     
@@ -148,7 +131,7 @@ def run_main_pipeline(seed_data=False):
     print(xg_boost_comps)
     
     # ⚠ Pick the best model performance
-    show_banner('---️ 📊 Final Model w/ Plot Confusion Matrix 📊 ---')
+    show_banner('📊 Final Model w/ Plot Confusion Matrix 📊')
     xg_boost_model.show_best(xg_boost_comps)
 
     # --- End of Program --- #
@@ -281,8 +264,153 @@ def run_debug(seed_data=False):
     print(val_models_fixed)
 
     print('!!! PRINT COMPARISONS !!!')
+    #best_estimator = # Pure Python dictionary fixture for testing your XGBoost selection logic
+    best_estimator = {
+        'original': {
+            'base_score': None,
+            'booster': None,
+            'callbacks': None,
+            'colsample_bylevel': None,
+            'colsample_bynode': None,
+            'colsample_bytree': None,
+            'device': None,
+            'early_stopping_rounds': None,
+            'enable_categorical': False,
+            'eval_metric': None,
+            'feature_types': None,
+            'feature_weights': None,
+            'gamma': 3,
+            'grow_policy': None,
+            'importance_type': None,
+            'interaction_constraints': None,
+            'learning_rate': 0.01,
+            'max_bin': None,
+            'max_cat_threshold': None,
+            'max_cat_to_onehot': None,
+            'max_delta_step': None,
+            'max_depth': 3,
+            'max_leaves': None,
+            'min_child_weight': None,
+            'missing': None,
+            'monotone_constraints': None,
+            'multi_strategy': None,
+            'n_estimators': 75,
+            'n_jobs': None,
+            'num_parallel_tree': None,
+            'objective': 'binary:logistic',
+            'random_state': 42,
+            'reg_alpha': 0.3,
+            'reg_lambda': 0.3,
+            'sampling_method': None,
+            'scale_pos_weight': 1,
+            'subsample': 0.7,
+            'tree_method': None,
+            'validate_parameters': None,
+            'verbosity': None
+        },
+        'oversampled': {
+            'base_score': None,
+            'booster': None,
+            'callbacks': None,
+            'colsample_bylevel': None,
+            'colsample_bynode': None,
+            'colsample_bytree': None,
+            'device': None,
+            'early_stopping_rounds': None,
+            'enable_categorical': False,
+            'eval_metric': None,
+            'feature_types': None,
+            'feature_weights': None,
+            'gamma': 3,
+            'grow_policy': None,
+            'importance_type': None,
+            'interaction_constraints': None,
+            'learning_rate': 0.01,
+            'max_bin': None,
+            'max_cat_threshold': None,
+            'max_cat_to_onehot': None,
+            'max_delta_step': None,
+            'max_depth': 3,
+            'max_leaves': None,
+            'min_child_weight': None,
+            'missing': None,
+            'monotone_constraints': None,
+            'multi_strategy': None,
+            'n_estimators': 75,
+            'n_jobs': None,
+            'num_parallel_tree': None,
+            'objective': 'binary:logistic',
+            'random_state': 42,
+            'reg_alpha': 0.3,
+            'reg_lambda': 0.3,
+            'sampling_method': None,
+            'scale_pos_weight': 1,
+            'subsample': 0.7,
+            'tree_method': None,
+            'validate_parameters': None,
+            'verbosity': None
+        },
+        'undersampled': {
+            'base_score': None,
+            'booster': None,
+            'callbacks': None,
+            'colsample_bylevel': None,
+            'colsample_bynode': None,
+            'colsample_bytree': None,
+            'device': None,
+            'early_stopping_rounds': None,
+            'enable_categorical': False,
+            'eval_metric': None,
+            'feature_types': None,
+            'feature_weights': None,
+            'gamma': 3,
+            'grow_policy': None,
+            'importance_type': None,
+            'interaction_constraints': None,
+            'learning_rate': 0.01,
+            'max_bin': None,
+            'max_cat_threshold': None,
+            'max_cat_to_onehot': None,
+            'max_delta_step': None,
+            'max_depth': 3,
+            'max_leaves': None,
+            'min_child_weight': None,
+            'missing': None,
+            'monotone_constraints': None,
+            'multi_strategy': None,
+            'n_estimators': 75,
+            'n_jobs': None,
+            'num_parallel_tree': None,
+            'objective': 'binary:logistic',
+            'random_state': 42,
+            'reg_alpha': 0.3,
+            'reg_lambda': 0.3,
+            'sampling_method': None,
+            'scale_pos_weight': 1,
+            'subsample': 0.7,
+            'tree_method': None,
+            'validate_parameters': None,
+            'verbosity': None
+        }
+    }
     model_eval = ModelEvaluator({})
     model_eval.print_comparisons(model_results)
+    xg_boost_model = XGBoostModel({})
+    xg_boost_model.best_estimator = best_estimator
+
+    xg_boost_perfs = xg_boost_model.get_perf()
+
+    # Create the comparison dataframe horizontally to match previous tables
+    # Transpose (.T) each set so metrics become rows and sampling types become single columns
+    xg_boost_comps = pd.concat([xg_boost_perfs[xgb_type].T for xgb_type in DF_TYPES], axis=1)
+    xg_boost_comps.columns = [name.capitalize() for name in DF_TYPES]
+    print('* xg_boost_comps *')
+    print(xg_boost_comps)
+
+    # ⚠ Pick the best model performance
+    show_banner('📊 Final Model w/ Plot Confusion Matrix 📊')
+
+    xg_boost_model.show_best(xg_boost_comps)
 
 
 # --- DEBUG --- #
@@ -312,8 +440,8 @@ if __name__ == '__main__':
     if args.mode == 'eda':
         run_eda_pipeline(args.seed)
     else:
-        run_main_pipeline(args.seed)
-        #run_debug(args.seed)
+       # run_main_pipeline(args.seed)
+        run_debug(args.seed)
 
     gc.collect()
 

@@ -152,10 +152,10 @@ class ModelEvaluator:
     def get_results(self, scorer) -> dict[str, Any]:
         model_titles, train_results, val_results = [], [], []
 
-        xgb = {}
+        xgb = {'title': ''}
         for df_type in DF_TYPES:
             title = f'{self.title} {df_type.title()}'
-            print(f'\n--- Tuning {title} Data ---')
+            print(f'\n🔧 --- Tuning {title} Data ---')
 
             start_time = start_timer()
             tuned_model = self._tune(scorer)
@@ -170,10 +170,36 @@ class ModelEvaluator:
 
             if isinstance(self.model, XGBClassifier):
                 print('💡 DEBUG: instance is XGBClassifier')
+                xgb['title'] += title+' '
                 xgb[df_type] = tuned_model
             else:
                 print(f'❌ DEBUG: {type(self.model).__name__} is not XGBClassifier')
 
+        # --- debug ---
+        import pprint
+
+        clean_mock_dump = {}
+
+        for strategy, model_obj in xgb.items():
+            # 1. Pull the raw parameter dictionary out of the estimator object
+            params = model_obj.get_params()
+
+            # 2. Fix the non-serializable objects (like NumPy types or float('nan'))
+            for key, val in list(params.items()):
+                # Convert np.int64 or np.float64 to native Python int/float
+                if hasattr(val, 'item'):
+                    params[key] = val.item()
+                # Convert true float NaN to a safe string or None for easy testing
+                elif isinstance(val, float) and str(val) == 'nan':
+                    params[key] = None
+
+            clean_mock_dump[strategy] = params
+
+        # Print the sanitized dictionary layout
+        print("CLEAN_HARDCODED_ESTIMATORS = ")
+        pprint.pprint(clean_mock_dump, indent=4, width=120)
+
+        # --- debug ---
         # Concatenate the list of DataFrames into a single DataFrame for each set
         # We use axis=0 to stack 'Original', 'Oversampled', and 'Undersampled' vertically
         df_train = pd.concat(train_results, axis=0) if train_results else pd.DataFrame()
@@ -238,7 +264,7 @@ class ModelEvaluator:
 
         proj_title_str = ''
         proj_title_str += '\t\t\t\t\t\t+-----------------------------------+\n\t\t\t\t\t\t|'
-        proj_title_str += ' ⚙️ CREDIT CARD CHURN PREDICTOR ⚙️ '
+        proj_title_str += ' 💳️ CREDIT CARD CHURN PREDICTOR 💳️ '
         proj_title_str += '|\n\t\t\t\t\t\t+-----------------------------------+'
 
         #proj_title_str = '\t\t\t\t\t\t+-----------------------------------+\n\t\t\t\t\t\t| ⚙️ CREDIT CARD CHURN PREDICTOR ⚙️ |\n\t\t\t\t\t\t+-----------------------------------+'

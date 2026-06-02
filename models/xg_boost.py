@@ -49,7 +49,9 @@ class XGBoostModel(ModelEvaluator):
 
         # Now, store XGBoost models specifically for the final step
         # Need to store tuned_models here since the object is XGBClassifier.
+
         self.best_estimator = results['best_estimator']
+        print(f'DEBUG: setting self.best_estimator = {self.best_estimator}')
         #self.best_estimator = best_estimator
 
         return results
@@ -74,6 +76,7 @@ class XGBoostModel(ModelEvaluator):
         Compares the three XGBoost models and returns the best one.
         """
         f1_scores = []
+        print('get_best()\n')
 
         # Get F1 Scores
         for model in comp_models.columns:
@@ -82,11 +85,25 @@ class XGBoostModel(ModelEvaluator):
         # Get index and variable of the best F1 score
         best_model_index = f1_scores.index(max(f1_scores))
         best_model_title = comp_models.columns[best_model_index]
-        best_model = self.best_estimator[best_model_index]
+        #print(f'DEBUG: self.best_estimator={self.best_estimator}')
+        print(f'DEBUG: best_model_index={best_model_index}')
+        print(f'DEBUG: best_model_title={best_model_title}')
+        # Error right here!
+        #best_model = self.best_estimator[best_model_index]
 
-        show_banner('--- 🏆 BEST XG BOOST MODEL 🏆--- ', best_model_title)
+        # --- 💡 THE ALIGNMENT FIX ---
+        # Extract the variant keyword (e.g., "Original", "Oversampled", "Undersampled")
+        # and match your lowercase dictionary keys
+        strategy_key = best_model_title.split()[-1].lower()
+        print(f'strategy_key = {strategy_key}')
+
+        # Look up using 'original', 'oversampled', or 'undersampled' instead of a numeric 0
+        best_model = self.best_estimator[strategy_key]
+        # -----------------------------
+
+        show_banner('--- 🏆 BEST XG BOOST MODEL 🏆---', best_model_title)
         print(comp_models[best_model_title])
-        print(f'best_model type: {type(best_model)}')
+        #print(f'best_model type: {type(best_model)}')
 
         return best_model
 
