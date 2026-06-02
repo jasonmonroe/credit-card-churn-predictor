@@ -3,10 +3,10 @@
 import numpy as np
 import pandas as pd
 
-from src.config import *
+from src.config import CUST_CHURN_RATE, SEED, SEEDER_FILE
 
 def run():
-    print('\nLoading model for seed data generation...')
+    print('\n--- Loading model for seed data generation ---')
 
     # Note: This is the order of the columns,
     csv_header_cols = [
@@ -38,7 +38,7 @@ def run():
 
     # Categorical Options
     edu_levels = ['High School', 'Graduate', 'Uneducated', 'College', 'Post-Graduate', 'Doctorate']
-    maritals = ['Married', 'Single', 'Divorced']
+    marital = ['Married', 'Single', 'Divorced']
     incomes = ['Less than $40K', '$40K - $60K', '$60K - $80K', '$80K - $120K', '$120K +']
     cards = ['Blue', 'Silver', 'Gold', 'Platinum']
 
@@ -94,7 +94,7 @@ def run():
 
         seeder_data.append([
             client_num, attrition_flag, age, rng.choice(['M', 'F']),
-            dependents, rng.choice(edu_levels), rng.choice(maritals),
+            dependents, rng.choice(edu_levels), rng.choice(marital),
             rng.choice(incomes), rng.choice(cards), months_on_book,
             rel_count, inactive_12, contacts_12, limit, revolving_bal,
             open_to_buy, amt_chng, trans_amt, trans_ct, ct_chng, utilization
@@ -105,4 +105,5 @@ def run():
 
     df = pd.DataFrame(seeder_data, columns=csv_header_cols)
     df.to_csv(output_file, index=False)
+    
     print(f"* Successfully generated {num_rows} rows in {output_file}. *")

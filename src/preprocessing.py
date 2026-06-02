@@ -138,7 +138,7 @@ def clean_training_data(x_training_data: pd.Series, y_training_data: pd.Series):
     x_training_data = x_training_data.loc[y_training_data.index]  # Keep only rows in X_train that match y_train's index
 
     if y_training_data.empty:
-        print('Warning! Target training data is empty after dropping NaNs. Imputation cannot be performed.')
+        print('❗ Warning! Target training data is empty after dropping NaNs. Imputation cannot be performed. ❗')
     else:
         y_training_data = y_training_data.fillna(y_training_data.mode()[0])  # Impute only if y_train is not empty
 

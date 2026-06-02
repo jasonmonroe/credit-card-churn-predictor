@@ -31,6 +31,19 @@ from src.utils import (
     model_performance_classification_sklearn
 )
 
+""""
+class _Model(ModelEvaluator):
+    def __init__(self, dataset: dict):
+        super().__init__(dataset)
+        self.title = ''
+        self.model = self._create()
+        self.perf = []
+        
+    def _create(self):
+        pass
+        
+
+"""
 def build_models():
     models = [
         ('Bagging', bagging_model()),
@@ -86,7 +99,7 @@ def show_fit_model_scores(
         scores_val = recall_score(y_data, model.predict(x_data))
         print("{}: {}".format(name, scores_val))
 
-def show_classification_model_perf(mods, x_data: pd.DataFrame, y_data: pd.Series):
+def     show_classification_model_perf(mods, x_data: pd.DataFrame, y_data: pd.Series):
     for name, model in mods:
         df_perf = model_performance_classification_sklearn(model, x_data, y_data)
         print(df_perf)

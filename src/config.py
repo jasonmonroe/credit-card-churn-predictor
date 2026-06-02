@@ -64,6 +64,8 @@ TUNED_LEARNING_RATE = 0.1
 UNTUNED_ESTIMATOR_CNT = 50
 UNTUNED_LEARNING_RATE = 0.05
 
+DF_TYPES = ['original', 'oversampled', 'undersampled']
+
 GB_PARAMS = {
     "init": [
         AdaBoostClassifier(random_state=SEED),
