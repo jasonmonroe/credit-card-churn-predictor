@@ -54,6 +54,7 @@ def run_main_pipeline(seed_data=False):
     Models include: Bagging Classifier, Random Forest Classifier, ADA Boost Classifier, Gradient Boosting Classifier, 
     XG Boost Classifier.
     Build each model with original, oversampled and undersampled data.
+    Each model has it's own original, oversampled and undersampled recall scores 
     """
 
     # Bagging Model
@@ -127,7 +128,8 @@ def run_main_pipeline(seed_data=False):
     # Transpose (.T) each set so metrics become rows and sampling types become single columns
     xg_boost_comps = pd.concat([xg_boost_perfs[xgb_type].T for xgb_type in DF_TYPES], axis=1)
     xg_boost_comps.columns = [name.capitalize() for name in DF_TYPES]
-    print('* xg_boost_comps *')
+
+    print('*** XGB Boost Comparisons ***')
     print(xg_boost_comps)
     
     # ⚠ Pick the best model performance

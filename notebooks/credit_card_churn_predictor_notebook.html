@@ -13356,7 +13356,7 @@ Testing Data: 0
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <ul>
-<li><strong>Gradiant Boosting</strong> has the highest performance for training.</li>
+<li><strong>Gradient Boosting</strong> has the highest performance for training.</li>
 <li><strong>Bagging</strong> and <strong>Gradient Boosting</strong> are tied for the highest performance for validation.</li>
 </ul>
 </div>
@@ -14338,7 +14338,7 @@ Run Time: 0m 0s 298ms
 <div class="jp-InputPrompt jp-InputArea-prompt">In [100]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Gradiant Boosting</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Gradient Boosting</span>
 <span class="n">start_time</span> <span class="o">=</span> <span class="n">start_timer</span><span class="p">()</span>
 
 <span class="n">gbc</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">SEED</span><span class="p">)</span>
@@ -14387,7 +14387,7 @@ Run Time: 0m 0s 298ms
 <div class="jp-InputPrompt jp-InputArea-prompt">In [101]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Tuned Gradiant Boosting</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Tuned Gradient Boosting</span>
 <span class="n">gbc_tuned</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span>
   <span class="n">random_state</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span>
   <span class="n">n_estimators</span><span class="o">=</span><span class="n">TUNED_ESTIMATOR_CNT</span><span class="p">,</span>
@@ -14839,7 +14839,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <div class="jp-InputPrompt jp-InputArea-prompt">In [102]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking GBC tuned model peformance</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking GBC tuned model performance</span>
 <span class="n">gbc_tuned_scores</span> <span class="o">=</span> <span class="n">model_performance_classification_sklearn</span><span class="p">(</span><span class="n">gbc_tuned</span><span class="p">,</span> <span class="n">x_training_data</span><span class="p">,</span> <span class="n">y_training_data</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -15002,7 +15002,7 @@ False Negatives (FN): 128
 <div class="jp-InputPrompt jp-InputArea-prompt">In [111]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Tuned Gradiant Boosting</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Tuned Gradient Boosting</span>
 <span class="n">gbc_tuned_oversample</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span>
   <span class="n">random_state</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span>
   <span class="n">n_estimators</span><span class="o">=</span><span class="n">TUNED_ESTIMATOR_CNT</span><span class="p">,</span>
@@ -15454,7 +15454,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <div class="jp-InputPrompt jp-InputArea-prompt">In [112]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking GBC tuned model peformance</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking GBC tuned model performance</span>
 <span class="n">gbc_tuned_oversample_scores</span> <span class="o">=</span> <span class="n">model_performance_classification_sklearn</span><span class="p">(</span><span class="n">gbc_tuned_oversample</span><span class="p">,</span> <span class="n">x_training_oversample</span><span class="p">,</span> <span class="n">y_training_oversample</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -15618,7 +15618,7 @@ Run Time: 0m 44s 528ms
 <div class="jp-InputPrompt jp-InputArea-prompt">In [118]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Tuned Gradiant Boosting</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Tuned Gradient Boosting</span>
 <span class="n">gbc_tuned_undersample</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span>
   <span class="n">random_state</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span>
   <span class="n">n_estimators</span><span class="o">=</span><span class="n">TUNED_ESTIMATOR_CNT</span><span class="p">,</span>
@@ -16070,7 +16070,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <div class="jp-InputPrompt jp-InputArea-prompt">In [119]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking GBC tuned model peformance</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking GBC tuned model performance</span>
 <span class="n">gbc_tuned_undersample_scores</span> <span class="o">=</span> <span class="n">model_performance_classification_sklearn</span><span class="p">(</span><span class="n">gbc_tuned_undersample</span><span class="p">,</span> <span class="n">x_training_data</span><span class="p">,</span> <span class="n">y_training_data</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -16710,7 +16710,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <div class="jp-InputPrompt jp-InputArea-prompt">In [126]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking ADA tuned model peformance</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking ADA tuned model performance</span>
 <span class="n">ada_tuned_scores</span> <span class="o">=</span> <span class="n">model_performance_classification_sklearn</span><span class="p">(</span><span class="n">ada_tuned</span><span class="p">,</span> <span class="n">x_training_data</span><span class="p">,</span> <span class="n">y_training_data</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -17327,7 +17327,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <div class="jp-InputPrompt jp-InputArea-prompt">In [132]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking ADA (oversampled) tuned model peformance</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking ADA (oversampled) tuned model performance</span>
 <span class="n">ada_tuned_oversample_scores</span> <span class="o">=</span> <span class="n">model_performance_classification_sklearn</span><span class="p">(</span><span class="n">ada_tuned_oversample</span><span class="p">,</span> <span class="n">x_training_oversample</span><span class="p">,</span> <span class="n">y_training_oversample</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -17944,7 +17944,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <div class="jp-InputPrompt jp-InputArea-prompt">In [138]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking ADA tuned model peformance</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking ADA tuned model performance</span>
 <span class="n">ada_tuned_undersample_scores</span> <span class="o">=</span> <span class="n">model_performance_classification_sklearn</span><span class="p">(</span><span class="n">ada_tuned_undersample</span><span class="p">,</span> <span class="n">x_training_undersample</span><span class="p">,</span> <span class="n">y_training_undersample</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -18600,7 +18600,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <div class="jp-InputPrompt jp-InputArea-prompt">In [145]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking XGB tuned model peformance</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking XGB tuned model performance</span>
 <span class="n">xgb_tuned_scores</span> <span class="o">=</span> <span class="n">model_performance_classification_sklearn</span><span class="p">(</span><span class="n">xgb_tuned</span><span class="p">,</span> <span class="n">x_training_data</span><span class="p">,</span> <span class="n">y_training_data</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -19235,7 +19235,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <div class="jp-InputPrompt jp-InputArea-prompt">In [151]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking XGB tuned model peformance</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checking XGB tuned model performance</span>
 <span class="n">xgb_tuned_oversample_scores</span> <span class="o">=</span> <span class="n">model_performance_classification_sklearn</span><span class="p">(</span><span class="n">xgb_tuned_oversample</span><span class="p">,</span> <span class="n">x_training_oversample</span><span class="p">,</span> <span class="n">y_training_oversample</span><span class="p">)</span>
 </pre></div>
 </div>

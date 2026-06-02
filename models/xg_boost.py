@@ -91,15 +91,14 @@ class XGBoostModel(ModelEvaluator):
         # Error right here!
         #best_model = self.best_estimator[best_model_index]
 
-        # --- 💡 THE ALIGNMENT FIX ---
+
         # Extract the variant keyword (e.g., "Original", "Oversampled", "Undersampled")
         # and match your lowercase dictionary keys
-        strategy_key = best_model_title.split()[-1].lower()
-        print(f'strategy_key = {strategy_key}')
+        col_header = best_model_title.split()[-1].lower()
+        print(f'strategy_key = {col_header}')
 
         # Look up using 'original', 'oversampled', or 'undersampled' instead of a numeric 0
-        best_model = self.best_estimator[strategy_key]
-        # -----------------------------
+        best_model = self.best_estimator[col_header]
 
         show_banner('--- 🏆 BEST XG BOOST MODEL 🏆---', best_model_title)
         print(comp_models[best_model_title])
@@ -111,9 +110,7 @@ class XGBoostModel(ModelEvaluator):
         best_model = self.get_best(comp_models)
         best_perf = self._get_model_perf(best_model, self.x_test, self.y_test)
 
-        print('--- Best Model Performance ---')
+        print('# --- Best Model Performance --- #')
         print(best_perf)
 
         plot_confusion_matrix(best_model, self.x_test, self.y_test)
-
-

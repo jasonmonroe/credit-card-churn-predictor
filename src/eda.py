@@ -319,7 +319,7 @@ def plot_confusion_matrix(model, X, y_true):
     ])
 
     # Display the confusion matrix as a heatmap
-    title = 'Confusion Matrix Heatmap'
+    title = 'Plot Confusion Matrix Heatmap'
     plt.figure(num=f'{title}', figsize=(6, 4))
     sns.heatmap(
         cm,

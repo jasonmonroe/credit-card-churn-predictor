@@ -9,6 +9,7 @@ import pandas as pd
 from sklearn.base import BaseEstimator
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from sklearn.model_selection import ParameterGrid, RandomizedSearchCV
+from src.eda import plot_confusion_matrix
 from xgboost import XGBClassifier
 
 from src.config import CV_FOLDS, DF_TYPES, MAX_PROC_THREADS, OUTPUT_FILE, PARAM_DISTR_CNT, SEED
@@ -23,10 +24,10 @@ class ModelEvaluator:
         self.perf = pd.DataFrame()
         self.sampled = {}
 
-        # Scores
+        # Recalled Scores after Fitting Model
         self.orig = {'train': 0.0, 'val': 0.0}
-        self.oversample = {'train': 0.0, 'val': 0.0}
-        self.undersample = {'train': 0.0, 'val': 0.0}
+        self.oversampled = {'train': 0.0, 'val': 0.0}
+        self.undersampled = {'train': 0.0, 'val': 0.0}
 
         self.x_train = pd.DataFrame()
         self.y_train = pd.Series()
@@ -76,7 +77,7 @@ class ModelEvaluator:
 
     def run(self):
 
-        # Get original, oversamples and undersampled datasets
+        # Get original, oversampled and undersampled datasets
         print(f'\n--- Running {self.title} Model Performances ---')
 
         self.run_orig()
@@ -87,25 +88,32 @@ class ModelEvaluator:
         print(f'\n* {self.title} Original Data *')
         self.orig['train'] = self._fit_model(self.x_train, self.y_train, self.x_train, self.y_train)
         self.orig['val'] = self._fit_model(self.x_train, self.y_train, self.x_val, self.y_val)
-        print(self.orig)
+
+        print(f'Training: {self.orig["train"]}, Validation: {self.orig["val"]}')
+        # @todo - Is this a duplicate call since I'm calling it again in get_results()?
+        #plot_confusion_matrix(self.model, self.x_train, self.y_train)
         self.show_classification_model_perf(self.x_train, self.y_train)
 
     def run_oversampled(self):
         print(f'\n* {self.title} Oversampled Data *')
 
-        self.oversample['train'] = self._fit_model(self.x_over, self.y_over, self.x_over, self.y_over)
-        self.oversample['val'] = self._fit_model(self.x_over, self.y_over, self.x_val, self.y_val)
-        print(f'Training: {self.oversample["train"]}')
-        print(f'Validation: {self.oversample["val"]}')
+        self.oversampled['train'] = self._fit_model(self.x_over, self.y_over, self.x_over, self.y_over)
+        self.oversampled['val'] = self._fit_model(self.x_over, self.y_over, self.x_val, self.y_val)
+
+        print(f'Training: {self.oversampled["train"]}, Validation: {self.oversampled["val"]}')
+        plot_confusion_matrix(self.model, self.x_over, self.y_over)
+        # @todo - Is this a duplicate call since I'm calling it again in get_results()?
         self.show_classification_model_perf(self.x_over, self.y_over)
 
     def run_undersampled(self):
         print(f'\n* {self.title} Undersampled Data *')
 
-        self.undersample['train'] = self._fit_model(self.x_under, self.y_under, self.x_under, self.y_under)
-        self.undersample['val'] = self._fit_model(self.x_under, self.y_under, self.x_val, self.y_val)
-        print(f'Training: {self.undersample["train"]}')
-        print(f'Validation: {self.undersample["val"]}')
+        self.undersampled['train'] = self._fit_model(self.x_under, self.y_under, self.x_under, self.y_under)
+        self.undersampled['val'] = self._fit_model(self.x_under, self.y_under, self.x_val, self.y_val)
+        print(f'Training: {self.undersampled["train"]}')
+        print(f'Validation: {self.undersampled["val"]}')
+        # @todo - Is this a duplicate call since I'm calling it again in get_results()?
+        #plot_confusion_matrix(self.model, self.x_under, self.y_under)
         self.show_classification_model_perf(self.x_under, self.y_under)
 
     def show_classification_model_perf(self, x, y):
@@ -119,7 +127,7 @@ class ModelEvaluator:
 
         return score
 
-    def _tune(self, scorer) -> BaseEstimator:
+    def _tune(self, scorer, x, y) -> Any:
         """
         Helper function to perform RandomizedSearchCV, fit the best model, and calculate scores.
         
@@ -140,7 +148,7 @@ class ModelEvaluator:
         )
 
         # Fit model
-        randomized_cv.fit(self.x_train, self.y_train)
+        randomized_cv.fit(x, y)
 
         print(f'💡 CV Score: {randomized_cv.best_score_}')
         print('✅ Best parameters are: ')
@@ -157,20 +165,45 @@ class ModelEvaluator:
             title = f'{self.title} {df_type.title()}'
             print(f'\n🔧 --- Tuning {title} Data ---')
 
+            # Determine data types to get the x & y values.
+            # Note: Every model shares the same x/y_over and x/y_under data due the data being called once, merged into
+            # the dataset and passed as an argument into each model.
+            x, y = pd.DataFrame(), pd.Series()
+
+            if df_type == 'original':
+                x, y = self.x_train, self.y_train
+            elif df_type == 'oversampled':
+                x, y = self.x_over, self.y_over
+            elif df_type == 'undersampled':
+                x, y = self.x_under, self.y_under
+
             start_time = start_timer()
-            tuned_model = self._tune(scorer)
+            tuned_model = self._tune(scorer, x, y)
             show_timer(start_time)
 
-            train_perf = self._get_model_perf(tuned_model, self.x_train, self.y_train)
-            val_perf = self._get_model_perf(tuned_model, self.x_val, self.y_val)
+            # Display Plot Confusion Matrix
+            #plot_confusion_matrix(tuned_model, x, y)
 
+            # Store performance results for each model
+            #train_perf = self._get_model_perf(tuned_model, self.x_train, self.y_train)
+            #val_perf = self._get_model_perf(tuned_model, self.x_val, self.y_val)
+            # @todo - what x, y variables go here???
+            # have I already stored x,y of train & val for original, oversampled, undersampled
+
+            # Do I save these when I call run_orig, run_oversampled(), run_undersampled()?
+            # Or do I just repeat it again so that I can store the values in train_perf, val_perf?
+            train_perf = self._get_model_perf(tuned_model, x, y)
+            val_perf = self._get_model_perf(tuned_model, x, y)
+
+            # Append the performance results into the training and validation array that'll be used for plotting and
+            # picking the best model.
             train_results.append(train_perf)
             val_results.append(val_perf)
             model_titles.append(f'{title}')
 
             if isinstance(self.model, XGBClassifier):
                 print('💡 DEBUG: instance is XGBClassifier')
-                xgb['title'] += title+' '
+                xgb['title'] += title + ' '
                 xgb[df_type] = tuned_model
             else:
                 print(f'❌ DEBUG: {type(self.model).__name__} is not XGBClassifier')
@@ -225,7 +258,7 @@ class ModelEvaluator:
         create a matrix for viewing.
         Reassign indices cleanly inside the looping block so .loc maps perfectly
         """
-        train_cols, val_cols, title_cols = [],[],[]
+        train_cols, val_cols, title_cols = [], [], []
 
         for result in results:
             train_cols.append(self._flatten(result, 'train'))
@@ -267,8 +300,6 @@ class ModelEvaluator:
         proj_title_str += ' 💳️ CREDIT CARD CHURN PREDICTOR 💳️ '
         proj_title_str += '|\n\t\t\t\t\t\t+-----------------------------------+'
 
-        #proj_title_str = '\t\t\t\t\t\t+-----------------------------------+\n\t\t\t\t\t\t| ⚙️ CREDIT CARD CHURN PREDICTOR ⚙️ |\n\t\t\t\t\t\t+-----------------------------------+'
-
         # Print Results to file
         with open(OUTPUT_FILE, 'w') as f:
             f.write(proj_title_str)
@@ -280,7 +311,6 @@ class ModelEvaluator:
             f.write('------------------------- ⚙️ Model Validation Comparisons ⚙️ --------------------------\n')
             f.write(df_val_long.to_string())
             f.write('\n----------------------------------------------------------------------------------------')
-
 
     @staticmethod
     def _get_model_perf(model, predictors, target) -> pd.DataFrame:

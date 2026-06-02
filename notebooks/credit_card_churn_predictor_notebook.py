@@ -1075,7 +1075,7 @@ else:
 
 Sample code for model building with original data
 
-*   **Gradiant Boosting** has the highest performance for training.
+*   **Gradient Boosting** has the highest performance for training.
 *   **Bagging** and **Gradient Boosting** are tied for the highest performance for validation.
 """
 
@@ -1301,7 +1301,7 @@ DECISION_TREE_PARAMS = {
     "max_features": [0.5, 0.7, 1],
 }
 
-# Gradiant Boosting
+# Gradient Boosting
 start_time = start_timer()
 
 gbc = GradientBoostingClassifier(random_state=SEED)
@@ -1325,7 +1325,7 @@ randomized_cv.fit(x_training_data, y_training_data)
 print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
 show_timer(start_time)
 
-# Tuned Gradiant Boosting
+# Tuned Gradient Boosting
 gbc_tuned = GradientBoostingClassifier(
   random_state=SEED,
   n_estimators=TUNED_ESTIMATOR_CNT,
@@ -1336,7 +1336,7 @@ gbc_tuned = GradientBoostingClassifier(
 
 gbc_tuned.fit(x_training_data, y_training_data)
 
-# Checking GBC tuned model peformance
+# Checking GBC tuned model performance
 gbc_tuned_scores = model_performance_classification_sklearn(gbc_tuned, x_training_data, y_training_data)
 
 plot_confusion_matrix(gbc_tuned, x_training_data, y_training_data)
@@ -1369,7 +1369,7 @@ randomized_cv.fit(x_training_oversample, y_training_oversample)
 print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
 show_timer(start_time)
 
-# Tuned Gradiant Boosting
+# Tuned Gradient Boosting
 gbc_tuned_oversample = GradientBoostingClassifier(
   random_state=SEED,
   n_estimators=TUNED_ESTIMATOR_CNT,
@@ -1380,7 +1380,7 @@ gbc_tuned_oversample = GradientBoostingClassifier(
 
 gbc_tuned_oversample.fit(x_training_oversample, y_training_oversample)
 
-# Checking GBC tuned model peformance
+# Checking GBC tuned model performance
 gbc_tuned_oversample_scores = model_performance_classification_sklearn(gbc_tuned_oversample, x_training_oversample, y_training_oversample)
 
 plot_confusion_matrix(gbc_tuned_oversample, x_training_oversample, y_training_oversample)
@@ -1413,7 +1413,7 @@ randomized_cv.fit(x_training_undersample, y_training_undersample)
 print("Best parameters are {} with CV score={}:".format(randomized_cv.best_params_, randomized_cv.best_score_))
 show_timer(start_time)
 
-# Tuned Gradiant Boosting
+# Tuned Gradient Boosting
 gbc_tuned_undersample = GradientBoostingClassifier(
   random_state=SEED,
   n_estimators=TUNED_ESTIMATOR_CNT,
@@ -1424,7 +1424,7 @@ gbc_tuned_undersample = GradientBoostingClassifier(
 
 gbc_tuned_undersample.fit(x_training_data, y_training_data)
 
-# Checking GBC tuned model peformance
+# Checking GBC tuned model performance
 gbc_tuned_undersample_scores = model_performance_classification_sklearn(gbc_tuned_undersample, x_training_data, y_training_data)
 
 plot_confusion_matrix(gbc_tuned_undersample, x_training_undersample, y_training_undersample)
@@ -1478,7 +1478,7 @@ ada_tuned = AdaBoostClassifier(
 
 ada_tuned.fit(x_training_data, y_training_data)
 
-# Checking ADA tuned model peformance
+# Checking ADA tuned model performance
 ada_tuned_scores = model_performance_classification_sklearn(ada_tuned, x_training_data, y_training_data)
 
 plot_confusion_matrix(ada_tuned, x_training_data, y_training_data)
@@ -1521,7 +1521,7 @@ ada_tuned_oversample = AdaBoostClassifier(
 
 ada_tuned_oversample.fit(x_training_oversample, y_training_oversample)
 
-# Checking ADA (oversampled) tuned model peformance
+# Checking ADA (oversampled) tuned model performance
 ada_tuned_oversample_scores = model_performance_classification_sklearn(ada_tuned_oversample, x_training_oversample, y_training_oversample)
 
 plot_confusion_matrix(ada_tuned_oversample, x_training_oversample, y_training_oversample)
@@ -1564,7 +1564,7 @@ ada_tuned_undersample = AdaBoostClassifier(
 
 ada_tuned_undersample.fit(x_training_undersample, y_training_undersample)
 
-# Checking ADA tuned model peformance
+# Checking ADA tuned model performance
 ada_tuned_undersample_scores = model_performance_classification_sklearn(ada_tuned_undersample, x_training_undersample, y_training_undersample)
 
 plot_confusion_matrix(ada_tuned_undersample, x_training_undersample, y_training_undersample)
@@ -1618,7 +1618,7 @@ xgb_tuned = XGBClassifier(
 
 xgb_tuned.fit(x_training_data, y_training_data)
 
-# Checking XGB tuned model peformance
+# Checking XGB tuned model performance
 xgb_tuned_scores = model_performance_classification_sklearn(xgb_tuned, x_training_data, y_training_data)
 
 plot_confusion_matrix(xgb_tuned, x_training_data, y_training_data)
@@ -1663,7 +1663,7 @@ xgb_tuned_oversample = XGBClassifier(
 
 xgb_tuned_oversample.fit(x_training_oversample, y_training_oversample)
 
-# Checking XGB tuned model peformance
+# Checking XGB tuned model performance
 xgb_tuned_oversample_scores = model_performance_classification_sklearn(xgb_tuned_oversample, x_training_oversample, y_training_oversample)
 
 plot_confusion_matrix(xgb_tuned_oversample, x_training_oversample, y_training_oversample)
