@@ -6,6 +6,7 @@
 SAMPLE_FILE = 'data/sample_data.csv'
 SEEDER_FILE = 'data/seeder_data.csv'
 DATASET_FILE = 'data/dataset.csv'
+OUTPUT_FILE = 'outputs/model_comparison_report.txt'
 
 # Customer Churn Rate (16%)
 CUST_CHURN_RATE = 0.16

@@ -23,7 +23,7 @@ class XGBoostModel(ModelEvaluator):
         self.model = self._create()
         self.params = self.get_params()
         self.perf = []
-        self.best_estimator = {}
+        self.best_estimator = None
 
     def _create(self) -> XGBClassifier:
         return XGBClassifier(
@@ -50,6 +50,7 @@ class XGBoostModel(ModelEvaluator):
         # Now, store XGBoost models specifically for the final step
         # Need to store tuned_models here since the object is XGBClassifier.
         self.best_estimator = results['best_estimator']
+        #self.best_estimator = best_estimator
 
         return results
 
@@ -60,8 +61,9 @@ class XGBoostModel(ModelEvaluator):
         """
 
         perf = {}
-        for xgb_type in self.best_estimator:
-            perf[xgb_type] = self._get_model_perf(self.best_estimator[xgb_type], self.x_test, self.y_test)
+        if self.best_estimator is not None:
+            for xgb_type in self.best_estimator:
+                perf[xgb_type] = self._get_model_perf(self.best_estimator[xgb_type], self.x_test, self.y_test)
 
         return perf
 

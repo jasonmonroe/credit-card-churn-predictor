@@ -53,7 +53,7 @@ def run():
         attrition_flag = 'Attrited Customer' if is_churn else 'Existing Customer'
 
         # 2. Apply Behavioral Correlation
-        # Introduce noise: 5% chance to decouple behavior from attrition status (simulating outliers)
+        # Inject 5% stochastic noise to simulate real-world anomalies and outliers.
         simulate_churn_behavior = is_churn
         if rng.random() < 0.05:
             simulate_churn_behavior = not simulate_churn_behavior
@@ -106,4 +106,4 @@ def run():
     df = pd.DataFrame(seeder_data, columns=csv_header_cols)
     df.to_csv(output_file, index=False)
     
-    print(f"* Successfully generated {num_rows} rows in {output_file}. *")
+    print(f"* Successfully generated {int(num_rows)} rows in {output_file}. *")

@@ -28,7 +28,7 @@ def get_time(start_time_float: float) -> str:
     ms = fractional_seconds * MSEC
     return f"{int(minutes)}m {int(seconds)}s {int(ms)}ms"
 
-def show_timer(start_time_int: float) -> None:
+def show_timer(start_time_int: float) -> str:
     print(f"Run Time: {get_time(start_time_int)}")
 
 def show_banner(title: str, section: str = '') -> None:

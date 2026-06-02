@@ -1,11 +1,11 @@
 
 # ---  --- RUN ID: 10246--- | START PROGRAM --- #
 +-----------------------------+
-+ CREDIT CARD CHURN PREDICTOR +
+| CREDIT CARD CHURN PREDICTOR |
 +-----------------------------+
 
 +-------------------------+
-|  ORIGINAL DATA MODEL  |
+|  ORIGINAL DATA MODEL    |
 +-------------------------+
 | Training Performance
 
@@ -134,49 +134,49 @@ Run Time: 0m 0s 51ms
 Best parameters are {'subsample': 0.9, 'n_estimators': np.int64(75), 'max_features': 1, 'learning_rate': 0.01, 'init': AdaBoostClassifier(random_state=42)} with CV score=0.9756848486742496:
 
 +------------------------------------------+
-|  TUNING GRADIENT BOOSTING OVERSAMPLED  |
+|  TUNING GRADIENT BOOSTING OVERSAMPLED    |
 +------------------------------------------+
 
 Best parameters are {'subsample': 0.7, 'n_estimators': np.int64(100), 'max_features': 0.7, 'learning_rate': 0.1, 'init': AdaBoostClassifier(random_state=42)} with CV score=0.9516644420797151:
 
 +-------------------------------------------+
-|  TUNING GRADIENT BOOSTING UNDERSAMPLED  |
+|  TUNING GRADIENT BOOSTING UNDERSAMPLED    |
 +-------------------------------------------+
 
 Best parameters are {'subsample': 0.7, 'n_estimators': np.int64(100), 'max_features': 0.5, 'learning_rate': 0.1, 'init': AdaBoostClassifier(random_state=42)} with CV score=0.9456456786612298:
 
 +------------------------------+
-|  TUNING ADABOOST ORIGINAL  |
+|  TUNING ADABOOST ORIGINAL    |
 +------------------------------+
 
 Best parameters are {'n_estimators': np.int64(100), 'learning_rate': 0.1, 'estimator': DecisionTreeClassifier(max_depth=3, random_state=42)} with CV score=0.9319263502454991:
 
 +---------------------------------+
-|  TUNING ADABOOST OVERSAMPLED  |
+|  TUNING ADABOOST OVERSAMPLED    |
 +---------------------------------+
 
 Best parameters are {'n_estimators': np.int64(100), 'learning_rate': 0.1, 'estimator': DecisionTreeClassifier(max_depth=3, random_state=42)} with CV score=0.9364265655049712:
 
 +----------------------------------+
-|  TUNING ADABOOST UNDERSAMPLED  |
+|  TUNING ADABOOST UNDERSAMPLED    |
 +----------------------------------+
 
 Best parameters are {'n_estimators': np.int64(100), 'learning_rate': 0.1, 'estimator': DecisionTreeClassifier(max_depth=3, random_state=42)} with CV score=0.93438909445183:
 
 +-----------------------------+
-|  TUNING XGBOOST ORIGINAL  |
+|  TUNING XGBOOST ORIGINAL    |
 +-----------------------------+
 
 Best parameters are {'subsample': 0.7, 'scale_pos_weight': 1, 'n_estimators': np.int64(75), 'learning_rate': 0.01, 'gamma': 3} with CV score=0.967724434255057:
 
 +--------------------------------+
-|  TUNING XGBOOST OVERSAMPLED  |
+|  TUNING XGBOOST OVERSAMPLED    |
 +--------------------------------+
 
 Best parameters are {'subsample': 0.7, 'scale_pos_weight': 1, 'n_estimators': np.int64(100), 'learning_rate': 0.1, 'gamma': 5} with CV score=0.9509439704217808:
 
 +---------------------------------+
-|  TUNING XGBOOST UNDERSAMPLED  |
+|  TUNING XGBOOST UNDERSAMPLED    |
 +---------------------------------+
 
 Best parameters are {'subsample': 0.9, 'scale_pos_weight': 1, 'n_estimators': np.int64(100), 'learning_rate': 0.1, 'gamma': 1} with CV score=0.9463719777470686:
@@ -201,12 +201,12 @@ Precision              0.766447             0.767361       0.912281
 F1                     0.850365             0.830827       0.345515
 
 +------------------------------------------+
-|  FINAL MODEL W/ PLOT CONFUSION MATRIX  |
+|  FINAL MODEL W/ PLOT CONFUSION MATRIX    |
 +------------------------------------------+
 
 
 +----------------+
-|  BEST MODEL  |
+|  BEST MODEL    |
 +----------------+
 | XGBoost Undersampled
 
@@ -224,4 +224,4 @@ False Negatives (FN): 11
 
 Run Time: 3m 0s 76ms
 
-#---  --- RUN ID: 10246--- | END PROGRAM ---#
+#---  RUN ID: 10246 | END PROGRAM ---#

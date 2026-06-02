@@ -1,7 +1,10 @@
 # src/main.py
+
 import argparse
 import gc
 import pandas as pd
+
+from sklearn.metrics import make_scorer, precision_score
 
 from models.ada_boost import AdaBoostModel
 from models.bagging import BaggingModel
@@ -10,31 +13,12 @@ from models.model_evaluator import ModelEvaluator
 from models.random_forest import RandomForestModel
 from models.xg_boost import XGBoostModel
 
-from sklearn.metrics import make_scorer, precision_score
-
-from src.config import DF_TYPES
+from src.config import DF_TYPES, OUTPUT_FILE
 from src.data_handler import DataHandler
 from src.eda import run_eda
 from src.utils import get_run_id, start_timer, show_timer
-#from src.preprocessing import (
-#    get_df,
-#    process_data
-#)
-from src.modeling import (
-    run_model_performance,
-    oversample_data,
-    undersample_data,
-    pick_best_model,
-    #model_performance_classification_sklearn,
-    build_models,
-    tune_and_evaluate,
-    gradient_boosting_model,
-    xgboost_model,
-    ada_boost_model
-)
+from src.utils import get_time, show_banner
 
-from sklearn.metrics import make_scorer, precision_score
-from src.utils import show_banner
 
 def run_eda_pipeline(seed_data=False):
 
@@ -65,7 +49,6 @@ def run_main_pipeline(seed_data=False):
     # Merge the sampled data into the dataset
     df = {**df, **sampled}
 
-
     """
     Build Models with original, oversampled and undersampled data.
     Models include: Bagging Classifier, Random Forest Classifier, ADA Boost Classifier, Gradient Boosting Classifier, 
@@ -95,8 +78,8 @@ def run_main_pipeline(seed_data=False):
     #ada_boost_model.run_undersampled(x_us, y_us)
 
     # Gradient Boosting Classifier
-    gradient_boost_model = GradientBoostingModel(df)
-    gradient_boost_model.run()
+    gradient_boosting_model = GradientBoostingModel(df)
+    gradient_boosting_model.run()
     #gradient_boost_model.run_orig()
     #gradient_boost_model.run_oversampled(x_os, y_os)
     #gradient_boost_model.run_undersampled(x_us, y_us)
@@ -111,36 +94,57 @@ def run_main_pipeline(seed_data=False):
     # --- Hyperparameter Tuning ---
     scorer = make_scorer(precision_score, zero_division=0)
 
-    # Define the datasets to iterate over
-    #xg_boost = {}
-    gradient_boost_results = gradient_boost_model.get_results(scorer)
+    # Get training, validation results from each model for original, oversampled and undersampled data.
+    bagging_results = bagging_model.get_results(scorer)
+    random_forest_results = rf_model.get_results(scorer)
+    gradient_boosting_results = gradient_boosting_model.get_results(scorer)
     ada_boost_results = ada_boost_model.get_results(scorer)
     xg_boost_results = xg_boost_model.get_results(scorer)
 
-    print('--- Training Comparison ---')
-    comp_columns = [gradient_boost_results['titles'], ada_boost_results['titles'], xg_boost_results['titles']]
-    training_models = pd.concat([gradient_boost_results['train'], ada_boost_results['train'], xg_boost_results['train']], axis=1)
-    training_models.columns = comp_columns
-    print(training_models)
-    #print(gradient_boost_results['train'])
-    #print(ada_boost_results['train'])
-    #print(xg_boost_results['train'])
-    #train_models = pd.concat(train_results, axis=1)
-    #training_models.columns =
+    # Collect all results into a list to process dynamically
+    # This list allows us to iterate once and handle all comparison tables
+    orig_model_results = [gradient_boosting_results, ada_boost_results, xg_boost_results]
+    model_results = [bagging_results, random_forest_results, ada_boost_results, gradient_boosting_results, ada_boost_results, xg_boost_results]
 
-    print('--- Validation Comparison ---')
-    val_models = pd.concat([gradient_boost_results['val'], ada_boost_results['val'], xg_boost_results['val']], axis=1)
-    val_models.columns = comp_columns
-    print(val_models)
-    #val_models = pd.concat(val_results, axis=1)
+
     
-    
+    print('DEBUG: --- model_results ----')
+    print(model_results)
+    print('DEBUG: --- model_results ----\n')
+
+    """
+    --- Format Results for Comparison ---
+    Take the training and validation data for each model that used original, oversampled and undersampled data and 
+    create a matrix for viewing.
+    """
+    model_eval.print_comparisons(model_results)
+
+
+    # 1. Generate flat list of titles (e.g., ['GB Original', 'GB Oversampled' ...])
+    # We filter out 'best_estimator' from the column headers to match our sampled types
+    #flat_titles = [title for res in model_results for title in res['titles'] ] # if not res['best_estimator']
+
+    #print('\n--- ⚙️ Model Training Comparisons ⚙️ ---')
+    # Using .loc[res['titles']] ensures we only pull the 3 specific rows (Original, Over, Under)
+    # and excludes the 'best_estimator' row that was causing the 12 vs 9 length mismatch.
+    #training_models = pd.concat([res['train'].loc[res['titles']].T for res in model_results], axis=1)
+    #training_models.columns = flat_titles
+    #print(training_models)
+
+    #print('\n--- Model ☑️️ Validation Comparisons ☑️️ ---')
+    # We add " Value" to the validation columns to maintain your original output style
+    #val_models = pd.concat([res['val'].loc[res['titles']].T for res in model_results], axis=1)
+    #val_models.columns = [f"{t} Value" for t in flat_titles]
+    #print(f'val_models={val_models}')
+
     # Final Test Performance (XGB Boost Specific)
+    # This logic matches your main2.py logic but utilizes the new XGBoostModel class state
     xg_boost_perfs = xg_boost_model.get_perf()
     
     # Create the comparison dataframe horizontally to match previous tables
     xg_boost_comps = pd.concat([xg_boost_perfs[xgb_type] for xgb_type in DF_TYPES], axis=1)
     xg_boost_comps.columns = [name.capitalize() for name in DF_TYPES]
+    print('* xg_boost_comps *')
     print(xg_boost_comps)
     
     # ⚠ Pick the best model performance
@@ -149,6 +153,139 @@ def run_main_pipeline(seed_data=False):
 
     # --- End of Program --- #
 
+
+# --- DEBUG --- #
+def run_debug(seed_data=False):
+    import pandas as pd
+    import numpy as np
+
+    print('\n### DEBUG OUTPUT ####')
+
+    # -------------------------------------------------------------
+    # HARDCODED PIPELINE DATA (Updated from your new terminal dump)
+    # -------------------------------------------------------------
+
+    # 1. Bagging Data Blocks
+    bagging_results = {
+        'train': pd.DataFrame([[1.0, 1.0, 1.0, 1.0], [1.0, 1.0, 1.0, 1.0], [1.0, 1.0, 1.0, 1.0]], columns=['Accuracy', 'Recall', 'Precision', 'F1'], index=[0, 0, 0]),
+        'val': pd.DataFrame([[0.9605, 0.836066, 0.910714, 0.871795], [0.9605, 0.836066, 0.910714, 0.871795], [0.9605, 0.836066, 0.910714, 0.871795]], columns=['Accuracy', 'Recall', 'Precision', 'F1'], index=[0, 0, 0]),
+        'titles': ['Bagging Original', 'Bagging Oversampled', 'Bagging Undersampled']
+    }
+
+    # 2. Random Forest Data Blocks
+    random_forest_results = {
+        'train': pd.DataFrame([[0.913516, 0.527656, 0.889053, 0.662259], [0.913516, 0.527656, 0.889053, 0.662259], [0.913516, 0.527656, 0.889053, 0.662259]], columns=['Accuracy', 'Recall', 'Precision', 'F1'], index=[0, 0, 0]),
+        'val': pd.DataFrame([[0.899934, 0.45082, 0.859375, 0.591398], [0.899934, 0.45082, 0.859375, 0.591398], [0.899934, 0.45082, 0.859375, 0.591398]], columns=['Accuracy', 'Recall', 'Precision', 'F1'], index=[0, 0, 0]),
+        'titles': ['Random Forest Classifier Original', 'Random Forest Classifier Oversampled', 'Random Forest Classifier Undersampled']
+    }
+
+    # 3. ADA Boost Data Blocks
+    ada_boost_results = {
+        'train': pd.DataFrame([[0.96741, 0.843723, 0.947732, 0.892708], [0.96741, 0.843723, 0.947732, 0.892708], [0.96741, 0.843723, 0.947732, 0.892708]], columns=['Accuracy', 'Recall', 'Precision', 'F1'], index=[0, 0, 0]),
+        'val': pd.DataFrame([[0.949967, 0.758197, 0.915842, 0.829596], [0.949967, 0.758197, 0.915842, 0.829596], [0.949967, 0.758197, 0.915842, 0.829596]], columns=['Accuracy', 'Recall', 'Precision', 'F1'], index=[0, 0, 0]),
+        'titles': ['ADA Boost Classifier Original', 'ADA Boost Classifier Oversampled', 'ADA Boost Classifier Undersampled']
+    }
+
+    # 4. Gradient Boosting Data Blocks
+    gradient_boosting_results = {
+        'train': pd.DataFrame([[0.975875, 0.889377, 0.957467, 0.922167], [0.975875, 0.889377, 0.957467, 0.922167], [0.975875, 0.889377, 0.957467, 0.922167]], columns=['Accuracy', 'Recall', 'Precision', 'F1'], index=[0, 0, 0]),
+        'val': pd.DataFrame([[0.9605, 0.807377, 0.938095, 0.867841], [0.9605, 0.807377, 0.938095, 0.867841], [0.9605, 0.807377, 0.938095, 0.867841]], columns=['Accuracy', 'Recall', 'Precision', 'F1'], index=[0, 0, 0]),
+        'titles': ['Gradient Boosting Classifier Original', 'Gradient Boosting Classifier Oversampled', 'Gradient Boosting Classifier Undersampled']
+    }
+
+    # 5. XGBoost Data Blocks
+    xg_boost_results = {
+        'train': pd.DataFrame([[0.881631, 0.271291, 0.971698, 0.424159], [0.881631, 0.271291, 0.971698, 0.424159], [0.881631, 0.271291, 0.971698, 0.424159]], columns=['Accuracy', 'Recall', 'Precision', 'F1'], index=[0, 0, 0]),
+        'val': pd.DataFrame([[0.875576, 0.241803, 0.936508, 0.384365], [0.875576, 0.241803, 0.936508, 0.384365], [0.875576, 0.241803, 0.936508, 0.384365]], columns=['Accuracy', 'Recall', 'Precision', 'F1'], index=[0, 0, 0]),
+        'titles': ['XG Boost Classifier Original', 'XG Boost Classifier Oversampled', 'XG Boost Classifier Undersampled'],
+        'best_estimator': {'original': 'XGBClassifier(...)', 'oversampled': 'XGBClassifier(...)', 'undersampled': 'XGBClassifier(...)'}
+    }
+
+    # Re-assembling model_results array exactly like your terminal execution state
+    model_results = [
+        bagging_results,
+        random_forest_results,
+        ada_boost_results,
+        gradient_boosting_results,
+        ada_boost_results,
+        xg_boost_results
+    ]
+
+    # -------------------------------------------------------------
+    # THE BREAKING PIPELINE RUN
+    # -------------------------------------------------------------
+
+    # Generates the target flat labels list
+    flat_titles = [title for res in model_results for title in res['titles']]
+    #print(flat_titles)
+
+    print('\n--- ⚙️ Training Comparison ⚙️ ---')
+    try:
+
+        training_chart = bagging_results['train'].T
+        print("--- Training Chart ---")
+        print(training_chart)
+
+        print('###############')
+        # 1. Take the original DataFrame (which has rows 0, 0, 0)
+        df_train = bagging_results['train'].copy()
+
+        # 2. Force overwrite the row labels [0, 0, 0] with your list of titles
+        df_train.index = bagging_results['titles']
+
+        # 3. Transpose (.T) to turn the titles into columns and the metrics into rows
+        training_chart = df_train.T
+
+        print("--- Training Chart (Inline Fix) ---")
+        print(training_chart)
+
+
+        # This triggers your exact KeyError immediately!
+        #training_models = pd.concat([res['train'].loc[res['titles']].T for res in model_results], axis=1)
+        #training_models.columns = flat_titles
+        #print(training_models)
+    except KeyError as e:
+        print(f"🚨 CAUGHT EXPECTED EXCEPTION:\nKeyError: {e}")
+
+    print('\n--- 💡 THE PRODUCTION REFACTOR FIX ---')
+    # Fix logic: Reassign indices cleanly inside the looping block so .loc maps perfectly
+
+    train_columns_fixed = []
+    val_columns_fixed = []
+    resolved_flat_titles = []
+
+    for res in model_results:
+        # 1. Process Training Blocks
+        df_train = res['train'].copy()
+        df_train.index = res['titles']  # Overwrites the broken [0, 0, 0] with real strings
+        train_columns_fixed.append(df_train.loc[res['titles']].T)
+
+        # 2. Process Validation Blocks
+        df_val = res['val'].copy()
+        df_val.index = res['titles']
+        val_columns_fixed.append(df_val.loc[res['titles']].T)
+
+        # 3. Collect titles explicitly to avoid length mismatches from duplicated entry items
+        resolved_flat_titles.extend(res['titles'])
+
+    # Horizontal Concatenation
+    training_models_fixed = pd.concat(train_columns_fixed, axis=1)
+    training_models_fixed.columns = resolved_flat_titles
+    print("TRAINING COMPARISON GRID:")
+    print(training_models_fixed)
+
+    print('\n--- Validation Comparison ---')
+    val_models_fixed = pd.concat(val_columns_fixed, axis=1)
+    val_models_fixed.columns = [f"{t} Value" for t in resolved_flat_titles]
+    print("VALIDATION COMPARISON GRID:")
+    print(val_models_fixed)
+
+    print('!!! PRINT COMPARISONS !!!')
+    model_eval = ModelEvaluator({})
+    model_eval.print_comparisons(model_results)
+
+
+# --- DEBUG --- #
 
 if __name__ == '__main__':
     main_start_time = start_timer()
@@ -176,10 +313,15 @@ if __name__ == '__main__':
         run_eda_pipeline(args.seed)
     else:
         run_main_pipeline(args.seed)
+        #run_debug(args.seed)
 
     gc.collect()
 
     print('\n')
     show_timer(main_start_time)
+
+    # Write the run time at the end of file
+    with open(OUTPUT_FILE, 'a') as f:
+        f.write(f'\n\n----- ⏱️ Run ID: {run_id} | Total Execution Time: {get_time(main_start_time)} ⏱️ -----')
 
     print(f'\n----- ⏱️ END RUN ID: {run_id} ⏱️ -----')

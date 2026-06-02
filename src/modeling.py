@@ -1,5 +1,5 @@
 # src/modeling.py
-
+# @todo - delete!
 import pandas as pd
 from sklearn.model_selection import RandomizedSearchCV, ParameterGrid
 from sklearn.metrics import recall_score
@@ -43,7 +43,7 @@ class _Model(ModelEvaluator):
         pass
         
 
-"""
+
 def build_models():
     models = [
         ('Bagging', bagging_model()),
@@ -115,7 +115,7 @@ def run_model_performance(
     show_classify: bool=False
     ) -> None:
 
-    """
+ 
     mods: - list of models
 
     data_y: dependent variable
@@ -124,7 +124,7 @@ def run_model_performance(
     show_classify: bool - determines which performance function to run
 
     Starts time for benchmarking, displays a banner for readability, and shows model performance.
-    """
+    
     start_time = start_timer()
     show_banner(title, section)
 
@@ -150,11 +150,11 @@ def undersample_data(x_training_data, y_training_data):
     return x_training_undersample, y_training_undersample
 
 def pick_best_model(xgb_model_scores: pd.DataFrame, xgb_models: list) -> XGBClassifier :
-    """
+    
     xgb_models: pd.DataFrame
 
     Compares the three XGBoost models and returns the best one.
-    """
+    
     f1_scores = []
 
     # Get F1 Scores
@@ -172,9 +172,9 @@ def pick_best_model(xgb_model_scores: pd.DataFrame, xgb_models: list) -> XGBClas
     return best_m
 
 def tune_and_evaluate(estimator, params, x_train, y_train, x_val, y_val, scorer):
-    """
+     
     Helper function to perform RandomizedSearchCV, fit the best model, and calculate scores.
-    """
+     
     # Calculate total parameter space size
     total_params = len(ParameterGrid(params))
     n_iter = min(PARAM_DISTR_CNT, total_params)
@@ -200,3 +200,4 @@ def tune_and_evaluate(estimator, params, x_train, y_train, x_val, y_val, scorer)
     val_scores = model_performance_classification_sklearn(best_model, x_val, y_val)
 
     return best_model, train_scores, val_scores
+"""

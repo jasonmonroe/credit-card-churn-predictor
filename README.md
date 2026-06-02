@@ -25,14 +25,21 @@ credit-card-churn-predictor/
 ├── main.py                 # Application entry point
 ├── requirements.txt        # Python dependencies
 ├── data/                   # Data storage (sample_data.csv, etc.)
+├── models/
+│   ├── ada_boost.py         # Model definition for ADA Boost Classifier
+│   ├── bagging.py           # Model definition for Bagging Classifier
+│   ├── gradient_boosting.py # Model definition for Gradient Boosting Classifier
+│   ├── model_evaluator.py   # Model definition and training
+│   ├── seeder.py            # Synthetic data generator
+│   └── utils.py             # Helper functions
+└── venv/                    # Virtual environment
 ├── src/
 │   ├── config.py           # Configuration constants
 │   ├── eda.py              # Exploratory Data Analysis logic
-│   ├── modeling.py         # Model definition and training
-│   ├── preprocessing.py    # Data cleaning and transformation
+│   ├── data_handler.py     # Data cleaning and transformation
 │   ├── seeder.py           # Synthetic data generator
 │   └── utils.py            # Helper functions and plotting
-└── venv/                   # Virtual environment
+└── venv/                    # Virtual environment
 ```
 
 ## Installation
