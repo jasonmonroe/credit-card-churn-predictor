@@ -1,4 +1,4 @@
------ ⏱️ START RUN ID: 85118 ⏱️ -----
+----- ⏱️ START RUN ID: 54388 ⏱️ -----
 
 
         +-------------------------------------+
@@ -44,6 +44,10 @@ Data type of Y training: str
 * Bagging Original Data *
 🤝🏾 Training Recall: 1.0000
 ☑️ Validation Recall: 0.8361
+👍🏾➕   True Positives (TP): 1139
+👎🏾➕   False Positives (FP): 0
+👍🏾➖   True Negatives (TN): 5949
+👎🏾➖   False Negatives (FN): 0
 
 🖥 -- Model Classification -- 🖥
    Accuracy  Recall  Precision   F1
@@ -52,6 +56,10 @@ Data type of Y training: str
 * Bagging Oversampled Data *
 🤝🏾 Training Recall: 1.0000
 ☑️ Validation Recall: 0.8689
+👍🏾➕   True Positives (TP): 5949
+👎🏾➕   False Positives (FP): 0
+👍🏾➖   True Negatives (TN): 5949
+👎🏾➖   False Negatives (FN): 0
 
 🖥 -- Model Classification -- 🖥
    Accuracy  Recall  Precision   F1
@@ -60,6 +68,10 @@ Data type of Y training: str
 * Bagging Undersampled Data *
 ⭐ Training Recall: 1.0000
 ☑️ Validation Recall: 0.9221
+👍🏾➕   True Positives (TP): 1139
+👎🏾➕   False Positives (FP): 0
+👍🏾➖   True Negatives (TN): 1139
+👎🏾➖   False Negatives (FN): 0
 
 🖥 -- Model Classification -- 🖥
    Accuracy  Recall  Precision   F1
@@ -70,6 +82,10 @@ Data type of Y training: str
 * Random Forest Classifier Original Data *
 🤝🏾 Training Recall: 0.5277
 ☑️ Validation Recall: 0.4508
+👍🏾➕   True Positives (TP): 601
+👎🏾➕   False Positives (FP): 75
+👍🏾➖   True Negatives (TN): 5874
+👎🏾➖   False Negatives (FN): 538
 
 🖥 -- Model Classification -- 🖥
    Accuracy    Recall  Precision        F1
@@ -78,6 +94,10 @@ Data type of Y training: str
 * Random Forest Classifier Oversampled Data *
 🤝🏾 Training Recall: 0.9314
 ☑️ Validation Recall: 0.8279
+👍🏾➕   True Positives (TP): 5541
+👎🏾➕   False Positives (FP): 665
+👍🏾➖   True Negatives (TN): 5284
+👎🏾➖   False Negatives (FN): 408
 
 🖥 -- Model Classification -- 🖥
    Accuracy    Recall  Precision        F1
@@ -86,6 +106,10 @@ Data type of Y training: str
 * Random Forest Classifier Undersampled Data *
 ⭐ Training Recall: 0.9192
 ☑️ Validation Recall: 0.8730
+👍🏾➕   True Positives (TP): 1047
+👎🏾➕   False Positives (FP): 124
+👍🏾➖   True Negatives (TN): 1015
+👎🏾➖   False Negatives (FN): 92
 
 🖥 -- Model Classification -- 🖥
    Accuracy    Recall  Precision        F1
@@ -96,6 +120,10 @@ Data type of Y training: str
 * ADA Boost Classifier Original Data *
 🤝🏾 Training Recall: 0.3090
 ☑️ Validation Recall: 0.2049
+👍🏾➕   True Positives (TP): 352
+👎🏾➕   False Positives (FP): 53
+👍🏾➖   True Negatives (TN): 5896
+👎🏾➖   False Negatives (FN): 787
 
 🖥 -- Model Classification -- 🖥
    Accuracy    Recall  Precision        F1
@@ -104,6 +132,10 @@ Data type of Y training: str
 * ADA Boost Classifier Oversampled Data *
 🤝🏾 Training Recall: 0.9092
 ☑️ Validation Recall: 0.8361
+👍🏾➕   True Positives (TP): 5409
+👎🏾➕   False Positives (FP): 1733
+👍🏾➖   True Negatives (TN): 4216
+👎🏾➖   False Negatives (FN): 540
 
 🖥 -- Model Classification -- 🖥
    Accuracy    Recall  Precision        F1
@@ -112,6 +144,10 @@ Data type of Y training: str
 * ADA Boost Classifier Undersampled Data *
 ⭐ Training Recall: 0.8806
 ☑️ Validation Recall: 0.8197
+👍🏾➕   True Positives (TP): 1003
+👎🏾➕   False Positives (FP): 314
+👍🏾➖   True Negatives (TN): 825
+👎🏾➖   False Negatives (FN): 136
 
 🖥 -- Model Classification -- 🖥
    Accuracy    Recall  Precision        F1
@@ -122,6 +158,10 @@ Data type of Y training: str
 * Gradient Boosting Classifier Original Data *
 🤝🏾 Training Recall: 0.8156
 ☑️ Validation Recall: 0.7172
+👍🏾➕   True Positives (TP): 929
+👎🏾➕   False Positives (FP): 55
+👍🏾➖   True Negatives (TN): 5894
+👎🏾➖   False Negatives (FN): 210
 
 🖥 -- Model Classification -- 🖥
    Accuracy    Recall  Precision        F1
@@ -130,6 +170,10 @@ Data type of Y training: str
 * Gradient Boosting Classifier Oversampled Data *
 🤝🏾 Training Recall: 0.9637
 ☑️ Validation Recall: 0.8648
+👍🏾➕   True Positives (TP): 5733
+👎🏾➕   False Positives (FP): 383
+👍🏾➖   True Negatives (TN): 5566
+👎🏾➖   False Negatives (FN): 216
 
 🖥 -- Model Classification -- 🖥
    Accuracy    Recall  Precision        F1
@@ -138,6 +182,10 @@ Data type of Y training: str
 * Gradient Boosting Classifier Undersampled Data *
 ⭐ Training Recall: 0.9710
 ☑️ Validation Recall: 0.9139
+👍🏾➕   True Positives (TP): 1106
+👎🏾➕   False Positives (FP): 53
+👍🏾➖   True Negatives (TN): 1086
+👎🏾➖   False Negatives (FN): 33
 
 🖥 -- Model Classification -- 🖥
    Accuracy    Recall  Precision        F1
@@ -148,6 +196,10 @@ Data type of Y training: str
 * XG Boost Classifier Original Data *
 🤝🏾 Training Recall: 0.9350
 ☑️ Validation Recall: 0.8770
+👍🏾➕   True Positives (TP): 1065
+👎🏾➕   False Positives (FP): 528
+👍🏾➖   True Negatives (TN): 5421
+👎🏾➖   False Negatives (FN): 74
 
 🖥 -- Model Classification -- 🖥
    Accuracy    Recall  Precision        F1
@@ -156,6 +208,10 @@ Data type of Y training: str
 * XG Boost Classifier Oversampled Data *
 🤝🏾 Training Recall: 0.9955
 ☑️ Validation Recall: 0.9590
+👍🏾➕   True Positives (TP): 5922
+👎🏾➕   False Positives (FP): 1552
+👍🏾➖   True Negatives (TN): 4397
+👎🏾➖   False Negatives (FN): 27
 
 🖥 -- Model Classification -- 🖥
    Accuracy    Recall  Precision        F1
@@ -164,6 +220,10 @@ Data type of Y training: str
 * XG Boost Classifier Undersampled Data *
 ⭐ Training Recall: 0.9965
 ☑️ Validation Recall: 0.9877
+👍🏾➕   True Positives (TP): 1135
+👎🏾➕   False Positives (FP): 299
+👍🏾➖   True Negatives (TN): 840
+👎🏾➖   False Negatives (FN): 4
 
 🖥 -- Model Classification -- 🖥
    Accuracy    Recall  Precision        F1
@@ -172,157 +232,157 @@ Data type of Y training: str
 🔧 --- Tuning Bagging Original Data --- 🔧
 💡 CV Score: 0.9600303771980073
 ✅ Best parameters are:
-        ⭐ n_estimators: 70
-        ⭐ max_samples: 0.9
-        ⭐ max_features: 0.5
-        ⭐ estimator: None
-Run Time: 0m 23s 414ms
+        ⭐  n_estimators: 70
+        ⭐  max_samples: 0.9
+        ⭐  max_features: 0.5
+        ⭐  estimator: None
+⌚ Run Time: 0m 22s 707ms
 
 🔧 --- Tuning Bagging Oversampled Data --- 🔧
 💡 CV Score: 0.9658391327392145
 ✅ Best parameters are:
-        ⭐ n_estimators: 70
-        ⭐ max_samples: 0.9
-        ⭐ max_features: 0.5
-        ⭐ estimator: None
-Run Time: 0m 37s 757ms
+        ⭐  n_estimators: 70
+        ⭐  max_samples: 0.9
+        ⭐  max_features: 0.5
+        ⭐  estimator: None
+⌚ Run Time: 0m 36s 451ms
 
 🔧 --- Tuning Bagging Undersampled Data --- 🔧
 💡 CV Score: 0.9381697621356494
 ✅ Best parameters are:
-        ⭐ n_estimators: 50
-        ⭐ max_samples: 0.7
-        ⭐ max_features: 0.5
-        ⭐ estimator: None
-Run Time: 0m 6s 497ms
+        ⭐  n_estimators: 50
+        ⭐  max_samples: 0.7
+        ⭐  max_features: 0.5
+        ⭐  estimator: None
+⌚ Run Time: 0m 6s 675ms
 
 🔧 --- Tuning Random Forest Classifier Original Data --- 🔧
 💡 CV Score: 0.9291506462954023
 ✅ Best parameters are:
-        ⭐ n_estimators: 200
-        ⭐ min_samples_split: 5
-        ⭐ min_samples_leaf: 3
-        ⭐ max_features: log2
-        ⭐ max_depth: 12
-Run Time: 0m 33s 781ms
+        ⭐  n_estimators: 200
+        ⭐  min_samples_split: 5
+        ⭐  min_samples_leaf: 3
+        ⭐  max_features: log2
+        ⭐  max_depth: 12
+⌚ Run Time: 0m 32s 920ms
 
 🔧 --- Tuning Random Forest Classifier Oversampled Data --- 🔧
 💡 CV Score: 0.9493673329888817
 ✅ Best parameters are:
-        ⭐ n_estimators: 200
-        ⭐ min_samples_split: 5
-        ⭐ min_samples_leaf: 3
-        ⭐ max_features: log2
-        ⭐ max_depth: 12
-Run Time: 0m 56s 905ms
+        ⭐  n_estimators: 200
+        ⭐  min_samples_split: 5
+        ⭐  min_samples_leaf: 3
+        ⭐  max_features: log2
+        ⭐  max_depth: 12
+⌚ Run Time: 0m 57s 120ms
 
 🔧 --- Tuning Random Forest Classifier Undersampled Data --- 🔧
 💡 CV Score: 0.9315910240396359
 ✅ Best parameters are:
-        ⭐ n_estimators: 300
-        ⭐ min_samples_split: 5
-        ⭐ min_samples_leaf: 3
-        ⭐ max_features: log2
-        ⭐ max_depth: 10
-Run Time: 0m 12s 353ms
+        ⭐  n_estimators: 300
+        ⭐  min_samples_split: 5
+        ⭐  min_samples_leaf: 3
+        ⭐  max_features: log2
+        ⭐  max_depth: 10
+⌚ Run Time: 0m 11s 748ms
 
 🔧 --- Tuning Gradient Boosting Classifier Original Data --- 🔧
 💡 CV Score: 0.9633899250468227
 ✅ Best parameters are:
-        ⭐ subsample: 0.7
-        ⭐ n_estimators: 100
-        ⭐ min_samples_split: 20
-        ⭐ min_samples_leaf: 15
-        ⭐ max_depth: 3
-        ⭐ learning_rate: 0.01
-Run Time: 0m 44s 827ms
+        ⭐  subsample: 0.7
+        ⭐  n_estimators: 100
+        ⭐  min_samples_split: 20
+        ⭐  min_samples_leaf: 15
+        ⭐  max_depth: 3
+        ⭐  learning_rate: 0.01
+⌚ Run Time: 0m 44s 295ms
 
 🔧 --- Tuning Gradient Boosting Classifier Oversampled Data --- 🔧
 💡 CV Score: 0.9526945675061548
 ✅ Best parameters are:
-        ⭐ subsample: 0.7
-        ⭐ n_estimators: 150
-        ⭐ min_samples_split: 20
-        ⭐ min_samples_leaf: 10
-        ⭐ max_depth: 4
-        ⭐ learning_rate: 0.05
-Run Time: 1m 19s 640ms
+        ⭐  subsample: 0.7
+        ⭐  n_estimators: 150
+        ⭐  min_samples_split: 20
+        ⭐  min_samples_leaf: 10
+        ⭐  max_depth: 4
+        ⭐  learning_rate: 0.05
+⌚ Run Time: 1m 17s 617ms
 
 🔧 --- Tuning Gradient Boosting Classifier Undersampled Data --- 🔧
 💡 CV Score: 0.9450437817613213
 ✅ Best parameters are:
-        ⭐ subsample: 0.6
-        ⭐ n_estimators: 150
-        ⭐ min_samples_split: 30
-        ⭐ min_samples_leaf: 10
-        ⭐ max_depth: 4
-        ⭐ learning_rate: 0.05
-Run Time: 0m 15s 615ms
+        ⭐  subsample: 0.6
+        ⭐  n_estimators: 150
+        ⭐  min_samples_split: 30
+        ⭐  min_samples_leaf: 10
+        ⭐  max_depth: 4
+        ⭐  learning_rate: 0.05
+⌚ Run Time: 0m 15s 161ms
 
 🔧 --- Tuning ADA Boost Classifier Original Data --- 🔧
 💡 CV Score: 0.9383932249021836
 ✅ Best parameters are:
-        ⭐ n_estimators: 100
-        ⭐ learning_rate: 0.1
-        ⭐ estimator: DecisionTreeClassifier(max_depth=4, random_state=42)
-Run Time: 0m 39s 635ms
+        ⭐  n_estimators: 100
+        ⭐  learning_rate: 0.1
+        ⭐  estimator: DecisionTreeClassifier(max_depth=4, random_state=42)
+⌚ Run Time: 0m 38s 823ms
 
 🔧 --- Tuning ADA Boost Classifier Oversampled Data --- 🔧
 💡 CV Score: 0.9589115403043464
 ✅ Best parameters are:
-        ⭐ n_estimators: 200
-        ⭐ learning_rate: 0.2
-        ⭐ estimator: DecisionTreeClassifier(max_depth=4, random_state=42)
-Run Time: 1m 13s 240ms
+        ⭐  n_estimators: 200
+        ⭐  learning_rate: 0.2
+        ⭐  estimator: DecisionTreeClassifier(max_depth=4, random_state=42)
+⌚ Run Time: 1m 10s 498ms
 
 🔧 --- Tuning ADA Boost Classifier Undersampled Data --- 🔧
 💡 CV Score: 0.9548429491271506
 ✅ Best parameters are:
-        ⭐ n_estimators: 200
-        ⭐ learning_rate: 0.2
-        ⭐ estimator: DecisionTreeClassifier(max_depth=4, random_state=42)
-Run Time: 0m 16s 83ms
+        ⭐  n_estimators: 200
+        ⭐  learning_rate: 0.2
+        ⭐  estimator: DecisionTreeClassifier(max_depth=4, random_state=42)
+⌚ Run Time: 0m 14s 70ms
 
 🔧 --- Tuning XG Boost Classifier Original Data --- 🔧
 💡 CV Score: 0.957479711161589
 ✅ Best parameters are:
-        ⭐ subsample: 0.6
-        ⭐ scale_pos_weight: 1.0
-        ⭐ reg_lambda: 5.0
-        ⭐ reg_alpha: 2.0
-        ⭐ n_estimators: 200
-        ⭐ max_depth: 4
-        ⭐ learning_rate: 0.05
-        ⭐ colsample_bytree: 0.5
-Run Time: 0m 3s 54ms
+        ⭐  subsample: 0.6
+        ⭐  scale_pos_weight: 1.0
+        ⭐  reg_lambda: 5.0
+        ⭐  reg_alpha: 2.0
+        ⭐  n_estimators: 200
+        ⭐  max_depth: 4
+        ⭐  learning_rate: 0.05
+        ⭐  colsample_bytree: 0.5
+⌚ Run Time: 0m 3s 335ms
 
 🔧 --- Tuning XG Boost Classifier Oversampled Data --- 🔧
 💡 CV Score: 0.9566078883010848
 ✅ Best parameters are:
-        ⭐ subsample: 0.6
-        ⭐ scale_pos_weight: 1.0
-        ⭐ reg_lambda: 5.0
-        ⭐ reg_alpha: 2.0
-        ⭐ n_estimators: 200
-        ⭐ max_depth: 4
-        ⭐ learning_rate: 0.05
-        ⭐ colsample_bytree: 0.5
-Run Time: 0m 4s 335ms
+        ⭐  subsample: 0.6
+        ⭐  scale_pos_weight: 1.0
+        ⭐  reg_lambda: 5.0
+        ⭐  reg_alpha: 2.0
+        ⭐  n_estimators: 200
+        ⭐  max_depth: 4
+        ⭐  learning_rate: 0.05
+        ⭐  colsample_bytree: 0.5
+⌚ Run Time: 0m 3s 969ms
 
 🔧 --- Tuning XG Boost Classifier Undersampled Data --- 🔧
 💡 CV Score: 0.9457953715344658
 ✅ Best parameters are:
-        ⭐ subsample: 0.6
-        ⭐ scale_pos_weight: 1.0
-        ⭐ reg_lambda: 5.0
-        ⭐ reg_alpha: 2.0
-        ⭐ n_estimators: 200
-        ⭐ max_depth: 4
-        ⭐ learning_rate: 0.05
-        ⭐ colsample_bytree: 0.5
-Run Time: 0m 1s 984ms
+        ⭐  subsample: 0.6
+        ⭐  scale_pos_weight: 1.0
+        ⭐  reg_lambda: 5.0
+        ⭐  reg_alpha: 2.0
+        ⭐  n_estimators: 200
+        ⭐  max_depth: 4
+        ⭐  learning_rate: 0.05
+        ⭐  colsample_bytree: 0.5
+⌚ Run Time: 0m 2s 0ms
 
---- 🤝🏾️ Model Training Comparisons 🤝🏾️ ---
+🤝🏾️---️ Model Training Comparisons ---  🤝🏾️
                                            Accuracy    Recall  Precision        F1
 Bagging Original                           1.000000  1.000000   1.000000  1.000000
 Bagging Oversampled                        1.000000  1.000000   1.000000  1.000000
@@ -340,7 +400,7 @@ XG Boost Classifier Original               0.967128  0.986831   0.837556  0.9060
 XG Boost Classifier Oversampled            0.970079  0.976635   0.963995  0.970274
 XG Boost Classifier Undersampled           0.976734  0.986831   0.967298  0.976967
 
---- ☑️️ Model Validation Comparisons ☑️️ ---
+☑️ ---  Model Validation Comparisons --- ☑️
                                                  Accuracy    Recall  Precision        F1
 Bagging Original Value                           0.941409  0.680328   0.937853  0.788599
 Bagging Oversampled Value                        0.946017  0.885246   0.800000  0.840467
@@ -386,8 +446,12 @@ Name: Original, dtype: float64
 0  0.957237  0.946721   0.816254  0.87666
 
 Showing Plot Confusion Matrix of Best Model...
+👍🏾➕   True Positives (TP): 231
+👎🏾➕   False Positives (FP): 52
+👍🏾➖   True Negatives (TN): 1224
+👎🏾➖   False Negatives (FN): 13
 
 
-Run Time: 8m 2s 102ms
+⌚ Run Time: 20m 48s 254ms
 
------ ⏱️ END RUN ID: 85118 ⏱️ -----
+----- ⏱️ END RUN ID: 54388 ⏱️ -----
