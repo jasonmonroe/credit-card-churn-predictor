@@ -12,6 +12,7 @@ from src.config import SEED, UNTUNED_LEARNING_RATE
 class AdaBoostModel(ModelEvaluator):
     def __init__(self, dataset: dict):
         super().__init__(dataset)
+
         self.title = 'ADA Boost Classifier'
         self.model = self._create()
         self.params = self._get_search_cv_params()

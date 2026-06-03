@@ -2,7 +2,6 @@
 
 import argparse
 import gc
-import sys
 
 import pandas as pd
 
@@ -49,7 +48,7 @@ def run_main_pipeline(seed_data=False):
     Models include: Bagging Classifier, Random Forest Classifier, ADA Boost Classifier, Gradient Boosting Classifier, 
     XG Boost Classifier.
     Build each model with original, oversampled and undersampled data.
-    Each model has it's own original, oversampled and undersampled recall scores 
+    Each model has its own original, oversampled and undersampled recall scores 
     """
 
     # Bagging Model
@@ -84,11 +83,10 @@ def run_main_pipeline(seed_data=False):
 
     # Collect all results into a list to process dynamically
     # This list allows us to iterate once and handle all comparison tables
-    orig_model_results = [gradient_boosting_results, ada_boost_results, xg_boost_results]
+    # orig_model_results = [gradient_boosting_results, ada_boost_results, xg_boost_results]
     model_results = [
         bagging_results,
         random_forest_results,
-        ada_boost_results,
         gradient_boosting_results,
         ada_boost_results,
         xg_boost_results
@@ -112,8 +110,8 @@ def run_main_pipeline(seed_data=False):
 
     print('\n*** XGB Boost Comparisons ***')
     print(xg_boost_comps)
-    
-    # ⚠ Pick the best model performance
+
+    # Determine and display champion performance
     show_banner('📊 Final Model w/ Plot Confusion Matrix 📊')
     xg_boost_model.show_best(xg_boost_comps)
 

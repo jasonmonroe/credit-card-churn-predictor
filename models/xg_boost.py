@@ -1,6 +1,7 @@
 # models/xg_boost.py
 
 import pandas as pd
+
 from xgboost import XGBClassifier
 
 from models.model_evaluator import ModelEvaluator
@@ -66,7 +67,7 @@ class XGBoostModel(ModelEvaluator):
 
         perf = {}
         if self.best_estimator is not None:
-            # Only iterate over valid sampling types to avoid metadata like 'title'
+            # Only iterate over valid sampling types to avoid metadata like 'title'.
             for xgb_type in DATASET_TYPES:
                 model = self.best_estimator.get(xgb_type)
                 if model is not None and not isinstance(model, dict):
@@ -94,7 +95,7 @@ class XGBoostModel(ModelEvaluator):
         # dictionary keys
         col_header = best_model_title.split()[-1].lower()
 
-        # Look up using 'original', 'oversampled', or 'undersampled' instead of a numeric 0
+        # Look up using 'original', 'oversampled', or 'undersampled' instead of a numeric 0.
         best_model = self.best_estimator[col_header]
 
         show_banner('🏆 --- BEST XG BOOST MODEL --- 🏆', best_model_title)
@@ -109,5 +110,8 @@ class XGBoostModel(ModelEvaluator):
         print('\n# --- Best Model Performance --- #')
         print(best_perf)
 
+        # Move import here to break circular dependency with src.eda
+        from src.eda import plot_confusion_matrix
+
         print('\nShowing Plot Confusion Matrix of Best Model...')
-        #plot_confusion_matrix(best_model, self.x_test, self.y_test)
+        plot_confusion_matrix(best_model, self.x_test, self.y_test, 'Best XG Boost Model')

@@ -10,6 +10,7 @@ from sklearn.base import BaseEstimator
 from sklearn.utils.class_weight import compute_sample_weight
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from sklearn.model_selection import ParameterGrid, RandomizedSearchCV
+from src.eda import plot_confusion_matrix
 from xgboost import XGBClassifier
 
 from src.config import (
@@ -32,7 +33,7 @@ class ModelEvaluator:
         self.undersampled = {'train': 0.0, 'val': 0.0}
 
         self.x_train = pd.DataFrame()
-        self.y_train = pd.Series()
+        self.y_train = pd.Series(dtype='float64')
         self.x_val = pd.DataFrame()
         self.y_val = pd.Series()
         self.x_test = pd.DataFrame()
@@ -99,8 +100,7 @@ class ModelEvaluator:
         print(f'🤝🏾 Training Recall: {self.orig["train"]:.4f}')
         print(f'☑️ Validation Recall: {self.orig["val"]:.4f}')
 
-        # @todo - Is this a duplicate call since I'm calling it again in get_results()?
-        #plot_confusion_matrix(self.model, self.x_train, self.y_train)
+        plot_confusion_matrix(self.model, self.x_train, self.y_train, '(Original) ' + self.title + ' - ')
         self.show_classification_model_perf(self.x_train, self.y_train)
 
     def run_oversampled(self) -> None:
@@ -118,8 +118,7 @@ class ModelEvaluator:
         print(f'☑️ Validation Recall: {self.oversampled["val"]:.4f}')
 
         # Display Plot Confusion Matrix for Oversampled Data
-        #plot_confusion_matrix(self.model, self.x_over, self.y_over)
-        # @todo - Is this a duplicate call since I'm calling it again in get_results()?
+        plot_confusion_matrix(self.model, self.x_over, self.y_over, '(Oversampled) ' + self.title + ' - ')
         self.show_classification_model_perf(self.x_over, self.y_over)
 
     def run_undersampled(self) -> None:
@@ -136,8 +135,8 @@ class ModelEvaluator:
         print(f'⭐ Training Recall: {self.undersampled["train"]:.4f}')
         print(f'☑️ Validation Recall: {self.undersampled["val"]:.4f}')
 
-        # @todo - Is this a duplicate call since I'm calling it again in get_results()?
-        #plot_confusion_matrix(self.model, self.x_under, self.y_under)
+        # Display Plot Confusion Matrix for Undersampled Data
+        plot_confusion_matrix(self.model, self.x_under, self.y_under, '(Undersampled) ' + self.title + ' - ')
         self.show_classification_model_perf(self.x_under, self.y_under)
 
     def show_classification_model_perf(self, x, y):
@@ -162,8 +161,6 @@ class ModelEvaluator:
         """
         total_params = len(ParameterGrid(self.params))
         n_iter = min(PARAM_DIST_CNT, total_params)
-
-
 
         """
         Instead of building one model, this sets up an automated experimental trial. It treats your original 
@@ -194,7 +191,7 @@ class ModelEvaluator:
         print(f'💡 CV Score: {randomized_cv.best_score_}')
         print('✅ Best parameters are: ')
         for key, value in randomized_cv.best_params_.items():
-            print(f"\t⭐ {key}: {value}")
+            print(f"\t⭐  {key}: {value}")
 
         return randomized_cv.best_estimator_
     
@@ -258,7 +255,7 @@ class ModelEvaluator:
 
         return results
 
-    def _format_results(self, results: list) -> tuple[DataFrame, DataFrame]:
+    def _format_results(self, results: list[dict[str, Any]]) -> tuple[DataFrame, DataFrame]:
         """
         Helper function to format the results dictionary into a more structured format.
         This is optional and can be adjusted based on how you want to present the results.
@@ -278,7 +275,6 @@ class ModelEvaluator:
         training_models.columns = title_cols
 
         val_models = pd.concat(val_cols, axis=1)
-        #val_models.columns = title_cols # @todo - why are we adding the string `value` below?
         val_models.columns = [f"{t} Value" for t in title_cols]
 
         return training_models, val_models
@@ -287,19 +283,20 @@ class ModelEvaluator:
     def _flatten(result, key: str):
         df_train = result[key].copy()
         df_train.index = result['titles']
+
         return df_train.loc[result['titles']].T
 
-    def print_comparisons(self, results: list) -> None:
+    def print_comparisons(self, results: list[dict[str, Any]]) -> None:
 
         # Format Results
         training_models, val_models = self._format_results(results)
 
         # Show Training and Validation Comparison for each model
-        print('\n--- 🤝🏾️ Model Training Comparisons 🤝🏾️ ---')
+        print('\n🤝🏾️---️ Model Training Comparisons ---  🤝🏾️')
         df_train_long = training_models.T
         print(df_train_long.to_string())
 
-        print('\n--- ☑️️ Model Validation Comparisons ☑️️ ---')
+        print('\n☑️ ---  Model Validation Comparisons --- ☑️')
         df_val_long = val_models.T
         print(df_val_long.to_string())
 

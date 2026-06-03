@@ -1,4 +1,4 @@
------ ⏱️ START RUN ID: 73969 ⏱️ -----
+----- ⏱️ START RUN ID: 85118 ⏱️ -----
 
 
         +-------------------------------------+
@@ -176,7 +176,7 @@ Data type of Y training: str
         ⭐ max_samples: 0.9
         ⭐ max_features: 0.5
         ⭐ estimator: None
-Run Time: 0m 23s 393ms
+Run Time: 0m 23s 414ms
 
 🔧 --- Tuning Bagging Oversampled Data --- 🔧
 💡 CV Score: 0.9658391327392145
@@ -185,7 +185,7 @@ Run Time: 0m 23s 393ms
         ⭐ max_samples: 0.9
         ⭐ max_features: 0.5
         ⭐ estimator: None
-Run Time: 0m 38s 804ms
+Run Time: 0m 37s 757ms
 
 🔧 --- Tuning Bagging Undersampled Data --- 🔧
 💡 CV Score: 0.9381697621356494
@@ -194,7 +194,7 @@ Run Time: 0m 38s 804ms
         ⭐ max_samples: 0.7
         ⭐ max_features: 0.5
         ⭐ estimator: None
-Run Time: 0m 6s 659ms
+Run Time: 0m 6s 497ms
 
 🔧 --- Tuning Random Forest Classifier Original Data --- 🔧
 💡 CV Score: 0.9291506462954023
@@ -204,7 +204,7 @@ Run Time: 0m 6s 659ms
         ⭐ min_samples_leaf: 3
         ⭐ max_features: log2
         ⭐ max_depth: 12
-Run Time: 0m 34s 622ms
+Run Time: 0m 33s 781ms
 
 🔧 --- Tuning Random Forest Classifier Oversampled Data --- 🔧
 💡 CV Score: 0.9493673329888817
@@ -214,7 +214,7 @@ Run Time: 0m 34s 622ms
         ⭐ min_samples_leaf: 3
         ⭐ max_features: log2
         ⭐ max_depth: 12
-Run Time: 0m 58s 137ms
+Run Time: 0m 56s 905ms
 
 🔧 --- Tuning Random Forest Classifier Undersampled Data --- 🔧
 💡 CV Score: 0.9315910240396359
@@ -224,7 +224,7 @@ Run Time: 0m 58s 137ms
         ⭐ min_samples_leaf: 3
         ⭐ max_features: log2
         ⭐ max_depth: 10
-Run Time: 0m 12s 345ms
+Run Time: 0m 12s 353ms
 
 🔧 --- Tuning Gradient Boosting Classifier Original Data --- 🔧
 💡 CV Score: 0.9633899250468227
@@ -235,7 +235,7 @@ Run Time: 0m 12s 345ms
         ⭐ min_samples_leaf: 15
         ⭐ max_depth: 3
         ⭐ learning_rate: 0.01
-Run Time: 0m 47s 944ms
+Run Time: 0m 44s 827ms
 
 🔧 --- Tuning Gradient Boosting Classifier Oversampled Data --- 🔧
 💡 CV Score: 0.9526945675061548
@@ -246,7 +246,7 @@ Run Time: 0m 47s 944ms
         ⭐ min_samples_leaf: 10
         ⭐ max_depth: 4
         ⭐ learning_rate: 0.05
-Run Time: 1m 26s 957ms
+Run Time: 1m 19s 640ms
 
 🔧 --- Tuning Gradient Boosting Classifier Undersampled Data --- 🔧
 💡 CV Score: 0.9450437817613213
@@ -257,7 +257,7 @@ Run Time: 1m 26s 957ms
         ⭐ min_samples_leaf: 10
         ⭐ max_depth: 4
         ⭐ learning_rate: 0.05
-Run Time: 0m 18s 668ms
+Run Time: 0m 15s 615ms
 
 🔧 --- Tuning ADA Boost Classifier Original Data --- 🔧
 💡 CV Score: 0.9383932249021836
@@ -265,7 +265,7 @@ Run Time: 0m 18s 668ms
         ⭐ n_estimators: 100
         ⭐ learning_rate: 0.1
         ⭐ estimator: DecisionTreeClassifier(max_depth=4, random_state=42)
-Run Time: 0m 46s 359ms
+Run Time: 0m 39s 635ms
 
 🔧 --- Tuning ADA Boost Classifier Oversampled Data --- 🔧
 💡 CV Score: 0.9589115403043464
@@ -273,7 +273,7 @@ Run Time: 0m 46s 359ms
         ⭐ n_estimators: 200
         ⭐ learning_rate: 0.2
         ⭐ estimator: DecisionTreeClassifier(max_depth=4, random_state=42)
-Run Time: 1m 20s 299ms
+Run Time: 1m 13s 240ms
 
 🔧 --- Tuning ADA Boost Classifier Undersampled Data --- 🔧
 💡 CV Score: 0.9548429491271506
@@ -281,7 +281,7 @@ Run Time: 1m 20s 299ms
         ⭐ n_estimators: 200
         ⭐ learning_rate: 0.2
         ⭐ estimator: DecisionTreeClassifier(max_depth=4, random_state=42)
-Run Time: 0m 14s 991ms
+Run Time: 0m 16s 83ms
 
 🔧 --- Tuning XG Boost Classifier Original Data --- 🔧
 💡 CV Score: 0.957479711161589
@@ -294,7 +294,7 @@ Run Time: 0m 14s 991ms
         ⭐ max_depth: 4
         ⭐ learning_rate: 0.05
         ⭐ colsample_bytree: 0.5
-Run Time: 0m 3s 43ms
+Run Time: 0m 3s 54ms
 
 🔧 --- Tuning XG Boost Classifier Oversampled Data --- 🔧
 💡 CV Score: 0.9566078883010848
@@ -307,7 +307,7 @@ Run Time: 0m 3s 43ms
         ⭐ max_depth: 4
         ⭐ learning_rate: 0.05
         ⭐ colsample_bytree: 0.5
-Run Time: 0m 4s 617ms
+Run Time: 0m 4s 335ms
 
 🔧 --- Tuning XG Boost Classifier Undersampled Data --- 🔧
 💡 CV Score: 0.9457953715344658
@@ -320,74 +320,7 @@ Run Time: 0m 4s 617ms
         ⭐ max_depth: 4
         ⭐ learning_rate: 0.05
         ⭐ colsample_bytree: 0.5
-Run Time: 0m 2s 69ms
-[{'train':    Accuracy  Recall  Precision   F1
-0       1.0     1.0        1.0  1.0
-0       1.0     1.0        1.0  1.0
-0       1.0     1.0        1.0  1.0, 'val':    Accuracy    Recall  Precision        F1
-0  0.941409  0.680328   0.937853  0.788599
-0  0.946017  0.885246   0.800000  0.840467
-0  0.936142  0.926230   0.740984  0.823315, 'titles': ['Bagging Original', 'Bagging Oversampled', 'Bagging Undersampled'], 'best_estimator': None}, {'train':    Accuracy    Recall  Precision        F1
-0  0.986738  0.930641   0.986047  0.957543
-0  0.987309  0.995125   0.979808  0.987407
-0  0.986831  0.993854   0.980087  0.986922, 'val':    Accuracy    Recall  Precision        F1
-0  0.940092  0.709016   0.896373  0.791762
-0  0.936142  0.881148   0.759717  0.815939
-0  0.929559  0.918033   0.720257  0.807207, 'titles': ['Random Forest Classifier Original', 'Random Forest Classifier Oversampled', 'Random Forest Classifier Undersampled'], 'best_estimator': None}, {'train':    Accuracy    Recall  Precision        F1
-0  0.979684  0.906058   0.965388  0.934783
-0  0.973693  0.979156   0.968573  0.973836
-0  0.996927  0.995610   0.998239  0.996923, 'val':    Accuracy    Recall  Precision        F1
-0  0.958525  0.807377   0.924883  0.862144
-0  0.947334  0.909836   0.792857  0.847328
-0  0.945359  0.954918   0.763934  0.848816, 'titles': ['ADA Boost Classifier Original', 'ADA Boost Classifier Oversampled', 'ADA Boost Classifier Undersampled'], 'best_estimator': None}, {'train':    Accuracy    Recall  Precision        F1
-0  0.905192  0.422300   0.971717  0.588739
-0  0.970079  0.977811   0.962920  0.970309
-0  0.985514  0.989464   0.981707  0.985571, 'val':    Accuracy    Recall  Precision        F1
-0  0.891376  0.352459   0.924731  0.510386
-0  0.940092  0.897541   0.768421  0.827977
-0  0.941409  0.938525   0.755776  0.837294, 'titles': ['Gradient Boosting Classifier Original', 'Gradient Boosting Classifier Oversampled', 'Gradient Boosting Classifier Undersampled'], 'best_estimator': None}, {'train':    Accuracy    Recall  Precision        F1
-0  0.979684  0.906058   0.965388  0.934783
-0  0.973693  0.979156   0.968573  0.973836
-0  0.996927  0.995610   0.998239  0.996923, 'val':    Accuracy    Recall  Precision        F1
-0  0.958525  0.807377   0.924883  0.862144
-0  0.947334  0.909836   0.792857  0.847328
-0  0.945359  0.954918   0.763934  0.848816, 'titles': ['ADA Boost Classifier Original', 'ADA Boost Classifier Oversampled', 'ADA Boost Classifier Undersampled'], 'best_estimator': None}, {'train':    Accuracy    Recall  Precision        F1
-0  0.967128  0.986831   0.837556  0.906086
-0  0.970079  0.976635   0.963995  0.970274
-0  0.976734  0.986831   0.967298  0.976967, 'val':    Accuracy    Recall  Precision        F1
-0  0.951942  0.930328   0.802120  0.861480
-0  0.939434  0.905738   0.762069  0.827715
-0  0.939434  0.942623   0.746753  0.833333, 'titles': ['XG Boost Classifier Original', 'XG Boost Classifier Oversampled', 'XG Boost Classifier Undersampled'], 'best_estimator': {'original': XGBClassifier(base_score=None, booster=None, callbacks=None,
-              colsample_bylevel=None, colsample_bynode=None,
-              colsample_bytree=0.5, device=None, early_stopping_rounds=None,
-              enable_categorical=False, eval_metric=None, feature_types=None,
-              feature_weights=None, gamma=None, grow_policy=None,
-              importance_type=None, interaction_constraints=None,
-              learning_rate=0.05, max_bin=None, max_cat_threshold=None,
-              max_cat_to_onehot=None, max_delta_step=None, max_depth=4,
-              max_leaves=None, min_child_weight=None, missing=nan,
-              monotone_constraints=None, multi_strategy=None, n_estimators=200,
-              n_jobs=None, num_parallel_tree=None, ...), 'oversampled': XGBClassifier(base_score=None, booster=None, callbacks=None,
-              colsample_bylevel=None, colsample_bynode=None,
-              colsample_bytree=0.5, device=None, early_stopping_rounds=None,
-              enable_categorical=False, eval_metric=None, feature_types=None,
-              feature_weights=None, gamma=None, grow_policy=None,
-              importance_type=None, interaction_constraints=None,
-              learning_rate=0.05, max_bin=None, max_cat_threshold=None,
-              max_cat_to_onehot=None, max_delta_step=None, max_depth=4,
-              max_leaves=None, min_child_weight=None, missing=nan,
-              monotone_constraints=None, multi_strategy=None, n_estimators=200,
-              n_jobs=None, num_parallel_tree=None, ...), 'undersampled': XGBClassifier(base_score=None, booster=None, callbacks=None,
-              colsample_bylevel=None, colsample_bynode=None,
-              colsample_bytree=0.5, device=None, early_stopping_rounds=None,
-              enable_categorical=False, eval_metric=None, feature_types=None,
-              feature_weights=None, gamma=None, grow_policy=None,
-              importance_type=None, interaction_constraints=None,
-              learning_rate=0.05, max_bin=None, max_cat_threshold=None,
-              max_cat_to_onehot=None, max_delta_step=None, max_depth=4,
-              max_leaves=None, min_child_weight=None, missing=nan,
-              monotone_constraints=None, multi_strategy=None, n_estimators=200,
-              n_jobs=None, num_parallel_tree=None, ...)}}]
+Run Time: 0m 1s 984ms
 
 --- 🤝🏾️ Model Training Comparisons 🤝🏾️ ---
                                            Accuracy    Recall  Precision        F1
@@ -397,9 +330,6 @@ Bagging Undersampled                       1.000000  1.000000   1.000000  1.0000
 Random Forest Classifier Original          0.986738  0.930641   0.986047  0.957543
 Random Forest Classifier Oversampled       0.987309  0.995125   0.979808  0.987407
 Random Forest Classifier Undersampled      0.986831  0.993854   0.980087  0.986922
-ADA Boost Classifier Original              0.979684  0.906058   0.965388  0.934783
-ADA Boost Classifier Oversampled           0.973693  0.979156   0.968573  0.973836
-ADA Boost Classifier Undersampled          0.996927  0.995610   0.998239  0.996923
 Gradient Boosting Classifier Original      0.905192  0.422300   0.971717  0.588739
 Gradient Boosting Classifier Oversampled   0.970079  0.977811   0.962920  0.970309
 Gradient Boosting Classifier Undersampled  0.985514  0.989464   0.981707  0.985571
@@ -418,9 +348,6 @@ Bagging Undersampled Value                       0.936142  0.926230   0.740984  
 Random Forest Classifier Original Value          0.940092  0.709016   0.896373  0.791762
 Random Forest Classifier Oversampled Value       0.936142  0.881148   0.759717  0.815939
 Random Forest Classifier Undersampled Value      0.929559  0.918033   0.720257  0.807207
-ADA Boost Classifier Original Value              0.958525  0.807377   0.924883  0.862144
-ADA Boost Classifier Oversampled Value           0.947334  0.909836   0.792857  0.847328
-ADA Boost Classifier Undersampled Value          0.945359  0.954918   0.763934  0.848816
 Gradient Boosting Classifier Original Value      0.891376  0.352459   0.924731  0.510386
 Gradient Boosting Classifier Oversampled Value   0.940092  0.897541   0.768421  0.827977
 Gradient Boosting Classifier Undersampled Value  0.941409  0.938525   0.755776  0.837294
@@ -461,6 +388,6 @@ Name: Original, dtype: float64
 Showing Plot Confusion Matrix of Best Model...
 
 
-Run Time: 8m 32s 109ms
+Run Time: 8m 2s 102ms
 
------ ⏱️ END RUN ID: 73969 ⏱️ -----
+----- ⏱️ END RUN ID: 85118 ⏱️ -----

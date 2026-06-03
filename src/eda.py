@@ -1,15 +1,17 @@
 # src/eda.py
 
+from typing import Any
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
 
-from src.config import  PERCENTILE
+from src.config import PERCENTILE
+
 
 def run_eda(df: pd.DataFrame):
-
     print('\n--- Running Exploratory Data Analysis Pipeline ---')
 
     # How is the total transaction amount distributed?
@@ -39,8 +41,8 @@ def run_eda(df: pd.DataFrame):
     print('Distribution of income level')
 
     for key, value in income_dist.items():
-      pct = round((value / sum_val) * PERCENTILE)
-      print(f"{key} is {value} or {pct}%")
+        pct = round((value / sum_val) * PERCENTILE)
+        print(f"{key} is {value} or {pct}%")
 
     distribution_plot_wrt_target(df, 'income_category', 'attrition_flag')
 
@@ -102,6 +104,7 @@ def run_eda(df: pd.DataFrame):
 
     show_correlation_matrix(df)
 
+
 def show_correlation_matrix(df: pd.DataFrame):
     # Assume df is your DataFrame with numerical attributes
     # Calculate the correlation matrix
@@ -115,8 +118,10 @@ def show_correlation_matrix(df: pd.DataFrame):
     plt.title(title)
     plt.show()
 
+
 # function to plot a boxplot and a histogram along the same scale.
-def histogram_boxplot(data: pd.DataFrame, feature: str, chart_title: str='', figsize:tuple=(12, 7), kde:bool=False, bins=None):
+def histogram_boxplot(data: pd.DataFrame, feature: str, chart_title: str = '', figsize: tuple = (12, 7),
+                      kde: bool = False, bins=None):
     """
     Boxplot and histogram combined
 
@@ -161,8 +166,9 @@ def histogram_boxplot(data: pd.DataFrame, feature: str, chart_title: str='', fig
         data[feature].median(), color="black", linestyle="-"
     )  # Add median to the histogram
 
+
 # function to create labeled barplots
-def labeled_barplot(chart_data: pd.DataFrame, feature: str, chart_title: str='', perc:bool=False, n=None):
+def labeled_barplot(chart_data: pd.DataFrame, feature: str, chart_title: str = '', perc: bool = False, n=None):
     """
     Barplot with percentage at the top
 
@@ -216,6 +222,7 @@ def labeled_barplot(chart_data: pd.DataFrame, feature: str, chart_title: str='',
     plt.xlabel(feature.title().replace('_', ' '))
     plt.show()  # show the plot
 
+
 # Function to plot stacked bar chart
 def stacked_barplot(data: pd.DataFrame, predictor: str, target: str):
     """
@@ -249,9 +256,9 @@ def stacked_barplot(data: pd.DataFrame, predictor: str, target: str):
     plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
     plt.show()
 
+
 # Function to plot distributions
 def distribution_plot_wrt_target(data, predictor, target):
-
     fig, axs = plt.subplots(2, 2, figsize=(12, 10))
 
     target_uniq = data[target].unique()
@@ -290,21 +297,23 @@ def distribution_plot_wrt_target(data, predictor, target):
     plt.tight_layout()
     plt.show()
 
-def plot_confusion_matrix(model, X, y_true):
+
+def plot_confusion_matrix(model: Any, feature: pd.DataFrame, y_true: pd.Series, title: str = '') -> None:
     """
     Generates a heatmap for the confusion matrix of a given model and dataset.
 
     Parameters:
     model: Trained model
-    X: Feature data to make predictions
+    feature: Feature data to make predictions
     y_true: True target labels
+    title: Title for the plot
 
     Returns:
     Heatmap showing TP (True Positives), FP (False Positives), TN (True Negatives), FN (False Negatives).
     """
 
     # Predict the target for the given features
-    y_pred = model.predict(X)
+    y_pred = model.predict(feature)
 
     # Compute confusion matrix
     cm = confusion_matrix(y_true, y_pred)
@@ -319,7 +328,7 @@ def plot_confusion_matrix(model, X, y_true):
     ])
 
     # Display the confusion matrix as a heatmap
-    title = 'Plot Confusion Matrix Heatmap'
+    title = f'{title} Plot Confusion Matrix'.strip()
     plt.figure(num=f'{title}', figsize=(6, 4))
     sns.heatmap(
         cm,
@@ -336,7 +345,7 @@ def plot_confusion_matrix(model, X, y_true):
     # Extract TP, FP, TN, FN and print them
     true_negatives, false_positives, false_negatives, true_positives = cm.ravel()
 
-    print(f"\nTrue Positives (TP): {true_positives}")
-    print(f"False Positives (FP): {false_positives}")
-    print(f"True Negatives (TN): {true_negatives}")
-    print(f"False Negatives (FN): {false_negatives}")
+    print(f"👍🏾➕\tTrue Positives (TP): {true_positives}")
+    print(f"👎🏾➕\tFalse Positives (FP): {false_positives}")
+    print(f"👍🏾➖\tTrue Negatives (TN): {true_negatives}")
+    print(f"👎🏾➖\tFalse Negatives (FN): {false_negatives}")
