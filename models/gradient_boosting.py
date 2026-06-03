@@ -29,7 +29,6 @@ class GradientBoostingModel(ModelEvaluator):
             'learning_rate': [0.01, 0.05],
             'max_depth': [3, 4],
             'subsample': [0.6, 0.7, 0.8],
-            'min_samples_split': [15, 20, 30], # Drastically increased minimum to split a node
-            'min_samples_leaf': [10, 15, 20],  # Higher leaves prevent individual user memorization
-            'scale_pos_weight': [1.0, 5.0]
+            'min_samples_split': [15, 20, 30],
+            'min_samples_leaf': [10, 15, 20]
         }

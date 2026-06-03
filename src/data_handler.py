@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import sys
+from typing import Any
 import numpy as np
 import pandas as pd
 
@@ -20,30 +21,25 @@ from src.config import (
 )
 
 
-
-
-
 class DataHandler:
     def __init__(self, use_seeder: bool=False):
         self.data_path = SAMPLE_FILE
         self.use_seeder = use_seeder
-        self.data = {}
-        self.get()
 
-    def get(self):
+    def get(self) -> dict[str, Any]:
         """
         Public API to orchestrate the data pipeline.
         """
         df = self.load_data()
         df = self._filter(df)
         raw_data = self._split_data(df)
-        self.data = raw_data.copy()
-        self._impute_data()
-        self._encode_data()
-        
-        self.data['x_train'], self.data['y_train'] = self._drop(self.data['x_train'], self.data['y_train'])
+        data = raw_data.copy()
+        data = self._impute_data(data)
+        data = self._encode_data(data)
+        data['x_train'], data['y_train'] = self._drop(data['x_train'], data['y_train'])
 
-        # Combine the data. Refresh the data.
+        # Combine the data. Refresh the data
+        return data
 
     def load_data(self) -> pd.DataFrame:
         df = pd.read_csv(self.data_path)
@@ -60,29 +56,38 @@ class DataHandler:
         else:
             return df
 
-    def _impute_data(self) -> None:
+    @staticmethod
+    def _impute_data(df: dict[str, Any]) -> dict[str, Any]:
         imputer = SimpleImputer(missing_values=np.nan, strategy="most_frequent")
 
         csv_columns = ['education_level', 'marital_status', 'income_category']
-        data_columns = ['x_train', 'x_val', 'x_test']
+        
+        # Fit only on the training set to prevent data leakage
+        df['x_train'].loc[:, csv_columns] = imputer.fit_transform(df['x_train'][csv_columns])
+        
+        # Transform validation and test sets using the training fit
+        for col in ['x_val', 'x_test']:
+            df[col].loc[:, csv_columns] = imputer.transform(df[col][csv_columns])
 
-        for col in data_columns:
-            self.data[col][csv_columns] = imputer.fit_transform(self.data[col][csv_columns])
+        return df
 
-    def _encode_data(self):
-        # # Find categorical features
+    @staticmethod
+    def _encode_data(df: dict) -> dict:
+        #  Find categorical features
         numerical_labels = {'Existing Customer': 0, 'Attrited Customer': 1}
-        categorical_cols = self.data['x_train'].select_dtypes(include=['object']).columns
+        categorical_cols = df['x_train'].select_dtypes(include=['object']).columns
 
         _encoder = ce.OrdinalEncoder(cols=categorical_cols)
 
-        self.data['x_train'] = _encoder.fit_transform(self.data['x_train'])
+        df['x_train'] = _encoder.fit_transform(df['x_train'])
         for col in ['x_val', 'x_test']:
-            self.data[col] = _encoder.transform(self.data[col])
+            df[col] = _encoder.transform(df[col])
 
         # Convert target variable to numerical labels
         for col in ['y_train', 'y_val', 'y_test']:
-            self.data[col] = self.data[col].map(numerical_labels)
+            df[col] = df[col].map(numerical_labels)
+            
+        return df
 
     @staticmethod
     def _filter(df: pd.DataFrame) -> pd.DataFrame:
@@ -99,7 +104,7 @@ class DataHandler:
         return df
 
     @staticmethod
-    def _drop(x_train: pd.Series, y_train: pd.Series) -> tuple[pd.Series, pd.Series]:
+    def _drop(x_train: pd.DataFrame, y_train: pd.Series) -> tuple[pd.DataFrame, pd.Series]:
         # Drop rows in X_train and y_train where y_train has NaN values
         y_train = y_train.dropna()
         x_train = x_train.loc[y_train.index] # Keep only rows in X_train that match y_train's index

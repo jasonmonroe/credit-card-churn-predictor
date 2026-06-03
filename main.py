@@ -2,6 +2,8 @@
 
 import argparse
 import gc
+import sys
+
 import pandas as pd
 
 from sklearn.metrics import make_scorer, precision_score
@@ -30,19 +32,11 @@ def run_eda_pipeline(seed_data=False):
     print('--- EDA complete ---')
 
 def run_main_pipeline(seed_data=False):
-
-    #print('+-----------------------------------+')
-    #print(f'|           {BANK_NAME}              |')
-    #print(f'|           {PROJ_NAME}             |')
-    #print('+-----------------------------------+')
     print(show_title_banner())
 
     data_handler = DataHandler(seed_data)
-    df = data_handler.data
+    df = data_handler.get()
 
-    """
-    
-    """
     # Create base model to get the over and undersampled data that will be used for all the models.
     model_eval = ModelEvaluator(df)
     sampled = model_eval.get_sampled()
@@ -91,10 +85,14 @@ def run_main_pipeline(seed_data=False):
     # Collect all results into a list to process dynamically
     # This list allows us to iterate once and handle all comparison tables
     orig_model_results = [gradient_boosting_results, ada_boost_results, xg_boost_results]
-    model_results = [bagging_results, random_forest_results, ada_boost_results, gradient_boosting_results, ada_boost_results, xg_boost_results]
-
-    print(model_results)
-
+    model_results = [
+        bagging_results,
+        random_forest_results,
+        ada_boost_results,
+        gradient_boosting_results,
+        ada_boost_results,
+        xg_boost_results
+    ]
 
     """
     --- Format Results for Comparison ---

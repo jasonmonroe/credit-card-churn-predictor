@@ -7,6 +7,7 @@ from imblearn.under_sampling import RandomUnderSampler
 from pandas import DataFrame
 import pandas as pd
 from sklearn.base import BaseEstimator
+from sklearn.utils.class_weight import compute_sample_weight
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from sklearn.model_selection import ParameterGrid, RandomizedSearchCV
 from xgboost import XGBClassifier
@@ -162,6 +163,8 @@ class ModelEvaluator:
         total_params = len(ParameterGrid(self.params))
         n_iter = min(PARAM_DIST_CNT, total_params)
 
+
+
         """
         Instead of building one model, this sets up an automated experimental trial. It treats your original 
         XGBClassifier merely as an initial estimator template, and then uses the param_distributions dictionary as a 
@@ -180,7 +183,13 @@ class ModelEvaluator:
         )
 
         # Fit model
-        randomized_cv.fit(x, y)
+        # Generates a weight array assigning a higher value to minority class indices
+        # Note: Only use weights for the XGBClassifier model.
+        if isinstance(self.model, XGBClassifier):
+            weights = compute_sample_weight(class_weight='balanced', y=y)
+            randomized_cv.fit(x, y, sample_weight=weights)
+        else:
+            randomized_cv.fit(x, y)
 
         print(f'💡 CV Score: {randomized_cv.best_score_}')
         print('✅ Best parameters are: ')
@@ -298,7 +307,7 @@ class ModelEvaluator:
         with open(OUTPUT_FILE, 'w') as f:
             f.write(show_title_banner())
             f.write("\n\n")
-            f.write('----------------------- 🤝🏾️Model Training Comparisons 🤝🏾------------------------\n')
+            f.write('------------------------ 🤝🏾️Model Training Comparisons 🤝🏾-------------------------\n')
             f.write(df_train_long.to_string())
             f.write('\n----------------------------------------------------------------------------------')
             f.write("\n\n")

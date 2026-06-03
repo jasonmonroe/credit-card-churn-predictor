@@ -40,12 +40,13 @@ class XGBoostModel(ModelEvaluator):
     def _get_search_cv_params() -> dict:
         return {
             'n_estimators': [100, 150, 200],
-            'learning_rate': [0.01, 0.03, 0.05],  # Lowered rates to build smoother residual steps
-            'max_depth': [3, 4],                 # Dropped 5 to prevent deep tree over-indexing
-            'subsample': [0.6, 0.7, 0.8],        # Row sub-sampling per tree
-            'colsample_bytree': [0.5, 0.6, 0.7], # Column sub-sampling to fight dominant features
-            'reg_alpha': [1.0, 2.0, 5.0],        # Increased L1 penalty to drop weak features completely
-            'reg_lambda': [2.0, 5.0, 10.0]       # Massive L2 penalty to smooth out leaf weights
+            'learning_rate': [0.01, 0.03, 0.05],
+            'max_depth': [3, 4],
+            'subsample': [0.6, 0.7, 0.8],
+            'colsample_bytree': [0.5, 0.6, 0.7],
+            'reg_alpha': [1.0, 2.0, 5.0],
+            'reg_lambda': [2.0, 5.0, 10.0],
+            'scale_pos_weight': [1.0, 5.0]  # Only leave this here
         }
 
     def get_results(self, scorer) -> dict:
