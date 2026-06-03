@@ -1,10 +1,10 @@
 # models/gradient_boosting.py
 
-import numpy as np
+import pandas as pd
+
+from sklearn.ensemble import GradientBoostingClassifier
 
 from models.model_evaluator import ModelEvaluator
-from sklearn.ensemble import GradientBoostingClassifier, AdaBoostClassifier
-from sklearn.tree import DecisionTreeClassifier
 from src.config import SEED, UNTUNED_LEARNING_RATE
 
 
@@ -14,7 +14,7 @@ class GradientBoostingModel(ModelEvaluator):
         self.title = 'Gradient Boosting Classifier'
         self.model = self._create()
         self.params = self._get_search_cv_params()
-        self.perf = []
+        self.perf = pd.DataFrame()
 
     def _create(self) -> GradientBoostingClassifier:
         return GradientBoostingClassifier(
@@ -22,14 +22,14 @@ class GradientBoostingModel(ModelEvaluator):
             learning_rate=UNTUNED_LEARNING_RATE
         )
 
-    def _get_search_cv_params(self) -> dict:
+    @staticmethod
+    def _get_search_cv_params() -> dict:
         return {
-            "init": [
-                AdaBoostClassifier(learning_rate=UNTUNED_LEARNING_RATE, random_state=SEED),
-                DecisionTreeClassifier(ccp_alpha=0.0, random_state=SEED)
-            ],
-            "n_estimators": np.arange(50, 110, 25),
-            "learning_rate": [0.01, 0.1, 0.05],
-            "subsample": [0.7, 0.9],
-            "max_features": [0.5, 0.7, 1],
+            'n_estimators': [100, 150],
+            'learning_rate': [0.01, 0.05],
+            'max_depth': [3, 4],
+            'subsample': [0.6, 0.7, 0.8],
+            'min_samples_split': [15, 20, 30], # Drastically increased minimum to split a node
+            'min_samples_leaf': [10, 15, 20],  # Higher leaves prevent individual user memorization
+            'scale_pos_weight': [1.0, 5.0]
         }

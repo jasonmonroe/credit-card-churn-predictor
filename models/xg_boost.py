@@ -1,9 +1,6 @@
 # models/xg_boost.py
 
-import numpy as np
 import pandas as pd
-from src.eda import plot_confusion_matrix
-from src.utils import show_banner
 from xgboost import XGBClassifier
 
 from models.model_evaluator import ModelEvaluator
@@ -14,7 +11,7 @@ from src.config import (
     UNTUNED_LEARNING_RATE,
     SEED
 )
-
+from src.utils import show_banner
 
 class XGBoostModel(ModelEvaluator):
     def __init__(self, dataset: dict):
@@ -34,17 +31,21 @@ class XGBoostModel(ModelEvaluator):
             learning_rate= UNTUNED_LEARNING_RATE,
             reg_alpha=0.3,
             reg_lambda=0.3,
-            random_state=SEED
+            random_state=SEED,
+            scale_pos_weight=5.0
         )
 
     # Params for Randomized Search CV
-    def _get_search_cv_params(self) -> dict:
+    @staticmethod
+    def _get_search_cv_params() -> dict:
         return {
-            'n_estimators': np.arange(50, 110, 25),
-            'scale_pos_weight': [1, 2, 5],
-            'learning_rate': [0.01, 0.1, 0.05],
-            'gamma': [1, 3, 5],
-            'subsample': [0.7, 0.9]
+            'n_estimators': [100, 150, 200],
+            'learning_rate': [0.01, 0.03, 0.05],  # Lowered rates to build smoother residual steps
+            'max_depth': [3, 4],                 # Dropped 5 to prevent deep tree over-indexing
+            'subsample': [0.6, 0.7, 0.8],        # Row sub-sampling per tree
+            'colsample_bytree': [0.5, 0.6, 0.7], # Column sub-sampling to fight dominant features
+            'reg_alpha': [1.0, 2.0, 5.0],        # Increased L1 penalty to drop weak features completely
+            'reg_lambda': [2.0, 5.0, 10.0]       # Massive L2 penalty to smooth out leaf weights
         }
 
     def get_results(self, scorer) -> dict:
@@ -52,10 +53,7 @@ class XGBoostModel(ModelEvaluator):
 
         # Now, store XGBoost models specifically for the final step
         # Need to store tuned_models here since the object is XGBClassifier.
-
         self.best_estimator = results['best_estimator']
-        #print(f'DEBUG: setting self.best_estimator = {self.best_estimator}')
-        #self.best_estimator = best_estimator
 
         return results
 

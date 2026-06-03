@@ -12,7 +12,8 @@ from sklearn.model_selection import ParameterGrid, RandomizedSearchCV
 from xgboost import XGBClassifier
 
 from src.config import (
-    CV_FOLDS, DATASET_TYPES, MAX_PROC_THREADS, OUTPUT_FILE, PARAM_DIST_CNT, SEED)
+    CV_FOLDS, DATASET_TYPES, MAX_PROC_THREADS, OUTPUT_FILE, PARAM_DIST_CNT, SEED
+)
 from src.utils import show_timer, start_timer, show_title_banner
 
 
@@ -139,7 +140,7 @@ class ModelEvaluator:
         self.show_classification_model_perf(self.x_under, self.y_under)
 
     def show_classification_model_perf(self, x, y):
-        print('\n-- 🖥️ Model Classification 🖥️ --')
+        print('\n🖥 -- Model Classification -- 🖥')
         self.perf = self._get_model_perf(self.model, x, y)
         print(self.perf)
 
@@ -187,44 +188,40 @@ class ModelEvaluator:
             print(f"\t⭐ {key}: {value}")
 
         return randomized_cv.best_estimator_
+    
+    def _get_xy_datasets(self, dataset_type: str) -> tuple[pd.DataFrame, pd.Series]:
+        """Returns the appropriate training features and target based on sampling type."""
+        mapping = {
+            'original': (self.x_train, self.y_train),
+            'oversampled': (self.x_over, self.y_over),
+            'undersampled': (self.x_under, self.y_under)
+        }
+        
+        if dataset_type not in mapping:
+            raise ValueError(f"Invalid dataset_type: '{dataset_type}'. Expected one of {list(mapping.keys())}")
+            
+        return mapping[dataset_type]
 
     def get_results(self, scorer) -> dict[str, Any]:
         model_titles, train_results, val_results = [], [], []
 
         xgb = {}
-        for df_type in DATASET_TYPES:
-            title = f'{self.title} {df_type.title()}'
+        for dataset_type in DATASET_TYPES:
+            title = f'{self.title} {dataset_type.title()}'
             print(f'\n🔧 --- Tuning {title} Data --- 🔧')
 
             # Determine data types to get the x & y values.
             # Note: Every model shares the same x/y_over and x/y_under data due the data being called once, merged into
-            # the dataset and passed as an argument into each model.
-            x, y = pd.DataFrame(), pd.Series()
-
-            if df_type == 'original':
-                x, y = self.x_train, self.y_train
-            elif df_type == 'oversampled':
-                x, y = self.x_over, self.y_over
-            elif df_type == 'undersampled':
-                x, y = self.x_under, self.y_under
+            # the dataset and passed as an argument into each model.    
+            x, y = self._get_xy_datasets(dataset_type)
 
             start_time = start_timer()
             tuned_model = self._tune(scorer, x, y)
             show_timer(start_time)
 
-            # Display Plot Confusion Matrix
-            #plot_confusion_matrix(tuned_model, x, y)
-
             # Store performance results for each model
-            #train_perf = self._get_model_perf(tuned_model, self.x_train, self.y_train)
-            #val_perf = self._get_model_perf(tuned_model, self.x_val, self.y_val)
-            # @todo - what x, y variables go here???
-            # have I already stored x,y of train & val for original, oversampled, undersampled
-
-            # Do I save these when I call run_orig, run_oversampled(), run_undersampled()?
-            # Or do I just repeat it again so that I can store the values in train_perf, val_perf?
             train_perf = self._get_model_perf(tuned_model, x, y)
-            val_perf = self._get_model_perf(tuned_model, x, y)
+            val_perf = self._get_model_perf(tuned_model, self.x_val, self.y_val)
 
             # Append the performance results into the training and validation array that'll be used for plotting and
             # picking the best model.
@@ -233,42 +230,7 @@ class ModelEvaluator:
             model_titles.append(f'{title}')
 
             if isinstance(self.model, XGBClassifier):
-                #print('💡 DEBUG: instance is XGBClassifier')
-
-                xgb[df_type] = tuned_model
-                #xgb[df_type] = {'title': title.strip(), 'model': tuned_model}
-
-            #else:
-            #    print(f'❌ DEBUG: {type(self.model).__name__} is not XGBClassifier')
-
-        """
-        # --- debug ---
-        import pprint
-
-        clean_mock_dump = {}
-
-        for strategy, model_obj in xgb.items():
-            # 1. Pull the raw parameter dictionary out of the estimator object
-            params = []
-            if hasattr(model_obj, '_get_search_cv_params'):
-                params = model_obj._get_search_cv_params()
-
-                # 2. Fix the non-serializable objects (like NumPy types or float('nan'))
-                for key, val in list(params.items()):
-                    # Convert np.int64 or np.float64 to native Python int/float
-                    if hasattr(val, 'item'):
-                        params[key] = val.item()
-                    # Convert true float NaN to a safe string or None for easy testing
-                    elif isinstance(val, float) and str(val) == 'nan':
-                        params[key] = None
-
-            clean_mock_dump[strategy] = params
-
-        # Print the sanitized dictionary layout
-        print("CLEAN_HARDCODED_ESTIMATORS = ")
-        pprint.pprint(clean_mock_dump, indent=4, width=120)
-        """
-        # --- debug ---
+                xgb[dataset_type] = tuned_model
 
         # Concatenate the list of DataFrames into a single DataFrame for each set
         # We use axis=0 to stack 'Original', 'Oversampled', and 'Undersampled' vertically
@@ -307,7 +269,7 @@ class ModelEvaluator:
         training_models.columns = title_cols
 
         val_models = pd.concat(val_cols, axis=1)
-        #val_models.columns = title_cols # @todo - why are we adding value below?
+        #val_models.columns = title_cols # @todo - why are we adding the string `value` below?
         val_models.columns = [f"{t} Value" for t in title_cols]
 
         return training_models, val_models

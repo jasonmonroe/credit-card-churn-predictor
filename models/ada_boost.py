@@ -1,9 +1,11 @@
 # models/ada_boost.py
-import numpy as np
 
-from models.model_evaluator import ModelEvaluator
+import pandas as pd
+
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
+
+from models.model_evaluator import ModelEvaluator
 from src.config import SEED, UNTUNED_LEARNING_RATE
 
 
@@ -13,7 +15,7 @@ class AdaBoostModel(ModelEvaluator):
         self.title = 'ADA Boost Classifier'
         self.model = self._create()
         self.params = self._get_search_cv_params()
-        self.perf = []
+        self.perf = pd.DataFrame()
 
     def _create(self) -> AdaBoostClassifier:
         return AdaBoostClassifier(
@@ -21,14 +23,14 @@ class AdaBoostModel(ModelEvaluator):
             learning_rate=UNTUNED_LEARNING_RATE
         )
 
-    def _get_search_cv_params(self) -> dict:
+    @staticmethod
+    def _get_search_cv_params() -> dict:
         return {
-            "n_estimators": np.arange(50, 110, 25),
-            "learning_rate": [0.01, 0.1, 0.05],
+            "n_estimators": [100, 150, 200],
+            "learning_rate": [0.05, 0.1, 0.2],
             "estimator": [
                 DecisionTreeClassifier(max_depth=2, ccp_alpha=0.0, random_state=SEED),
-                DecisionTreeClassifier(max_depth=2, ccp_alpha=0.01, random_state=SEED),
                 DecisionTreeClassifier(max_depth=3, ccp_alpha=0.0, random_state=SEED),
-                DecisionTreeClassifier(max_depth=3, ccp_alpha=0.01, random_state=SEED),
+                DecisionTreeClassifier(max_depth=4, ccp_alpha=0.0,random_state=SEED),
             ],
         }

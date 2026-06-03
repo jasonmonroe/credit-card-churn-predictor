@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
+
 from models.model_evaluator import ModelEvaluator
 from src.config import (
     NODE_RFC_CNT, SEED, UNTUNED_ESTIMATOR_CNT
@@ -28,12 +29,12 @@ class RandomForestModel(ModelEvaluator):
             random_state=SEED
         )
 
-    def _get_search_cv_params(self) -> dict:
+    @staticmethod
+    def _get_search_cv_params() -> dict:
         return {
-            # Using np.arange creates a list of candidates to sample from
-            "n_estimators": np.arange(50, 125, 25),
-            "min_samples_leaf": np.arange(1, 5),
-            # To mix floats and strings, convert the array to a list and extend it
-            "max_features": np.arange(0.3, 0.6, 0.1).tolist() + ['sqrt'],
-            "max_samples": np.arange(0.4, 0.7, 0.1)
+            'n_estimators': [100, 200, 300],
+            'max_depth': [6, 8, 10, 12],       # Cap how deep the trees can grow
+            'min_samples_split': [5, 10, 15],  # Higher minimum required data points to make a split
+            'min_samples_leaf': [3, 5, 10],    # Forces leaves to hold more samples, smoothing out noise
+            'max_features': ['sqrt', 'log2']   # Built-in fix for your earlier array error flag
         }
