@@ -1,5 +1,7 @@
 # Credit Card Churn Predictor
 
+![Hero Image](data/hero.webp)
+
 A comprehensive machine learning pipeline designed to predict whether a credit card customer will churn (attrite) or be retained. This project employs various ensemble learning techniques and strategies for handling imbalanced datasets to maximize prediction accuracy and recall.
 
 ## Features
@@ -25,14 +27,16 @@ credit-card-churn-predictor/
 ├── main.py                 # Application entry point
 ├── requirements.txt        # Python dependencies
 ├── data/                   # Data storage (sample_data.csv, etc.)
+│   ├── dataset.csv        # Sample dataset for training
+│   ├── hero.webp          # Hero image for project
 ├── models/
 │   ├── ada_boost.py         # Model definition for ADA Boost Classifier
 │   ├── bagging.py           # Model definition for Bagging Classifier
 │   ├── gradient_boosting.py # Model definition for Gradient Boosting Classifier
 │   ├── model_evaluator.py   # Model definition and training
-│   ├── seeder.py            # Synthetic data generator
-│   └── utils.py             # Helper functions
-└── venv/                    # Virtual environment
+│   ├── random_forest.py     # Model definition for Random Forest Classifier
+│   ├── xg_boost.py          # Model definition for XGBoost Classifier
+├── outputs/
 ├── src/
 │   ├── config.py           # Configuration constants
 │   ├── eda.py              # Exploratory Data Analysis logic
